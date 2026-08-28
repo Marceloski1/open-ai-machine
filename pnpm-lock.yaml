@@ -8,6 +8,8 @@ importers:
 
   .: {}
 
+  cli: {}
+
   packages/machine-business:
     dependencies:
       machine-core:
@@ -15,3 +17,5 @@ importers:
         version: link:../machine-core
 
   packages/machine-core: {}
+
+  tools/build-registry: {}

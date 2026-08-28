@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { approveGate, assertGateApproved, setGatePending } from "./approvals";
@@ -100,7 +100,8 @@ export type RenderDocxResult = {
   outputPath: string;
 };
 
-const PANDOC_INSTALL_INSTRUCTIONS = "https://pandoc.org/installing.html";
+const PANDOC_INSTALL_INSTRUCTIONS =
+  'ejecuta "uv sync" en la raiz del repositorio (instala el pandoc empaquetado via pypandoc-binary en .venv/). Referencia: https://pandoc.org/installing.html';
 
 export function defaultTemplatePath(): string {
   return join(import.meta.dir, "..", "templates", "reference.docx");
@@ -110,14 +111,56 @@ export function defaultTemplateExists(templatePath: string): boolean {
   return existsSync(templatePath);
 }
 
+function repoRoot(): string {
+  return join(import.meta.dir, "..", "..", "..");
+}
+
+function findVenvSitePackages(root: string): string | undefined {
+  const windowsSitePackages = join(root, ".venv", "Lib", "site-packages");
+  if (existsSync(windowsSitePackages)) {
+    return windowsSitePackages;
+  }
+  const libDir = join(root, ".venv", "lib");
+  if (!existsSync(libDir)) {
+    return undefined;
+  }
+  for (const entry of readdirSync(libDir)) {
+    const candidate = join(libDir, entry, "site-packages");
+    if (existsSync(candidate)) {
+      return candidate;
+    }
+  }
+  return undefined;
+}
+
+export function resolveRepoPandocPath(): string | undefined {
+  const sitePackages = findVenvSitePackages(repoRoot());
+  if (!sitePackages) {
+    return undefined;
+  }
+  const binaryName = process.platform === "win32" ? "pandoc.exe" : "pandoc";
+  const candidate = join(sitePackages, "pypandoc", "files", binaryName);
+  return existsSync(candidate) ? candidate : undefined;
+}
+
+export function defaultPandocIsAvailable(): boolean {
+  return resolveRepoPandocPath() !== undefined;
+}
+
 async function defaultPandocRender(
   sourcePath: string,
   outputPath: string,
   templatePath: string,
 ): Promise<void> {
+  const pandocPath = resolveRepoPandocPath();
+  if (!pandocPath) {
+    throw new Error(
+      `Dependencia externa faltante: "pandoc". Instalala antes de continuar: ${PANDOC_INSTALL_INSTRUCTIONS}`,
+    );
+  }
   const { spawnSync } = await import("node:child_process");
   const result = spawnSync(
-    "pandoc",
+    pandocPath,
     [sourcePath, "-o", outputPath, `--reference-doc=${templatePath}`],
     { stdio: "ignore" },
   );
@@ -132,7 +175,7 @@ export async function machine_render_docx(args: RenderDocxArgs): Promise<RenderD
   checkExternalBinary(
     "pandoc",
     PANDOC_INSTALL_INSTRUCTIONS,
-    args.isAvailable ?? defaultIsAvailable,
+    args.isAvailable ?? defaultPandocIsAvailable,
   );
 
   const templatePath = args.templatePath ?? defaultTemplatePath();

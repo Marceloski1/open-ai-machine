@@ -9,6 +9,7 @@ import {
   machine_process_input,
   machine_render_docx,
   machine_write_artifact,
+  resolveRepoPandocPath,
 } from "./index";
 
 async function makeProjectDir(): Promise<string> {
@@ -153,7 +154,7 @@ describe("plantilla corporativa", () => {
     });
 
     expect(spawnSyncSpy).toHaveBeenCalledWith(
-      "pandoc",
+      resolveRepoPandocPath(),
       expect.arrayContaining([`--reference-doc=${templatePath}`]),
       expect.anything(),
     );

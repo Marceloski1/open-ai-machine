@@ -1,0 +1,11 @@
+[project]
+name = "opencode-market-place"
+version = "0.1.0"
+description = "Entorno Python unico del repo (uv). Usado por tools/build-template y por el pandoc empaquetado via pypandoc-binary."
+requires-python = ">=3.13"
+dependencies = [
+    "pypandoc-binary>=1.17",
+]
+
+[tool.uv]
+package = false

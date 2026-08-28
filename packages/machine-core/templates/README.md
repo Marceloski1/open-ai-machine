@@ -19,14 +19,29 @@ verdadera) sigue pendiente como insumo externo. Mientras no se provea, `machine_
 producira documentos con el formato neutro descrito aqui, no con la marca del cliente. Quien
 provea la plantilla corporativa real debe reemplazar este archivo y retirar esta advertencia.
 
+### Pandoc: entorno gestionado por el repositorio, no un install de sistema
+
+Pandoc **no se resuelve desde el PATH del sistema**. `machine_render_docx`
+(`packages/machine-core/src/index.ts`, `resolveRepoPandocPath()` / `defaultPandocRender()`)
+localiza el binario de Pandoc empaquetado por `pypandoc-binary` dentro del `.venv/` gestionado
+por `uv` en la raiz del repositorio. Para tenerlo disponible:
+
+```
+uv sync
+```
+
+ejecutado desde la raiz del repositorio. Esto crea/actualiza `.venv/` e instala
+`pypandoc-binary`, que trae un binario de Pandoc embebido (no requiere instalar Pandoc en el
+sistema operativo). El entorno Python del repo (dependencias, `uv.lock`) vive en el
+`pyproject.toml` de la raiz; `tools/build-template/` solo contiene los scripts que lo usan.
+
 ### Como se regenera
 
 El `.docx` **no se edita a mano**: es la salida reproducible de un script. La fuente de verdad
 es el script; el binario commiteado es su resultado.
 
 ```
-cd tools/build-template
-uv run python build-template.py
+uv run python tools/build-template/build-template.py
 ```
 
 Esto reconstruye `packages/machine-core/templates/reference.docx` desde cero usando unicamente
@@ -37,8 +52,7 @@ Para cambiar el diseno (colores, tipografia, espaciados), edita
 ### Como se verifica
 
 ```
-cd tools/build-template
-uv run python verify-template.py
+uv run python tools/build-template/verify-template.py
 ```
 
 El verificador comprueba automaticamente:
@@ -54,32 +68,35 @@ El verificador comprueba automaticamente:
 
 Esto **no** confirma que Pandoc acepte o renderice correctamente la plantilla.
 
-### Que NO esta validado
+### Validacion contra Pandoc real
 
-**Pandoc no esta instalado en este entorno de desarrollo.** No fue posible:
-
-- Generar la plantilla con `pandoc --print-default-data-file reference.docx` como punto de
-  partida (por eso se construye el OOXML directamente).
-- Ejecutar `pandoc <archivo>.md --reference-doc=reference.docx -o salida.docx` y confirmar que
-  Pandoc reconoce y aplica los estilos.
-- Abrir el `.docx` resultante en Word o LibreOffice y confirmar visualmente el render.
-
-Esta validacion contra Pandoc real queda **pendiente**. Lo que este README certifica es
-unicamente lo verificable sin Pandoc: estructura ZIP/XML valida y presencia de los `w:styleId`
-requeridos (ver seccion anterior).
+Con el Pandoc empaquetado via `pypandoc-binary` (`uv sync`) se ejecuto
+`pandoc <archivo>.md --reference-doc=reference.docx -o salida.docx` y se confirmo, inspeccionando
+el `.docx` resultante como ZIP (`word/document.xml`, `word/styles.xml`), que Pandoc reconoce y
+aplica los estilos de esta plantilla: los `w:pStyle` emitidos (`Heading1`–`Heading3`,
+`FirstParagraph`, `Compact`, `SourceCode`, `BlockText`) corresponden a `w:styleId` reales
+definidos en `styles.xml`, y los colores y tipografias de la plantilla (ver paleta arriba,
+Calibri/Consolas) aparecen en el `.docx` de salida. No se abrio el resultado en Word ni
+LibreOffice; la validacion visual manual en esas aplicaciones sigue pendiente.
 
 ### Como se consume
 
+`pypandoc-binary` no expone `pandoc` como script del `.venv` (no funciona `uv run pandoc`); el
+binario vive dentro de `site-packages` y se invoca por su ruta completa, tal como hace
+`resolveRepoPandocPath()` en `packages/machine-core/src/index.ts`:
+
 ```
-pandoc <artefacto>.md --reference-doc=packages/machine-core/templates/reference.docx -o <artefacto>.docx
+.venv/Lib/site-packages/pypandoc/files/pandoc.exe <artefacto>.md --reference-doc=packages/machine-core/templates/reference.docx -o <artefacto>.docx
 ```
+
+(en POSIX, la ruta equivalente es `.venv/lib/python<version>/site-packages/pypandoc/files/pandoc`).
 
 ### Impacto mientras la plantilla corporativa real no se provea
 
 - `machine_render_docx` **funciona end-to-end**, pero produce documentos con el formato neutro
   de este repositorio, no con la identidad de marca del cliente.
-- La validacion contra Pandoc real sigue pendiente (ver arriba); el contrato de fallo explicito
-  ante plantilla ausente (`packages/machine-core/src/index.ts`) ya no aplica porque el archivo
-  existe.
+- La validacion contra Pandoc real ya se realizo (ver seccion anterior); el contrato de fallo
+  explicito ante plantilla ausente (`packages/machine-core/src/index.ts`) ya no aplica porque el
+  archivo existe.
 - Ningun tool debe presentar el resultado de este template neutro como si fuera la identidad
   corporativa real.
