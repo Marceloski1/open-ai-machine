@@ -1,0 +1,13 @@
+{
+  "id": "machine-beta",
+  "version": "0.2.1",
+  "target": "plugin",
+  "description": "Paquete beta de prueba",
+  "commands": ["machine-beta-run"],
+  "agents": ["beta"],
+  "skills": [],
+  "templates": [],
+  "dependencies": ["machine-alpha"],
+  "externalRequirements": ["pandoc"],
+  "permissions": {}
+}

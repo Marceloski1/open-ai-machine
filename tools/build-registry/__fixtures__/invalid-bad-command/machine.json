@@ -1,0 +1,12 @@
+{
+  "id": "machine-delta",
+  "version": "0.1.0",
+  "target": "plugin",
+  "commands": ["process-input"],
+  "agents": [],
+  "skills": [],
+  "templates": [],
+  "dependencies": [],
+  "externalRequirements": [],
+  "permissions": {}
+}

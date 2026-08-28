@@ -1,0 +1,43 @@
+{
+  "packages": [
+    {
+      "id": "machine-business",
+      "version": "0.1.0",
+      "description": "",
+      "commands": [
+        "machine-business-init",
+        "machine-business-proposal"
+      ],
+      "agents": [
+        "machine-business"
+      ],
+      "skills": [],
+      "templates": [],
+      "compatibility": "opencode-v1",
+      "checksum": "45b372334b6ea2742efc7efe7a433175dd9f5c8188178d661cfe812f487ae5cd",
+      "permissions": {},
+      "externalRequirements": []
+    },
+    {
+      "id": "machine-core",
+      "version": "0.1.0",
+      "description": "",
+      "commands": [
+        "machine-process-input",
+        "machine-render-docx",
+        "machine-approve"
+      ],
+      "agents": [
+        "machine"
+      ],
+      "skills": [],
+      "templates": [],
+      "compatibility": "opencode-v1",
+      "checksum": "bc773296f23a6eab327b574931aa4b3b84ab37a5ca77faf972836889faacb890",
+      "permissions": {},
+      "externalRequirements": [
+        "pandoc"
+      ]
+    }
+  ]
+}

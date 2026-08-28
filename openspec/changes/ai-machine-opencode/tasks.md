@@ -51,70 +51,70 @@ Comandos: `pnpm test` para tests, `pnpm build` para build. Nunca npm, yarn ni bu
 
 ### 1.1 Infraestructura
 
-- [ ] 1.1.1 Crear `pnpm-workspace.yaml` (packages/*, cli, tools/build-registry, registry)
-- [ ] 1.1.2 Crear `registry/schema.json`: schema de `machine.json` (id, version SemVer, commands/agents/skills/templates/dependencies/externalRequirements, permissions) y del catálogo
-- [ ] 1.1.3 `package.json`/`tsconfig.json` de `cli` y `tools/build-registry`; fixtures `machine.json` en `tools/build-registry/__fixtures__/`
+- [x] 1.1.1 Crear `pnpm-workspace.yaml` (packages/*, cli, tools/build-registry, registry)
+- [x] 1.1.2 Crear `registry/schema.json`: schema de `machine.json` (id, version SemVer, commands/agents/skills/templates/dependencies/externalRequirements, permissions) y del catálogo
+- [x] 1.1.3 `package.json`/`tsconfig.json` de `cli` y `tools/build-registry`; fixtures `machine.json` en `tools/build-registry/__fixtures__/`
 
 ### 1.2 Validación de manifiestos
 
-- [ ] 1.2.1 (RED) `machine.json` válido pasa el schema
-- [ ] 1.2.2 (GREEN) `tools/build-registry/src/validate.ts` (`validateManifest`) vs `registry/schema.json`
-- [ ] 1.2.3 (RED) Sin `version`/SemVer malformado falla e indica el campo
-- [ ] 1.2.4 (GREEN) Reportar campo infractor
-- [ ] 1.2.5 (RED) Comando sin prefijo `machine-` falla
-- [ ] 1.2.6 (GREEN) Chequeo de prefijo
+- [x] 1.2.1 (RED) `machine.json` válido pasa el schema
+- [x] 1.2.2 (GREEN) `tools/build-registry/src/validate.ts` (`validateManifest`) vs `registry/schema.json`
+- [x] 1.2.3 (RED) Sin `version`/SemVer malformado falla e indica el campo
+- [x] 1.2.4 (GREEN) Reportar campo infractor
+- [x] 1.2.5 (RED) Comando sin prefijo `machine-` falla
+- [x] 1.2.6 (GREEN) Chequeo de prefijo
 
 ### 1.3 `build-registry`
 
-- [ ] 1.3.1 (RED) Checksum de un paquete: determinista, cambia con el contenido
-- [ ] 1.3.2 (GREEN) `tools/build-registry/src/checksum.ts` (sha256 sobre archivos del paquete)
-- [ ] 1.3.3 (RED) Dos paquetes con mismo comando (`machine-render-docx`) fallan `build-registry`
-- [ ] 1.3.4 (GREEN) Detección de colisión de comandos en `tools/build-registry/src/index.ts`
-- [ ] 1.3.5 (RED) 3 manifiestos válidos generan `registry/index.json` con 3 entradas y checksum
-- [ ] 1.3.6 (GREEN) Escanear `packages/*/machine.json`, validar, checksum, escribir `registry/index.json`
+- [x] 1.3.1 (RED) Checksum de un paquete: determinista, cambia con el contenido
+- [x] 1.3.2 (GREEN) `tools/build-registry/src/checksum.ts` (sha256 sobre archivos del paquete)
+- [x] 1.3.3 (RED) Dos paquetes con mismo comando (`machine-render-docx`) fallan `build-registry`
+- [x] 1.3.4 (GREEN) Detección de colisión de comandos en `tools/build-registry/src/index.ts`
+- [x] 1.3.5 (RED) 3 manifiestos válidos generan `registry/index.json` con 3 entradas y checksum
+- [x] 1.3.6 (GREEN) Escanear `packages/*/machine.json`, validar, checksum, escribir `registry/index.json`
 
 ### 1.4 CLI: descubrimiento
 
-- [ ] 1.4.1 `cli/src/list.ts`, `search.ts`, `info.ts`: contra `registry/index.json`, sin instalar; test `info machine-business` muestra versión/permisos/checksum/requisitos
+- [x] 1.4.1 `cli/src/list.ts`, `search.ts`, `info.ts`: contra `registry/index.json`, sin instalar; test `info machine-business` muestra versión/permisos/checksum/requisitos
 
 ### 1.5 Merge no destructivo de `opencode.json`
 
-- [ ] 1.5.1 (RED) Merge preserva claves ajenas, añade/actualiza `plugin`; aplicado dos veces da resultado idéntico sin duplicar
-- [ ] 1.5.2 (GREEN) `cli/src/opencode-config.ts` (`mergeOpencodeConfig`, deduplica entradas de `plugin`)
+- [x] 1.5.1 (RED) Merge preserva claves ajenas, añade/actualiza `plugin`; aplicado dos veces da resultado idéntico sin duplicar
+- [x] 1.5.2 (GREEN) `cli/src/opencode-config.ts` (`mergeOpencodeConfig`, deduplica entradas de `plugin`)
 
 ### 1.6 `installed.json`
 
-- [ ] 1.6.1 (RED) Registra `id`, `version`, `target`, `files[]` (`path`+`sha256`); leer archivo inexistente devuelve lista vacía sin lanzar
-- [ ] 1.6.2 (GREEN) `cli/src/installed-registry.ts` (`readInstalledEntries`/`writeInstalledEntry`, maneja ausencia de archivo)
+- [x] 1.6.1 (RED) Registra `id`, `version`, `target`, `files[]` (`path`+`sha256`); leer archivo inexistente devuelve lista vacía sin lanzar
+- [x] 1.6.2 (GREEN) `cli/src/installed-registry.ts` (`readInstalledEntries`/`writeInstalledEntry`, maneja ausencia de archivo)
 
 ### 1.7 CLI: `install`
 
-- [ ] 1.7.1 `cli/src/install.ts`: resuelve paquete/checksum, muestra permisos/checksum/requisitos, pide confirmación
-- [ ] 1.7.2 (RED) No interactivo sin flag de aceptación: rechaza sin escribir
-- [ ] 1.7.3 (GREEN) Chequeo de `--yes` antes de escribir
-- [ ] 1.7.4 (RED) Destino proyecto escribe bajo `.opencode/`; `installed.json` registra cada archivo con checksum
-- [ ] 1.7.5 (GREEN) Copiar archivos + merge `opencode.json` + escribir `installed.json` por `target`
-- [ ] 1.7.6 (RED) Reinstalar misma versión: no reescribe, informa "sin cambios"
-- [ ] 1.7.7 (GREEN) Comparar checksum instalado vs catálogo (idempotencia)
+- [x] 1.7.1 `cli/src/install.ts`: resuelve paquete/checksum, muestra permisos/checksum/requisitos, pide confirmación
+- [x] 1.7.2 (RED) No interactivo sin flag de aceptación: rechaza sin escribir
+- [x] 1.7.3 (GREEN) Chequeo de `--yes` antes de escribir
+- [x] 1.7.4 (RED) Destino proyecto escribe bajo `.opencode/`; `installed.json` registra cada archivo con checksum
+- [x] 1.7.5 (GREEN) Copiar archivos + merge `opencode.json` + escribir `installed.json` por `target`
+- [x] 1.7.6 (RED) Reinstalar misma versión: no reescribe, informa "sin cambios"
+- [x] 1.7.7 (GREEN) Comparar checksum instalado vs catálogo (idempotencia)
 
 ### 1.8 CLI: `update` reversible
 
-- [ ] 1.8.1 (RED) Verifica checksum antes de reemplazar; fallo a mitad restaura archivos e `installed.json` previos, versión sigue operativa
-- [ ] 1.8.2 (GREEN) `cli/src/update.ts`: verificación de checksum previa + backup-then-swap (tmp, aplicar, restaurar ante error)
+- [x] 1.8.1 (RED) Verifica checksum antes de reemplazar; fallo a mitad restaura archivos e `installed.json` previos, versión sigue operativa
+- [x] 1.8.2 (GREEN) `cli/src/update.ts`: verificación de checksum previa + backup-then-swap (tmp, aplicar, restaurar ante error)
 
 ### 1.9 CLI: `uninstall` acotado
 
-- [ ] 1.9.1 (RED) Elimina solo archivos listados en `installed.json` para ese paquete/destino; archivo ajeno del usuario permanece intacto
-- [ ] 1.9.2 (GREEN) `cli/src/uninstall.ts`: borra solo rutas registradas (nunca directorios completos), remueve entrada
+- [x] 1.9.1 (RED) Elimina solo archivos listados en `installed.json` para ese paquete/destino; archivo ajeno del usuario permanece intacto
+- [x] 1.9.2 (GREEN) `cli/src/uninstall.ts`: borra solo rutas registradas (nunca directorios completos), remueve entrada
 
 ### 1.10 CLI: bootstrap y empaquetado
 
-- [ ] 1.10.1 `cli/package.json` (`bin: machine`, publicable a npm, vía `pnpm dlx machine install <paquete>`); `cli/src/cli.ts` enruta `install|list|search|info|update|uninstall`
+- [x] 1.10.1 `cli/package.json` (`bin: machine`, publicable a npm, vía `pnpm dlx machine install <paquete>`); `cli/src/cli.ts` enruta `install|list|search|info|update|uninstall`
 
 ### 1.11 CI y validación de repositorio
 
-- [ ] 1.11.1 (RED) Falla si existe `package-lock.json`, `yarn.lock` o `bun.lockb`
-- [ ] 1.11.2 (GREEN) `tools/build-registry/src/check-lockfiles.ts`, invocado en workflow CI junto a `pnpm test`, `build-registry` y validación de instalación con pnpm y Bun
+- [x] 1.11.1 (RED) Falla si existe `package-lock.json`, `yarn.lock` o `bun.lockb`
+- [x] 1.11.2 (GREEN) `tools/build-registry/src/check-lockfiles.ts`, invocado en workflow CI junto a `pnpm test`, `build-registry` y validación de instalación con pnpm y Bun
 
 ---
 

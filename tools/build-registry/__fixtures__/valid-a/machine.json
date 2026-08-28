@@ -1,0 +1,13 @@
+{
+  "id": "machine-alpha",
+  "version": "0.1.0",
+  "target": "plugin",
+  "description": "Paquete alpha de prueba",
+  "commands": ["machine-alpha-init"],
+  "agents": ["alpha"],
+  "skills": [],
+  "templates": [],
+  "dependencies": [],
+  "externalRequirements": [],
+  "permissions": {}
+}

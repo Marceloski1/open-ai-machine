@@ -1,2 +1,4 @@
 packages:
   - "packages/*"
+  - "cli"
+  - "tools/build-registry"

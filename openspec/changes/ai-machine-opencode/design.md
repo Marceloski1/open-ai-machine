@@ -149,6 +149,14 @@ seguridad frente a un usuario que decide saltárselo deliberadamente. Para el ca
 —evitar que una ejecución no interactiva emita un entregable sin revisión humana— es
 suficiente. No lo es para un modelo de amenaza con usuario hostil, y no se MUST presentar como tal.
 
+## Decisiones tomadas durante la implementación
+
+| Decisión | Motivo |
+|---|---|
+| `computeSha256` duplicado en `cli/src/hash.ts` y `packages/machine-core/src/hash.ts` | El CLI se publica y ejecuta **standalone** vía `pnpm dlx`; importar `machine-core` lo obligaría a arrastrar el paquete como dependencia de runtime. Son además hashes de cosas distintas: insumos frente a archivos instalados. Duplicación deliberada, no descuido |
+| `validateManifest` implementado a mano en vez de un motor JSON Schema | No hay `ajv` en el repo y añadir una dependencia requería aprobación. `registry/schema.json` queda como contrato documentado y el validador implementa su semántica. **Revisable** si el schema crece |
+| `defaultSourceRoot` del instalador asume layout de monorepo | La resolución real desde tarball npm no estaba en alcance. Sirve para desarrollo y tests; **un instalador publicado MUST sustituir ese paso** |
+
 ## Migración
 
 No aplica: greenfield. El rollout es por fases 1→2→3; `machine-business` no se publica hasta que `machine-core` esté verde.

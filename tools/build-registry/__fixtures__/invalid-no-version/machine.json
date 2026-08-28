@@ -1,0 +1,11 @@
+{
+  "id": "machine-gamma",
+  "target": "plugin",
+  "commands": ["machine-gamma-run"],
+  "agents": [],
+  "skills": [],
+  "templates": [],
+  "dependencies": [],
+  "externalRequirements": [],
+  "permissions": {}
+}

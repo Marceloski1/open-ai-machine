@@ -1,0 +1,12 @@
+{
+  "name": "build-registry",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "bun test",
+    "build-registry": "bun run src/index.ts",
+    "check-lockfiles": "bun run src/check-lockfiles.ts"
+  }
+}

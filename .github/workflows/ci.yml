@@ -1,0 +1,26 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - name: Install dependencies (pnpm)
+        run: pnpm install --frozen-lockfile
+      - name: Check forbidden lockfiles
+        run: bun run tools/build-registry/src/check-lockfiles.ts
+      - name: Run tests
+        run: pnpm test
+      - name: Build registry
+        run: bun run tools/build-registry/src/index.ts
+      # TODO(cli): agregar validacion de instalacion con pnpm y con Bun una vez que cli/ este listo

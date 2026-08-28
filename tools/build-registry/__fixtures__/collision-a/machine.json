@@ -1,0 +1,12 @@
+{
+  "id": "machine-collision-a",
+  "version": "0.1.0",
+  "target": "plugin",
+  "commands": ["machine-render-docx"],
+  "agents": [],
+  "skills": [],
+  "templates": [],
+  "dependencies": [],
+  "externalRequirements": [],
+  "permissions": {}
+}

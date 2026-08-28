@@ -1,0 +1,13 @@
+{
+  "id": "machine-gamma",
+  "version": "1.0.0",
+  "target": "plugin",
+  "description": "Paquete gamma de prueba",
+  "commands": ["machine-gamma-plan"],
+  "agents": [],
+  "skills": [],
+  "templates": [],
+  "dependencies": [],
+  "externalRequirements": [],
+  "permissions": {}
+}
