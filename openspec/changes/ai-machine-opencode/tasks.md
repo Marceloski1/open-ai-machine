@@ -167,11 +167,11 @@ Comandos: `pnpm test` para tests, `pnpm build` para build. Nunca npm, yarn ni bu
 Huecos hallados al verificar 2.1–2.5. No son fallos de ejecución: las tareas originales no
 los cubrían porque el design no los listaba.
 
-- [ ] 2.6.1 (RED) Test: con la puerta aprobada y Pandoc presente pero SIN `templates/reference.docx`, `machine_render_docx` falla indicando que falta la plantilla y no genera `.docx`
-- [ ] 2.6.2 (GREEN) Verificar la plantilla en `machine_render_docx` antes de renderizar (`packages/machine-core/src/index.ts`)
-- [ ] 2.6.3 (RED) Test: `defaultPandocRender` invoca pandoc con `--reference-doc=<plantilla>`
-- [ ] 2.6.4 (GREEN) Pasar `--reference-doc` en `defaultPandocRender`; la ruta resuelta MUST coincidir con la documentada en `templates/README.md`
-- [ ] 2.6.5 Crear `packages/machine-core/agents/machine.md` (`mode: subagent`, `permission: { bash: deny }`) y apuntar los tres commands de 2.5 a ese agente en lugar de `build`, cerrando el rodeo de D6
+- [x] 2.6.1 (RED) Test: con la puerta aprobada y Pandoc presente pero SIN `templates/reference.docx`, `machine_render_docx` falla indicando que falta la plantilla y no genera `.docx`
+- [x] 2.6.2 (GREEN) Verificar la plantilla en `machine_render_docx` antes de renderizar (`packages/machine-core/src/index.ts`)
+- [x] 2.6.3 (RED) Test: `defaultPandocRender` invoca pandoc con `--reference-doc=<plantilla>`
+- [x] 2.6.4 (GREEN) Pasar `--reference-doc` en `defaultPandocRender`; la ruta resuelta MUST coincidir con la documentada en `templates/README.md`
+- [x] 2.6.5 Crear `packages/machine-core/agents/machine.md` (`mode: subagent`, `permission: { bash: deny }`) y apuntar los tres commands de 2.5 a ese agente en lugar de `build`, cerrando el rodeo de D6
 
 ---
 

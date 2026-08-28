@@ -1,5 +1,6 @@
+import { existsSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
-import { dirname } from "node:path";
+import { dirname, join } from "node:path";
 import { approveGate, assertGateApproved, setGatePending } from "./approvals";
 import { checkExternalBinary, defaultIsAvailable, type BinaryChecker } from "./deps";
 import { computeSha256, isProcessed, upsertInput } from "./hash";
@@ -82,13 +83,17 @@ export function machine_check_deps(args: CheckDepsArgs): void {
   checkExternalBinary(args.binary, args.installInstructions, args.isAvailable ?? defaultIsAvailable);
 }
 
+export type TemplateChecker = (templatePath: string) => boolean;
+
 export type RenderDocxArgs = {
   projectDir: string;
   gate: string;
   sourcePath: string;
   outputPath: string;
   isAvailable?: BinaryChecker;
-  render?: (sourcePath: string, outputPath: string) => Promise<void>;
+  templatePath?: string;
+  isTemplateAvailable?: TemplateChecker;
+  render?: (sourcePath: string, outputPath: string, templatePath: string) => Promise<void>;
 };
 
 export type RenderDocxResult = {
@@ -97,9 +102,25 @@ export type RenderDocxResult = {
 
 const PANDOC_INSTALL_INSTRUCTIONS = "https://pandoc.org/installing.html";
 
-async function defaultPandocRender(sourcePath: string, outputPath: string): Promise<void> {
+export function defaultTemplatePath(): string {
+  return join(import.meta.dir, "..", "templates", "reference.docx");
+}
+
+export function defaultTemplateExists(templatePath: string): boolean {
+  return existsSync(templatePath);
+}
+
+async function defaultPandocRender(
+  sourcePath: string,
+  outputPath: string,
+  templatePath: string,
+): Promise<void> {
   const { spawnSync } = await import("node:child_process");
-  const result = spawnSync("pandoc", [sourcePath, "-o", outputPath], { stdio: "ignore" });
+  const result = spawnSync(
+    "pandoc",
+    [sourcePath, "-o", outputPath, `--reference-doc=${templatePath}`],
+    { stdio: "ignore" },
+  );
   if (result.status !== 0) {
     throw new Error(`pandoc fallo al renderizar ${sourcePath} -> ${outputPath}`);
   }
@@ -114,9 +135,17 @@ export async function machine_render_docx(args: RenderDocxArgs): Promise<RenderD
     args.isAvailable ?? defaultIsAvailable,
   );
 
+  const templatePath = args.templatePath ?? defaultTemplatePath();
+  const templateExists = args.isTemplateAvailable ?? defaultTemplateExists;
+  if (!templateExists(templatePath)) {
+    throw new Error(
+      `Plantilla corporativa faltante: "${templatePath}". Coloca el .docx corporativo en esa ruta antes de renderizar (ver packages/machine-core/templates/README.md). No se entrega un .docx sin estilos corporativos.`,
+    );
+  }
+
   await mkdir(dirname(args.outputPath), { recursive: true });
   const render = args.render ?? defaultPandocRender;
-  await render(args.sourcePath, args.outputPath);
+  await render(args.sourcePath, args.outputPath, templatePath);
 
   return { outputPath: args.outputPath };
 }

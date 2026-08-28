@@ -1,6 +1,6 @@
 ---
 description: Renderiza un artefacto Markdown aprobado a .docx vía Pandoc.
-agent: build
+agent: machine
 ---
 
 Ejecuta el tool `machine_render_docx` sobre el proyecto `$1` y el artefacto `$2`.

@@ -68,6 +68,7 @@ describe("flujo write -> pending -> approve -> render", () => {
       sourcePath,
       outputPath: join(projectDir, "business", "proposal.docx"),
       isAvailable: () => true,
+      isTemplateAvailable: () => true,
       render: async () => {
         renderCalled = true;
       },
@@ -102,6 +103,64 @@ describe("flujo write -> pending -> approve -> render", () => {
   });
 });
 
+describe("plantilla corporativa", () => {
+  test("puerta aprobada y Pandoc presente pero sin templates/reference.docx falla indicando la plantilla y no genera .docx", async () => {
+    const projectDir = await makeProjectDir();
+    await machine_write_artifact({ projectDir, gate: "proposal" });
+    await machine_approve({ projectDir, gate: "proposal" });
+
+    const outputPath = join(projectDir, "business", "proposal.docx");
+
+    await expect(
+      machine_render_docx({
+        projectDir,
+        gate: "proposal",
+        sourcePath: join(projectDir, "business", "proposal.md"),
+        outputPath,
+        isAvailable: () => true,
+        render: async () => {
+          throw new Error("render no deberia haberse invocado en este escenario");
+        },
+      }),
+    ).rejects.toThrow(/plantilla/i);
+
+    const exists = await Bun.file(outputPath).exists();
+    expect(exists).toBe(false);
+  });
+
+  test("defaultPandocRender invoca pandoc con --reference-doc=<plantilla>", async () => {
+    const cp = await import("node:child_process");
+    const spawnSyncSpy = spyOn(cp, "spawnSync").mockReturnValue({
+      status: 0,
+    } as ReturnType<typeof cp.spawnSync>);
+
+    const projectDir = await makeProjectDir();
+    await machine_write_artifact({ projectDir, gate: "proposal" });
+    await machine_approve({ projectDir, gate: "proposal" });
+
+    const outputPath = join(projectDir, "business", "proposal.docx");
+    const templatePath = join(projectDir, "templates", "reference.docx");
+
+    await machine_render_docx({
+      projectDir,
+      gate: "proposal",
+      sourcePath: join(projectDir, "business", "proposal.md"),
+      outputPath,
+      isAvailable: () => true,
+      templatePath,
+      isTemplateAvailable: () => true,
+    });
+
+    expect(spawnSyncSpy).toHaveBeenCalledWith(
+      "pandoc",
+      expect.arrayContaining([`--reference-doc=${templatePath}`]),
+      expect.anything(),
+    );
+
+    spawnSyncSpy.mockRestore();
+  });
+});
+
 describe("no recalculo aguas abajo", () => {
   test("machine_render_docx lee la aprobacion existente del estado sin volver a aprobarla ni recalcularla", async () => {
     const projectDir = await makeProjectDir();
@@ -116,6 +175,7 @@ describe("no recalculo aguas abajo", () => {
       sourcePath: join(projectDir, "business", "proposal.md"),
       outputPath: join(projectDir, "business", "proposal.docx"),
       isAvailable: () => true,
+      isTemplateAvailable: () => true,
       render: async () => {},
     });
 

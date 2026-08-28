@@ -109,6 +109,22 @@ Los tools se nombran `machine_*` (snake_case) para no colisionar con los built-i
 | E2E | pipeline business completo hasta rechazo por gate | `opencode run --auto`; el rechazo es el aserto clave |
 | Contrato | validación de todos los `machine.json` y del catálogo | En CI, con pnpm y con Bun |
 
+## Límite conocido de la garantía
+
+D4 y D6 garantizan que **el pipeline** no produce un entregable sin aprobación: los tools
+`machine_*` son la única ruta que el flujo de commands ofrece, y el agente `machine` deniega
+`bash` y `edit` para que no exista otra.
+
+Lo que NO garantizan: que un usuario, desde su propio agente primario con `bash: allow`,
+invoque Pandoc por su cuenta al margen del pipeline. Nada en la plataforma lo impide, y no es
+un hueco que un paquete pueda cerrar — el modelo de confianza de Opencode deja el shell en
+manos del agente que el usuario elige.
+
+La lectura correcta es que la puerta es una garantía **del producto**, no un control de
+seguridad frente a un usuario que decide saltárselo deliberadamente. Para el caso de uso real
+—evitar que una ejecución no interactiva emita un entregable sin revisión humana— es
+suficiente. No lo es para un modelo de amenaza con usuario hostil, y no se MUST presentar como tal.
+
 ## Migración
 
 No aplica: greenfield. El rollout es por fases 1→2→3; `machine-business` no se publica hasta que `machine-core` esté verde.

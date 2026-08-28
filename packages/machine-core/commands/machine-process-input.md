@@ -1,6 +1,6 @@
 ---
 description: Procesa los insumos pendientes de un proyecto (hash, ruta y estado).
-agent: build
+agent: machine
 ---
 
 Ejecuta el tool `machine_process_input` sobre el proyecto `$1`.

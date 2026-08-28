@@ -1,6 +1,6 @@
 ---
 description: Aprueba una puerta declarada del pipeline (<proyecto> <gate>).
-agent: build
+agent: machine
 ---
 
 Ejecuta el tool `machine_approve` con proyecto `$1` y puerta `$2`.
