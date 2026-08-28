@@ -32,7 +32,7 @@ Nota de versión: coexisten **Opencode v1 (estable)** y **Opencode 2.0 beta** co
 ### 1.1 Del repositorio
 El repo `opencode-market-place` está **vacío salvo documentación**:
 
-- `docs/inputs/the-ai-machine-presentacion.md` — único archivo (insumo de la presentación).
+- `docs/inputs/posted.md` — único archivo (insumo de la presentación). Privado, no versionado.
 - No hay `openspec/`, `package.json`, `opencode.json`, ni código previo.
 
 Es decir: proyecto greenfield. No hay que migrar código, hay que **portar un diseño** que hoy vive como plugins de Claude Code.

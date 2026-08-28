@@ -17,14 +17,14 @@ Opencode como marketplace de plugins/agentes.
 Principio rector del producto: *"la máquina no reemplaza el criterio; lo acelera. El humano aprueba
 en cada puerta."*
 
-Insumo primario: `docs/inputs/the-ai-machine-presentacion.md`.
+Insumo primario: `docs/inputs/posted.md`. **Privado y no versionado** — ver §6, "Material privado".
 
 ## 2. Estado actual del repositorio
 
 **Greenfield.** El repositorio contiene únicamente:
 
 ```
-docs/inputs/the-ai-machine-presentacion.md
+docs/inputs/posted.md          # privado, no versionado
 ```
 
 No existe: `package.json`, `opencode.json`, código fuente, tests, linters, CI, ni control de
@@ -131,7 +131,7 @@ instalador, o (c) híbrido. Esa decisión es materia de `sdd-explore`.
 ### 5.3 Preguntas abiertas para `sdd-explore`
 
 1. ¿Qué significa exactamente "marketplace" aquí: catálogo + instalador, o solo convención sobre npm?
-2. ~~¿Se portan los plugins existentes de Claude Code, o se reescriben desde cero?~~ **RESUELTA (2026-08-28): se reescriben desde cero.** El código original no está disponible. Única fuente funcional: `docs/inputs/the-ai-machine-presentacion.md`.
+2. ~~¿Se portan los plugins existentes de Claude Code, o se reescriben desde cero?~~ **RESUELTA (2026-08-28): se reescriben desde cero.** El código original no está disponible. Única fuente funcional: `docs/inputs/posted.md`.
 3. ¿Cómo se traduce una "puerta humana" (Aprobar · Refinar · Reiniciar) a las primitivas de Opencode
    (`hooks` de permissions, `subtask`, agentes)?
 4. ¿Dónde vive la plantilla corporativa `.docx` y cómo se versiona?
@@ -151,6 +151,15 @@ instalador, o (c) híbrido. Esa decisión es materia de `sdd-explore`.
 - Specs con `Given/When/Then` y palabras clave RFC 2119 (MUST, SHALL, SHOULD, MAY).
 - Todo lo no verificado se marca explícitamente como **SUPUESTO**; lo que falta del cliente, como
   `NEEDS INPUT` (coherente con el principio 4 del producto).
+
+### Material privado
+
+Todo archivo o directorio cuyo nombre empiece por `posted` es **material privado de este proyecto**
+y MUST NOT versionarse ni publicarse. Regla vigente en `.gitignore`: `posted*`.
+
+Este repositorio y el marketplace que produce son **públicos**. Los insumos de cliente no lo son.
+Antes de publicar cualquier paquete, ejemplo, plantilla, fixture de test o documentación, se MUST
+verificar que no reproduce contenido procedente de un archivo `posted*`.
 
 ### Persistencia SDD
 - Backend: **openspec** (archivos). No hay engram en este entorno.

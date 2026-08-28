@@ -13,7 +13,7 @@ todas son user-level de `~/.claude/skills/`). Se omiten `sdd-*`, `_shared` y `sk
 | CLAUDE.md (global de usuario) | `C:\Users\pendr\.claude\CLAUDE.md` | Orquestación de agentes, workflow SDD, política de "sin comentarios en código", trigger `/graphify` |
 | Contexto de proyecto SDD | `C:\1\Visual Code\opencode-market-place\openspec\project.md` | Contexto, stack propuesto y convenciones |
 | Config SDD | `C:\1\Visual Code\opencode-market-place\openspec\config.yaml` | Reglas por fase |
-| Insumo de producto | `C:\1\Visual Code\opencode-market-place\docs\inputs\the-ai-machine-presentacion.md` | Fuente única del dominio funcional |
+| Insumo de producto | `C:\1\Visual Code\opencode-market-place\docs\inputs\posted.md` | Fuente única del dominio funcional. **PRIVADO**: no versionado (`.gitignore: posted*`) |
 
 **No existen** `AGENTS.md`, `.cursorrules`, `GEMINI.md` ni `copilot-instructions.md` a nivel de proyecto.
 

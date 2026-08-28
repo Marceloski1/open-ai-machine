@@ -4,7 +4,7 @@
 
 Fase 0 del pipeline: convierte insumos de reunión en una propuesta de negocio aprobada y su entregable `proposal.docx`.
 
-> Origen: reescritura desde cero sobre `docs/inputs/the-ai-machine-presentacion.md`. No existe código original de referencia.
+> Origen: reescritura desde cero sobre `docs/inputs/posted.md` (insumo privado, no versionado). No existe código original de referencia.
 
 ## Requirements
 

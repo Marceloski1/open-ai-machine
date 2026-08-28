@@ -42,7 +42,7 @@ El código fuente de los plugins `machine-business` y `machine-discovery` de Cla
 
 Consecuencias que las specs MUST asumir:
 
-- La única fuente de verdad funcional es `docs/inputs/the-ai-machine-presentacion.md`, material de presentación, no de implementación.
+- La única fuente de verdad funcional es `docs/inputs/posted.md`, material de presentación, no de implementación. Es un **insumo privado no versionado**: quien implemente MUST disponer de él fuera del repositorio.
 - No existe paridad verificable con el original. El criterio de aceptación de las fases 3 y 4 es el **cumplimiento de la spec escrita**, no la equivalencia de comportamiento con los plugins de Claude Code.
 - Todo detalle no cubierto por la presentación —formato exacto de los artefactos intermedios, umbrales de la fórmula de estimación de 6 componentes, redacción de las 11 secciones del documento de proyecto— se MUST marcar `NEEDS INPUT` en la spec y resolver con el usuario antes de `sdd-apply`. No se MUST inventar.
 - Los siete principios transversales de `openspec/project.md` §4 son los invariantes que sustituyen al código original como contrato de diseño.
