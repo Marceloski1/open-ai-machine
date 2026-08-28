@@ -33,11 +33,14 @@ rules:
     - Sin comentarios en codigo salvo marcadores TODO()
     - Gestor de paquetes JS/TS: pnpm. Prohibido npm/yarn/bun para instalar o generar lockfiles
     - Gestor de paquetes Python: uv. Prohibido pip/poetry/conda y requirements.txt sueltos
-    tdd: false
-    test_command: ""
+    - TDD obligatorio en logica determinista (hash, estado, puertas, merge de config, checksum):
+      escribir el test primero, verlo fallar, implementar, refactorizar
+    - TDD no aplica a contenido declarativo (commands/agents/skills markdown, plantillas)
+    tdd: true
+    test_command: "pnpm test"
   verify:
-    test_command: ""
-    build_command: ""
+    test_command: "pnpm test"
+    build_command: "pnpm build"
     coverage_threshold: 0
   archive:
     - Advertir antes de fusionar deltas destructivos (eliminaciones grandes)
