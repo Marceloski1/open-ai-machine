@@ -22,7 +22,7 @@ La regla que ordena todo el diseño: **los commands markdown son prompts, no có
 | D3 | Estado en `docs/<proyecto>/.machine/state.json` | Sesión de Opencode (`--continue`) | Cada `opencode run` puede ser sesión nueva. El filesystem ya es el entregable |
 | D4 | Puerta = estado persistido verificado por tool | `permission: ask` sobre `edit`/`bash` | `opencode run --auto` auto-aprueba todo permiso no denegado; la puerta se saltaría |
 | D5 | Instalador hace **merge** de la clave `plugin` en `opencode.json` | Pedir edición manual al usuario | Los orígenes de config se mergean, no se reemplazan; el instalador debe preservar claves ajenas |
-| D6 | Agente de fase con `permission: { bash: deny }` | Confiar en que el modelo use el tool | Cierra el rodeo de D2: sin bash, el render sólo es alcanzable por el tool |
+| D6 | Agente con `permission: { bash: deny }` para **todo** command que invoque un tool protegido, incluidos los compartidos de `machine-core` | Confiar en que el modelo use el tool; usar el agente `build` por defecto | Cierra el rodeo de D2: sin bash, el render sólo es alcanzable por el tool. `build` trae bash permitido, así que apuntar ahí reabre el rodeo |
 | D7 | Skills publicadas también a `.claude/skills/` | Sólo `.opencode/skills/` | Opencode lee `.claude/skills/` sin cambios; el mismo paquete sirve a dos runtimes |
 | D8 | pnpm workspaces; uv si aparece Python | npm / bun install | Decisión del proyecto. Los paquetes publicados siguen siendo instalables por Bun, que es lo que usa Opencode en el consumidor |
 
@@ -74,6 +74,7 @@ flowchart LR
 | `packages/machine-core/src/{state,hash,approvals,deps}.ts` | Crear | Núcleo determinista |
 | `packages/machine-core/src/index.ts` | Crear | Plugin v1: expone los tools |
 | `packages/machine-core/commands/machine-{process-input,render-docx,approve}.md` | Crear | Comandos compartidos |
+| `packages/machine-core/agents/machine.md` | Crear | `mode: subagent`, `bash: deny`; los commands compartidos MUST apuntar aquí, no a `build` |
 | `packages/machine-core/templates/` | Crear | Plantilla DOCX (**NEEDS INPUT**) |
 | `packages/machine-business/src/{init,proposal,index}.ts` | Crear | Lógica de fase 0; consume los tools de `machine-core`, no los reimplementa |
 | `packages/machine-business/commands/machine-business-{init,proposal}.md` | Crear | Fase 0 |

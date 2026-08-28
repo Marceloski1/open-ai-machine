@@ -119,48 +119,59 @@ Comandos: `pnpm test` para tests, `pnpm build` para build. Nunca npm, yarn ni bu
 
 ### 2.1 Infraestructura
 
-- [ ] 2.1.1 Crear `packages/machine-core/package.json` y `packages/machine-core/machine.json` (manifiesto: comandos `machine-process-input`, `machine-render-docx`, `machine-approve`, target `plugin`).
-- [ ] 2.1.2 Crear `packages/machine-core/src/types.ts` con `Gate`, `MachineState`, `InputRecord` (path, sha256, processedAt, route, outputPath) según contratos del design.
-- [ ] 2.1.3 Configurar script `test` en `packages/machine-core/package.json` invocable vía `pnpm test` (raíz del monorepo).
+- [x] 2.1.1 Crear `packages/machine-core/package.json` y `packages/machine-core/machine.json` (manifiesto: comandos `machine-process-input`, `machine-render-docx`, `machine-approve`, target `plugin`).
+- [x] 2.1.2 Crear `packages/machine-core/src/types.ts` con `Gate`, `MachineState`, `InputRecord` (path, sha256, processedAt, route, outputPath) según contratos del design.
+- [x] 2.1.3 Configurar script `test` en `packages/machine-core/package.json` invocable vía `pnpm test` (raíz del monorepo).
 
 ### 2.2 Estado persistente y hash (RED → GREEN)
 
-- [ ] 2.2.1 (RED) Escribir test en `packages/machine-core/src/state.test.ts`: sin `state.json` previo, `readState`/`ensureState` crea `docs/<proyecto>/.machine/state.json` con `inputs: []`, `approvals: {}`, `phase`. Verlo fallar.
-- [ ] 2.2.2 (GREEN) Implementar `readState`/`ensureState`/`writeState` en `packages/machine-core/src/state.ts`.
-- [ ] 2.2.3 (RED) Test: `state.json` con JSON inválido → `readState` lanza error accionable y MUST NOT escribir el archivo (comparar mtime/contenido antes/después).
-- [ ] 2.2.4 (GREEN) Implementar manejo de parseo corrupto en `state.ts` sin sobrescritura.
-- [ ] 2.2.5 (RED) Test en `packages/machine-core/src/hash.test.ts`: mismo `sha256` ya en `inputs[]` → insumo se omite, `outputPath` no se modifica.
-- [ ] 2.2.6 (RED) Test: contenido de insumo cambia → hash difiere, se reprocesa, `sha256`/`processedAt` se actualizan.
-- [ ] 2.2.7 (GREEN) Implementar `computeSha256` e `isProcessed`/`upsertInput` en `packages/machine-core/src/hash.ts`, consumidos desde `state.ts`.
-- [ ] 2.2.8 (RED) Test: insumo de audio sin transcripción ni proveedor configurado → registro marcado `NEEDS INPUT`, sin contenido inventado.
-- [ ] 2.2.9 (GREEN) Implementar la rama de audio sin transcripción en el tool `machine_process_input` (`packages/machine-core/src/index.ts`).
+- [x] 2.2.1 (RED) Escribir test en `packages/machine-core/src/state.test.ts`: sin `state.json` previo, `readState`/`ensureState` crea `docs/<proyecto>/.machine/state.json` con `inputs: []`, `approvals: {}`, `phase`. Verlo fallar.
+- [x] 2.2.2 (GREEN) Implementar `readState`/`ensureState`/`writeState` en `packages/machine-core/src/state.ts`.
+- [x] 2.2.3 (RED) Test: `state.json` con JSON inválido → `readState` lanza error accionable y MUST NOT escribir el archivo (comparar mtime/contenido antes/después).
+- [x] 2.2.4 (GREEN) Implementar manejo de parseo corrupto en `state.ts` sin sobrescritura.
+- [x] 2.2.5 (RED) Test en `packages/machine-core/src/hash.test.ts`: mismo `sha256` ya en `inputs[]` → insumo se omite, `outputPath` no se modifica.
+- [x] 2.2.6 (RED) Test: contenido de insumo cambia → hash difiere, se reprocesa, `sha256`/`processedAt` se actualizan.
+- [x] 2.2.7 (GREEN) Implementar `computeSha256` e `isProcessed`/`upsertInput` en `packages/machine-core/src/hash.ts`, consumidos desde `state.ts`.
+- [x] 2.2.8 (RED) Test: insumo de audio sin transcripción ni proveedor configurado → registro marcado `NEEDS INPUT`, sin contenido inventado.
+- [x] 2.2.9 (GREEN) Implementar la rama de audio sin transcripción en el tool `machine_process_input` (`packages/machine-core/src/index.ts`).
 
 ### 2.3 Puertas de aprobación (RED → GREEN)
 
-- [ ] 2.3.1 (RED) Test en `packages/machine-core/src/approvals.test.ts`: `approvals.proposal = "pending"` → operación protegida (p.ej. render) se rechaza indicando la puerta pendiente, sin generar artefacto.
-- [ ] 2.3.2 (RED) Test: mismo rechazo simulando `opencode run --auto` (sin bypass por flag de entorno/contexto).
-- [ ] 2.3.3 (GREEN) Implementar `assertGateApproved(state, gate)` en `packages/machine-core/src/approvals.ts`, invocado por toda operación protegida.
-- [ ] 2.3.4 (RED) Test: `machine-approve <proyecto> <gate>` sobre puerta `pending` declarada → pasa a `approved` con `at` (timestamp).
-- [ ] 2.3.5 (RED) Test: `machine-approve` sobre puerta no declarada por ningún paquete instalado → falla, estado sin modificar.
-- [ ] 2.3.6 (GREEN) Implementar `approveGate` en `approvals.ts` y el tool `machine_approve` en `index.ts`.
-- [ ] 2.3.7 (RED) Test: `approvals.requirements = "approved"` con aprobaciones aguas abajo generadas → al regenerar el artefacto de requirements, las dependientes vuelven a `pending`.
-- [ ] 2.3.8 (GREEN) Implementar invalidación aguas abajo vía `dependsOn` en `approvals.ts` (recorrer y resetear gates dependientes).
-- [ ] 2.3.9 (RED) Test: comando posterior que consume una estimación ya aprobada la lee del estado sin recalcularla (mock del cálculo no invocado).
-- [ ] 2.3.10 (GREEN) Implementar lectura directa desde `state.approvals`/`inputs` en los tools consumidores, sin recómputo.
+- [x] 2.3.1 (RED) Test en `packages/machine-core/src/approvals.test.ts`: `approvals.proposal = "pending"` → operación protegida (p.ej. render) se rechaza indicando la puerta pendiente, sin generar artefacto.
+- [x] 2.3.2 (RED) Test: mismo rechazo simulando `opencode run --auto` (sin bypass por flag de entorno/contexto).
+- [x] 2.3.3 (GREEN) Implementar `assertGateApproved(state, gate)` en `packages/machine-core/src/approvals.ts`, invocado por toda operación protegida.
+- [x] 2.3.4 (RED) Test: `machine-approve <proyecto> <gate>` sobre puerta `pending` declarada → pasa a `approved` con `at` (timestamp).
+- [x] 2.3.5 (RED) Test: `machine-approve` sobre puerta no declarada por ningún paquete instalado → falla, estado sin modificar.
+- [x] 2.3.6 (GREEN) Implementar `approveGate` en `approvals.ts` y el tool `machine_approve` en `index.ts`.
+- [x] 2.3.7 (RED) Test: `approvals.requirements = "approved"` con aprobaciones aguas abajo generadas → al regenerar el artefacto de requirements, las dependientes vuelven a `pending`.
+- [x] 2.3.8 (GREEN) Implementar invalidación aguas abajo vía `dependsOn` en `approvals.ts` (recorrer y resetear gates dependientes).
+- [x] 2.3.9 (RED) Test: comando posterior que consume una estimación ya aprobada la lee del estado sin recalcularla (mock del cálculo no invocado).
+- [x] 2.3.10 (GREEN) Implementar lectura directa desde `state.approvals`/`inputs` en los tools consumidores, sin recómputo.
 
 ### 2.4 Dependencias externas y plugin (RED → GREEN)
 
-- [ ] 2.4.1 (RED) Test en `packages/machine-core/src/deps.test.ts`: Pandoc ausente (mock de `which`/spawn) → `machine-render-docx` falla con instrucción de instalación, sin `.docx` generado.
-- [ ] 2.4.2 (GREEN) Implementar `checkExternalBinary` en `packages/machine-core/src/deps.ts` y su uso en el tool `machine_render_docx`.
-- [ ] 2.4.3 Implementar `packages/machine-core/src/index.ts`: plugin v1 que exporta `tool: { machine_process_input, machine_approve, machine_render_docx, machine_write_artifact, machine_check_deps }`, todos `machine_*` snake_case.
-- [ ] 2.4.4 Test de integración `packages/machine-core/src/index.test.ts`: flujo write→pending→approve→render con directorio temporal como `docs/<proyecto>`.
+- [x] 2.4.1 (RED) Test en `packages/machine-core/src/deps.test.ts`: Pandoc ausente (mock de `which`/spawn) → `machine-render-docx` falla con instrucción de instalación, sin `.docx` generado.
+- [x] 2.4.2 (GREEN) Implementar `checkExternalBinary` en `packages/machine-core/src/deps.ts` y su uso en el tool `machine_render_docx`.
+- [x] 2.4.3 Implementar `packages/machine-core/src/index.ts`: plugin v1 que exporta `tool: { machine_process_input, machine_approve, machine_render_docx, machine_write_artifact, machine_check_deps }`, todos `machine_*` snake_case.
+- [x] 2.4.4 Test de integración `packages/machine-core/src/index.test.ts`: flujo write→pending→approve→render con directorio temporal como `docs/<proyecto>`.
 
 ### 2.5 Comandos compartidos (declarativo, sin TDD)
 
-- [ ] 2.5.1 Crear `packages/machine-core/commands/machine-process-input.md` invocando `machine_process_input`.
-- [ ] 2.5.2 Crear `packages/machine-core/commands/machine-render-docx.md` invocando `machine_render_docx`.
-- [ ] 2.5.3 Crear `packages/machine-core/commands/machine-approve.md` invocando `machine_approve`.
-- [ ] 2.5.4 Crear `packages/machine-core/templates/README.md` documentando la plantilla DOCX pendiente (**NEEDS INPUT**: archivo `.docx` corporativo no disponible; no crear plantilla inventada).
+- [x] 2.5.1 Crear `packages/machine-core/commands/machine-process-input.md` invocando `machine_process_input`.
+- [x] 2.5.2 Crear `packages/machine-core/commands/machine-render-docx.md` invocando `machine_render_docx`.
+- [x] 2.5.3 Crear `packages/machine-core/commands/machine-approve.md` invocando `machine_approve`.
+- [x] 2.5.4 Crear `packages/machine-core/templates/README.md` documentando la plantilla DOCX pendiente (**NEEDS INPUT**: archivo `.docx` corporativo no disponible; no crear plantilla inventada).
+
+### 2.6 Correcciones detectadas en verificación
+
+Huecos hallados al verificar 2.1–2.5. No son fallos de ejecución: las tareas originales no
+los cubrían porque el design no los listaba.
+
+- [ ] 2.6.1 (RED) Test: con la puerta aprobada y Pandoc presente pero SIN `templates/reference.docx`, `machine_render_docx` falla indicando que falta la plantilla y no genera `.docx`
+- [ ] 2.6.2 (GREEN) Verificar la plantilla en `machine_render_docx` antes de renderizar (`packages/machine-core/src/index.ts`)
+- [ ] 2.6.3 (RED) Test: `defaultPandocRender` invoca pandoc con `--reference-doc=<plantilla>`
+- [ ] 2.6.4 (GREEN) Pasar `--reference-doc` en `defaultPandocRender`; la ruta resuelta MUST coincidir con la documentada en `templates/README.md`
+- [ ] 2.6.5 Crear `packages/machine-core/agents/machine.md` (`mode: subagent`, `permission: { bash: deny }`) y apuntar los tres commands de 2.5 a ese agente en lugar de `build`, cerrando el rodeo de D6
 
 ---
 

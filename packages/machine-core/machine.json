@@ -1,0 +1,16 @@
+{
+  "id": "machine-core",
+  "version": "0.1.0",
+  "target": "plugin",
+  "commands": [
+    "machine-process-input",
+    "machine-render-docx",
+    "machine-approve"
+  ],
+  "agents": [],
+  "skills": [],
+  "templates": [],
+  "dependencies": [],
+  "externalRequirements": ["pandoc"],
+  "permissions": {}
+}
