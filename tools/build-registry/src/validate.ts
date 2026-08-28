@@ -5,6 +5,7 @@ const COMMAND_PATTERN = /^machine-[a-z0-9-]+$/;
 const REQUIRED_FIELDS = [
   "id",
   "version",
+  "description",
   "commands",
   "agents",
   "skills",
@@ -48,6 +49,12 @@ export function validateManifest(manifest: unknown): ValidationResult {
     errors.push("version: debe ser un string");
   } else if (!SEMVER_PATTERN.test(manifest.version)) {
     errors.push(`version: "${manifest.version}" no es SemVer valido`);
+  }
+
+  if ("description" in manifest) {
+    if (typeof manifest.description !== "string" || manifest.description.trim().length === 0) {
+      errors.push("description: debe ser un string no vacio");
+    }
   }
 
   for (const field of ARRAY_OF_STRING_FIELDS) {

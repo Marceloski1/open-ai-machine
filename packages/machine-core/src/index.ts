@@ -1,5 +1,6 @@
 import { existsSync, readdirSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
+import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 import { approveGate, assertGateApproved, setGatePending } from "./approvals";
 import { checkExternalBinary, defaultIsAvailable, type BinaryChecker } from "./deps";
@@ -85,6 +86,13 @@ export function machine_check_deps(args: CheckDepsArgs): void {
 
 export type TemplateChecker = (templatePath: string) => boolean;
 
+export type TemplateSource = "override" | "project" | "user" | "package";
+
+export type TemplateResolution = {
+  templatePath: string;
+  source: TemplateSource;
+};
+
 export type RenderDocxArgs = {
   projectDir: string;
   gate: string;
@@ -93,11 +101,16 @@ export type RenderDocxArgs = {
   isAvailable?: BinaryChecker;
   templatePath?: string;
   isTemplateAvailable?: TemplateChecker;
+  projectTemplatePath?: string;
+  userTemplatePath?: string;
+  packageTemplatePath?: string;
   render?: (sourcePath: string, outputPath: string, templatePath: string) => Promise<void>;
 };
 
 export type RenderDocxResult = {
   outputPath: string;
+  templatePath: string;
+  templateSource: TemplateSource;
 };
 
 const PANDOC_INSTALL_INSTRUCTIONS =
@@ -109,6 +122,42 @@ export function defaultTemplatePath(): string {
 
 export function defaultTemplateExists(templatePath: string): boolean {
   return existsSync(templatePath);
+}
+
+export function defaultProjectTemplatePath(projectDir: string): string {
+  return join(projectDir, ".machine", "template.docx");
+}
+
+export function defaultUserTemplatePath(home: string = homedir()): string {
+  return join(home, ".config", "opencode", "templates", "reference.docx");
+}
+
+export function resolveTemplate(args: {
+  projectDir: string;
+  templatePath?: string;
+  templateExists?: TemplateChecker;
+  projectTemplatePath?: string;
+  userTemplatePath?: string;
+  packageTemplatePath?: string;
+}): TemplateResolution {
+  const exists = args.templateExists ?? defaultTemplateExists;
+
+  if (args.templatePath) {
+    return { templatePath: args.templatePath, source: "override" };
+  }
+
+  const projectTemplatePath = args.projectTemplatePath ?? defaultProjectTemplatePath(args.projectDir);
+  if (exists(projectTemplatePath)) {
+    return { templatePath: projectTemplatePath, source: "project" };
+  }
+
+  const userTemplatePath = args.userTemplatePath ?? defaultUserTemplatePath();
+  if (exists(userTemplatePath)) {
+    return { templatePath: userTemplatePath, source: "user" };
+  }
+
+  const packageTemplatePath = args.packageTemplatePath ?? defaultTemplatePath();
+  return { templatePath: packageTemplatePath, source: "package" };
 }
 
 function repoRoot(): string {
@@ -178,19 +227,27 @@ export async function machine_render_docx(args: RenderDocxArgs): Promise<RenderD
     args.isAvailable ?? defaultPandocIsAvailable,
   );
 
-  const templatePath = args.templatePath ?? defaultTemplatePath();
   const templateExists = args.isTemplateAvailable ?? defaultTemplateExists;
-  if (!templateExists(templatePath)) {
+  const resolution = resolveTemplate({
+    projectDir: args.projectDir,
+    templatePath: args.templatePath,
+    templateExists,
+    projectTemplatePath: args.projectTemplatePath,
+    userTemplatePath: args.userTemplatePath,
+    packageTemplatePath: args.packageTemplatePath,
+  });
+
+  if (!templateExists(resolution.templatePath)) {
     throw new Error(
-      `Plantilla corporativa faltante: "${templatePath}". Coloca el .docx corporativo en esa ruta antes de renderizar (ver packages/machine-core/templates/README.md). No se entrega un .docx sin estilos corporativos.`,
+      `Plantilla corporativa faltante: "${resolution.templatePath}". Coloca el .docx corporativo en esa ruta antes de renderizar (ver packages/machine-core/templates/README.md). No se entrega un .docx sin estilos corporativos.`,
     );
   }
 
   await mkdir(dirname(args.outputPath), { recursive: true });
   const render = args.render ?? defaultPandocRender;
-  await render(args.sourcePath, args.outputPath, templatePath);
+  await render(args.sourcePath, args.outputPath, resolution.templatePath);
 
-  return { outputPath: args.outputPath };
+  return { outputPath: args.outputPath, templatePath: resolution.templatePath, templateSource: resolution.source };
 }
 
 export default async function machineCorePlugin() {

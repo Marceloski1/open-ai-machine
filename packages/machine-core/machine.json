@@ -2,6 +2,7 @@
   "id": "machine-core",
   "version": "0.1.0",
   "target": "plugin",
+  "description": "Nucleo determinista del pipeline: estado por proyecto en docs/<proyecto>/.machine/state.json, idempotencia por hash sha256 de cada insumo, puertas de aprobacion humanas (approvals.<gate>) y renderizado de artefactos Markdown aprobados a .docx via Pandoc. Aloja los comandos compartidos (machine-process-input, machine-approve, machine-render-docx) que usan las demas fases del pipeline.",
   "commands": [
     "machine-process-input",
     "machine-render-docx",

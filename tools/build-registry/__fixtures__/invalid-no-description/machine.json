@@ -1,9 +1,8 @@
 {
-  "id": "machine-collision-b",
+  "id": "machine-epsilon",
   "version": "0.1.0",
   "target": "plugin",
-  "description": "Paquete collision-b de prueba",
-  "commands": ["machine-render-docx"],
+  "commands": ["machine-epsilon-run"],
   "agents": [],
   "skills": [],
   "templates": [],

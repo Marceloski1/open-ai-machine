@@ -1,11 +1,41 @@
 # Plantillas de `machine-core`
 
+## Cómo poner tu propia marca (sin tocar este paquete)
+
+`machine_render_docx` no usa siempre `reference.docx`: resuelve la plantilla `.docx` en
+**cascada**, quedándose con la primera que exista, en este orden de prioridad:
+
+1. **`templatePath` explícito** — el argumento que ya recibe el tool, si se lo pasas.
+2. **Plantilla del proyecto** — `docs/<proyecto>/.machine/template.docx`. Vive junto al resto
+   del estado del proyecto (`state.json`), coherente con que el filesystem del proyecto es el
+   estado. Úsala para dar marca a un proyecto puntual sin afectar a los demás.
+3. **Plantilla del usuario** — `~/.config/opencode/templates/reference.docx`. Es la misma raíz
+   donde vive la config global de Opencode (`~/.config/opencode/opencode.json`, ver
+   `cli/src/paths.ts`), así que quien instala paquetes en modo `global` ya conoce esa carpeta.
+   Coloca ahí tu `.docx` de marca una sola vez y se aplica a todos tus proyectos, sin repetir el
+   archivo en cada uno.
+4. **Plantilla base del paquete** — `packages/machine-core/templates/reference.docx`, la neutra
+   descrita abajo. Es el último recurso: si no configuraste ninguna plantilla propia, tus
+   documentos salen con este formato genérico.
+
+**Ninguna sustitución de archivo dentro de `node_modules`/el paquete instalado es necesaria ni
+recomendada** — eso se pierde en cada actualización. Coloca tu `.docx` en la ruta de proyecto o
+de usuario de arriba y listo.
+
+### Cómo saber qué plantilla se usó
+
+`machine_render_docx` MUST informar qué plantilla aplicó: el resultado que devuelve incluye
+`templatePath` (la ruta efectivamente usada) y `templateSource` (`"override" | "project" | "user"
+| "package"`). Revisa ese campo antes de dar por hecho que un documento salió con tu marca — si
+`templateSource` es `"package"`, salió con la plantilla neutra, no con la tuya.
+
 ## `reference.docx` — plantilla base neutra, NO identidad corporativa
 
 `packages/machine-core/templates/reference.docx` existe en este repositorio y es usada por
 `machine_render_docx` (`packages/machine-core/src/index.ts`, `defaultTemplatePath()` /
 `defaultPandocRender()`) como `pandoc --reference-doc=<plantilla>` para dar formato a los
-`.docx` generados a partir de Markdown.
+`.docx` generados a partir de Markdown, **únicamente cuando ninguna plantilla de proyecto ni de
+usuario está presente** (ver cascada arriba).
 
 **Este archivo es una plantilla base neutra generada por este repositorio.** Define una
 jerarquia tipografica sobria (grises y azul oscuro), pensada para una propuesta de negocio
@@ -91,12 +121,14 @@ binario vive dentro de `site-packages` y se invoca por su ruta completa, tal com
 
 (en POSIX, la ruta equivalente es `.venv/lib/python<version>/site-packages/pypandoc/files/pandoc`).
 
-### Impacto mientras la plantilla corporativa real no se provea
+### Impacto mientras no se configure una plantilla propia (proyecto o usuario)
 
-- `machine_render_docx` **funciona end-to-end**, pero produce documentos con el formato neutro
-  de este repositorio, no con la identidad de marca del cliente.
+- `machine_render_docx` **funciona end-to-end**, pero si nadie coloca una plantilla de proyecto
+  o de usuario (ver cascada arriba), produce documentos con el formato neutro de este
+  repositorio, no con la identidad de marca de quien usa el marketplace.
 - La validacion contra Pandoc real ya se realizo (ver seccion anterior); el contrato de fallo
   explicito ante plantilla ausente (`packages/machine-core/src/index.ts`) ya no aplica porque el
   archivo existe.
 - Ningun tool debe presentar el resultado de este template neutro como si fuera la identidad
-  corporativa real.
+  corporativa real. El campo `templateSource` del resultado de `machine_render_docx` es la forma
+  programatica de distinguirlo.

@@ -47,4 +47,13 @@ describe("validateManifest", () => {
     expect(result.valid).toBe(false);
     expect(result.errors.some((error) => error.includes("commands"))).toBe(true);
   });
+
+  test("manifiesto sin description falla e indica el campo infractor", async () => {
+    const manifest = await readManifest("invalid-no-description");
+
+    const result = validateManifest(manifest);
+
+    expect(result.valid).toBe(false);
+    expect(result.errors.some((error) => error.includes("description"))).toBe(true);
+  });
 });

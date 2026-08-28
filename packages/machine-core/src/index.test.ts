@@ -5,6 +5,9 @@ import { join } from "node:path";
 import * as approvalsModule from "./approvals";
 import { readState } from "./state";
 import {
+  defaultProjectTemplatePath,
+  defaultTemplatePath,
+  defaultUserTemplatePath,
   machine_approve,
   machine_process_input,
   machine_render_docx,
@@ -160,6 +163,147 @@ describe("plantilla corporativa", () => {
     );
 
     spawnSyncSpy.mockRestore();
+  });
+});
+
+describe("resolucion en cascada de la plantilla", () => {
+  test("plantilla de proyecto gana a la plantilla de usuario", async () => {
+    const projectDir = await makeProjectDir();
+    await machine_write_artifact({ projectDir, gate: "proposal" });
+    await machine_approve({ projectDir, gate: "proposal" });
+
+    const projectTemplatePath = defaultProjectTemplatePath(projectDir);
+    await mkdir(join(projectDir, ".machine"), { recursive: true });
+    await writeFile(projectTemplatePath, "project-template-bytes");
+
+    const userDir = await mkdtemp(join(tmpdir(), "machine-core-user-"));
+    const userTemplatePath = join(userDir, "reference.docx");
+    await writeFile(userTemplatePath, "user-template-bytes");
+
+    const outputPath = join(projectDir, "business", "proposal.docx");
+    const result = await machine_render_docx({
+      projectDir,
+      gate: "proposal",
+      sourcePath: join(projectDir, "business", "proposal.md"),
+      outputPath,
+      isAvailable: () => true,
+      userTemplatePath,
+      render: async () => {},
+    });
+
+    expect(result.templatePath).toBe(projectTemplatePath);
+    expect(result.templateSource).toBe("project");
+  });
+
+  test("plantilla de usuario gana a la plantilla base del paquete", async () => {
+    const projectDir = await makeProjectDir();
+    await machine_write_artifact({ projectDir, gate: "proposal" });
+    await machine_approve({ projectDir, gate: "proposal" });
+
+    const userDir = await mkdtemp(join(tmpdir(), "machine-core-user-"));
+    const userTemplatePath = join(userDir, "reference.docx");
+    await writeFile(userTemplatePath, "user-template-bytes");
+
+    const outputPath = join(projectDir, "business", "proposal.docx");
+    const result = await machine_render_docx({
+      projectDir,
+      gate: "proposal",
+      sourcePath: join(projectDir, "business", "proposal.md"),
+      outputPath,
+      isAvailable: () => true,
+      userTemplatePath,
+      render: async () => {},
+    });
+
+    expect(result.templatePath).toBe(userTemplatePath);
+    expect(result.templateSource).toBe("user");
+  });
+
+  test("sin plantilla de proyecto ni de usuario cae a la plantilla base del paquete", async () => {
+    const projectDir = await makeProjectDir();
+    await machine_write_artifact({ projectDir, gate: "proposal" });
+    await machine_approve({ projectDir, gate: "proposal" });
+
+    const userDir = await mkdtemp(join(tmpdir(), "machine-core-user-"));
+    const userTemplatePath = join(userDir, "reference.docx");
+
+    const outputPath = join(projectDir, "business", "proposal.docx");
+    const result = await machine_render_docx({
+      projectDir,
+      gate: "proposal",
+      sourcePath: join(projectDir, "business", "proposal.md"),
+      outputPath,
+      isAvailable: () => true,
+      userTemplatePath,
+      render: async () => {},
+    });
+
+    expect(result.templatePath).toBe(defaultTemplatePath());
+    expect(result.templateSource).toBe("package");
+  });
+
+  test("ninguna plantilla existe en ninguna ubicacion falla indicando la ruta consultada", async () => {
+    const projectDir = await makeProjectDir();
+    await machine_write_artifact({ projectDir, gate: "proposal" });
+    await machine_approve({ projectDir, gate: "proposal" });
+
+    const userDir = await mkdtemp(join(tmpdir(), "machine-core-user-"));
+    const userTemplatePath = join(userDir, "reference.docx");
+    const packageTemplatePath = join(userDir, "no-existe-tampoco.docx");
+
+    const outputPath = join(projectDir, "business", "proposal.docx");
+
+    await expect(
+      machine_render_docx({
+        projectDir,
+        gate: "proposal",
+        sourcePath: join(projectDir, "business", "proposal.md"),
+        outputPath,
+        isAvailable: () => true,
+        userTemplatePath,
+        packageTemplatePath,
+        render: async () => {
+          throw new Error("render no deberia haberse invocado en este escenario");
+        },
+      }),
+    ).rejects.toThrow(new RegExp(packageTemplatePath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+
+    const exists = await Bun.file(outputPath).exists();
+    expect(exists).toBe(false);
+  });
+
+  test("templatePath explicito gana incluso si existe una plantilla de proyecto", async () => {
+    const projectDir = await makeProjectDir();
+    await machine_write_artifact({ projectDir, gate: "proposal" });
+    await machine_approve({ projectDir, gate: "proposal" });
+
+    const projectTemplatePath = defaultProjectTemplatePath(projectDir);
+    await mkdir(join(projectDir, ".machine"), { recursive: true });
+    await writeFile(projectTemplatePath, "project-template-bytes");
+
+    const overridePath = join(projectDir, "custom-template.docx");
+    await writeFile(overridePath, "override-template-bytes");
+
+    const outputPath = join(projectDir, "business", "proposal.docx");
+    const result = await machine_render_docx({
+      projectDir,
+      gate: "proposal",
+      sourcePath: join(projectDir, "business", "proposal.md"),
+      outputPath,
+      isAvailable: () => true,
+      templatePath: overridePath,
+      render: async () => {},
+    });
+
+    expect(result.templatePath).toBe(overridePath);
+    expect(result.templateSource).toBe("override");
+  });
+
+  test("defaultUserTemplatePath usa ~/.config/opencode/templates/reference.docx", () => {
+    const home = join("C:", "Users", "alguien");
+    expect(defaultUserTemplatePath(home)).toBe(
+      join(home, ".config", "opencode", "templates", "reference.docx"),
+    );
   });
 });
 

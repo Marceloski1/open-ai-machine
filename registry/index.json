@@ -3,7 +3,7 @@
     {
       "id": "machine-business",
       "version": "0.1.0",
-      "description": "",
+      "description": "Fase 0 del pipeline: convierte insumos de una reunion en una propuesta de negocio aprobada. machine-business-init crea la estructura estandar del proyecto y machine-business-proposal sintetiza mercado, problema, solucion y estimacion en business/proposal.md a partir de los insumos clasificados como route business, marcando como NEEDS INPUT lo que no tenga respaldo. Depende de machine-core para el estado, el hash de insumos y las puertas de aprobacion.",
       "commands": [
         "machine-business-init",
         "machine-business-proposal"
@@ -14,14 +14,14 @@
       "skills": [],
       "templates": [],
       "compatibility": "opencode-v1",
-      "checksum": "45b372334b6ea2742efc7efe7a433175dd9f5c8188178d661cfe812f487ae5cd",
+      "checksum": "d88b76b95f76529a4fce25cf79244cb333f01dee7a5c44ccdd7b10e77e067493",
       "permissions": {},
       "externalRequirements": []
     },
     {
       "id": "machine-core",
       "version": "0.1.0",
-      "description": "",
+      "description": "Nucleo determinista del pipeline: estado por proyecto en docs/<proyecto>/.machine/state.json, idempotencia por hash sha256 de cada insumo, puertas de aprobacion humanas (approvals.<gate>) y renderizado de artefactos Markdown aprobados a .docx via Pandoc. Aloja los comandos compartidos (machine-process-input, machine-approve, machine-render-docx) que usan las demas fases del pipeline.",
       "commands": [
         "machine-process-input",
         "machine-render-docx",
@@ -33,7 +33,7 @@
       "skills": [],
       "templates": [],
       "compatibility": "opencode-v1",
-      "checksum": "bc773296f23a6eab327b574931aa4b3b84ab37a5ca77faf972836889faacb890",
+      "checksum": "52e22544d2d481a883e58efe677a8efb118287859be11efb1d33a4c0180b81ee",
       "permissions": {},
       "externalRequirements": [
         "pandoc"

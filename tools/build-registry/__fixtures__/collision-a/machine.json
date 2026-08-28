@@ -2,6 +2,7 @@
   "id": "machine-collision-a",
   "version": "0.1.0",
   "target": "plugin",
+  "description": "Paquete collision-a de prueba",
   "commands": ["machine-render-docx"],
   "agents": [],
   "skills": [],

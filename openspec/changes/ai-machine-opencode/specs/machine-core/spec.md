@@ -102,6 +102,44 @@ Antes de ejecutar una operación que dependa de un binario externo, `machine-cor
 - THEN falla indicando cómo instalar Pandoc
 - AND MUST NOT entregarse un Markdown renombrado como `.docx`
 
+### Requirement: Resolución en cascada de la plantilla DOCX
+
+`machine_render_docx` MUST resolver la plantilla `.docx` en este orden de prioridad, quedándose con la primera que exista: (1) el `templatePath` recibido explícitamente por argumento, (2) una plantilla de proyecto en `docs/<proyecto>/.machine/template.docx`, (3) una plantilla de usuario en `~/.config/opencode/templates/reference.docx`, y (4) la plantilla base neutra empaquetada en `packages/machine-core/templates/reference.docx`. El resultado MUST informar qué ruta de plantilla y qué origen (`override`, `project`, `user`, `package`) se usó, de modo que nadie entregue un documento creyendo que lleva su marca cuando en realidad se generó con la plantilla neutra. Si ninguna plantilla existe en ninguna de las ubicaciones, el fallo MUST seguir siendo explícito, indicando la ruta consultada, y MUST NOT generarse ningún `.docx`.
+
+#### Scenario: Plantilla de proyecto gana a la plantilla de usuario
+
+- GIVEN una plantilla de proyecto en `docs/<proyecto>/.machine/template.docx` y una plantilla de usuario en `~/.config/opencode/templates/reference.docx`, ambas presentes, sin `templatePath` explícito
+- WHEN se ejecuta `machine_render_docx`
+- THEN se usa la plantilla de proyecto
+- AND el resultado indica origen `project`
+
+#### Scenario: Plantilla de usuario gana a la plantilla base del paquete
+
+- GIVEN no existe plantilla de proyecto, existe plantilla de usuario, y sin `templatePath` explícito
+- WHEN se ejecuta `machine_render_docx`
+- THEN se usa la plantilla de usuario
+- AND el resultado indica origen `user`
+
+#### Scenario: Ninguna plantilla propia presente cae a la base del paquete
+
+- GIVEN no existe plantilla de proyecto ni de usuario, y sin `templatePath` explícito
+- WHEN se ejecuta `machine_render_docx`
+- THEN se usa la plantilla base neutra empaquetada en el paquete
+- AND el resultado indica origen `package`
+
+#### Scenario: Ninguna plantilla existe en ninguna ubicación
+
+- GIVEN no existe plantilla de proyecto, de usuario, ni la plantilla base del paquete
+- WHEN se ejecuta `machine_render_docx`
+- THEN falla indicando la ruta de plantilla consultada
+- AND MUST NOT generarse ningún `.docx`
+
+#### Scenario: El resultado siempre informa qué plantilla se usó
+
+- GIVEN cualquier renderizado exitoso, sin importar de qué nivel de la cascada provino la plantilla
+- WHEN `machine_render_docx` termina
+- THEN el resultado incluye la ruta de la plantilla efectivamente usada y su origen en la cascada
+
 ### Requirement: No recálculo aguas abajo
 
 Un comando MUST consumir los valores ya aprobados aguas arriba y MUST NOT recalcularlos.
