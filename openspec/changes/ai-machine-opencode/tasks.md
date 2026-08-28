@@ -179,35 +179,35 @@ los cubrían porque el design no los listaba.
 
 ### 3.1 Infraestructura
 
-- [ ] 3.1.1 Crear `packages/machine-business/machine.json` (id, version, commands, agent, `dependsOn: machine-core`)
-- [ ] 3.1.2 Crear esqueleto: `packages/machine-business/{src,commands,agents}/` y entrada de workspace en `pnpm-workspace.yaml`
+- [x] 3.1.1 Crear `packages/machine-business/machine.json` (id, version, commands, agent, `dependsOn: machine-core`)
+- [x] 3.1.2 Crear esqueleto: `packages/machine-business/{src,commands,agents}/` y entrada de workspace en `pnpm-workspace.yaml`
 
 ### 3.2 Implementación determinista (TDD)
 
-- [ ] 3.2.1 (RED) Test: `machine-business-init` crea `inputs/`, `business/`, `.machine/state.json` e índice sobre proyecto inexistente — `packages/machine-business/src/init.test.ts`
-- [ ] 3.2.2 (GREEN) Implementar `packages/machine-business/src/init.ts` (`machine_business_init`), reutilizando `state.ts` de `machine-core`
-- [ ] 3.2.3 (RED) Test: `machine-business-init` sobre proyecto con insumos ya cargados no destruye contenido
-- [ ] 3.2.4 (GREEN) Implementar rama idempotente en `init.ts` (skip si la estructura ya existe)
-- [ ] 3.2.5 (RED) Test: `machine-business-proposal` falla y no genera `proposal.md` si no hay insumos `route: business` — `packages/machine-business/src/proposal.test.ts`
-- [ ] 3.2.6 (GREEN) Implementar `packages/machine-business/src/proposal.ts`: valida insumos `route: business` antes de sintetizar
-- [ ] 3.2.7 (RED) Test: al generar `proposal.md` se fija `approvals.proposal = "pending"` (usa `approvals.ts` de `machine-core`)
-- [ ] 3.2.8 (GREEN) Implementar fijado de `approvals.proposal = "pending"` al escribir `proposal.md`
-- [ ] 3.2.9 (RED) Test: regenerar `proposal.md` con `approvals.proposal = "approved"` lo devuelve a `"pending"`
-- [ ] 3.2.10 (GREEN) Implementar invalidación de la puerta al regenerar, delegando en la invalidación aguas abajo de `machine-core`
-- [ ] 3.2.11 (RED) Test: sección sin insumos de respaldo (p.ej. mercado) se marca `NEEDS INPUT` en vez de inventar contenido
-- [ ] 3.2.12 (GREEN) Implementar marcado `NEEDS INPUT` por sección en `proposal.ts`
-- [ ] 3.2.13 Crear `packages/machine-business/src/index.ts`: registra `machine_business_init` y `machine_business_proposal` en la clave `plugin`
+- [x] 3.2.1 (RED) Test: `machine-business-init` crea `inputs/`, `business/`, `.machine/state.json` e índice sobre proyecto inexistente — `packages/machine-business/src/init.test.ts`
+- [x] 3.2.2 (GREEN) Implementar `packages/machine-business/src/init.ts` (`machine_business_init`), reutilizando `state.ts` de `machine-core`
+- [x] 3.2.3 (RED) Test: `machine-business-init` sobre proyecto con insumos ya cargados no destruye contenido
+- [x] 3.2.4 (GREEN) Implementar rama idempotente en `init.ts` (skip si la estructura ya existe)
+- [x] 3.2.5 (RED) Test: `machine-business-proposal` falla y no genera `proposal.md` si no hay insumos `route: business` — `packages/machine-business/src/proposal.test.ts`
+- [x] 3.2.6 (GREEN) Implementar `packages/machine-business/src/proposal.ts`: valida insumos `route: business` antes de sintetizar
+- [x] 3.2.7 (RED) Test: al generar `proposal.md` se fija `approvals.proposal = "pending"` (usa `approvals.ts` de `machine-core`)
+- [x] 3.2.8 (GREEN) Implementar fijado de `approvals.proposal = "pending"` al escribir `proposal.md`
+- [x] 3.2.9 (RED) Test: regenerar `proposal.md` con `approvals.proposal = "approved"` lo devuelve a `"pending"`
+- [x] 3.2.10 (GREEN) Implementar invalidación de la puerta al regenerar, delegando en la invalidación aguas abajo de `machine-core`
+- [x] 3.2.11 (RED) Test: sección sin insumos de respaldo (p.ej. mercado) se marca `NEEDS INPUT` en vez de inventar contenido
+- [x] 3.2.12 (GREEN) Implementar marcado `NEEDS INPUT` por sección en `proposal.ts`
+- [x] 3.2.13 Crear `packages/machine-business/src/index.ts`: registra `machine_business_init` y `machine_business_proposal` en la clave `plugin`
 
 ### 3.3 Contenido declarativo (exento de TDD)
 
-- [ ] 3.3.1 Escribir `packages/machine-business/commands/machine-business-init.md`
-- [ ] 3.3.2 Escribir `packages/machine-business/commands/machine-business-proposal.md`, sugiriendo `machine-approve <proyecto> proposal` al finalizar
-- [ ] 3.3.3 Escribir `packages/machine-business/agents/machine-business.md` con `mode: subagent` y `permission: { bash: deny }`
+- [x] 3.3.1 Escribir `packages/machine-business/commands/machine-business-init.md`
+- [x] 3.3.2 Escribir `packages/machine-business/commands/machine-business-proposal.md`, sugiriendo `machine-approve <proyecto> proposal` al finalizar
+- [x] 3.3.3 Escribir `packages/machine-business/agents/machine-business.md` con `mode: subagent` y `permission: { bash: deny }`
 
 ### 3.4 Testing de integración
 
-- [ ] 3.4.1 (RED) Test integración: `machine-render-docx` sobre `business/proposal.md` con `approvals.proposal = "pending"` rechaza y no crea archivo — `packages/machine-business/test/render-gate.integration.test.ts`
-- [ ] 3.4.2 (GREEN) Verificar que `machine-business` no reimplementa ni bypassea el rechazo de `machine-core`; solo lo consume
-- [ ] 3.4.3 Test integración: insumo de negocio procesado por `machine-process-input` (de `machine-core`) aterriza bajo `business/` con `route: business` — fixture con HOME simulado en tmp
-- [ ] 3.4.4 Test integración: el agente `machine-business` con `bash: deny` no puede alcanzar el render fuera del tool `machine_render_docx`
-- [ ] 3.4.5 Ejecutar `pnpm test` en `packages/machine-business` y verificar cobertura de todos los escenarios de `specs/machine-business/spec.md`
+- [x] 3.4.1 (RED) Test integración: `machine-render-docx` sobre `business/proposal.md` con `approvals.proposal = "pending"` rechaza y no crea archivo — `packages/machine-business/test/render-gate.integration.test.ts`
+- [x] 3.4.2 (GREEN) Verificar que `machine-business` no reimplementa ni bypassea el rechazo de `machine-core`; solo lo consume
+- [x] 3.4.3 Test integración: insumo de negocio procesado por `machine-process-input` (de `machine-core`) aterriza bajo `business/` con `route: business` — fixture con HOME simulado en tmp
+- [x] 3.4.4 Test integración: el agente `machine-business` con `bash: deny` no puede alcanzar el render fuera del tool `machine_render_docx`
+- [x] 3.4.5 Ejecutar `pnpm test` en `packages/machine-business` y verificar cobertura de todos los escenarios de `specs/machine-business/spec.md`

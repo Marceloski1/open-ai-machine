@@ -15,7 +15,7 @@ artifacts:
   specs: done
   design: done
   tasks: done
-  apply: seccion 2 (machine-core) completa; secciones 1 y 3 pendientes
+  apply: secciones 2 (machine-core) y 3 (machine-business) completas; seccion 1 (marketplace) pendiente
   verify: pending
   archive: pending
 

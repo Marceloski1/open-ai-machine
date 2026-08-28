@@ -8,4 +8,10 @@ importers:
 
   .: {}
 
+  packages/machine-business:
+    dependencies:
+      machine-core:
+        specifier: workspace:*
+        version: link:../machine-core
+
   packages/machine-core: {}

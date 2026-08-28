@@ -109,7 +109,31 @@ Los tools se nombran `machine_*` (snake_case) para no colisionar con los built-i
 | E2E | pipeline business completo hasta rechazo por gate | `opencode run --auto`; el rechazo es el aserto clave |
 | Contrato | validación de todos los `machine.json` y del catálogo | En CI, con pnpm y con Bun |
 
-## Límite conocido de la garantía
+## Límites conocidos de la garantía
+
+### 1. La síntesis no es determinista
+
+`machine_business_proposal` recibe las secciones ya redactadas y verifica sólo lo verificable:
+que existan insumos `route: business`, que una sección vacía se marque `NEEDS INPUT`, y que la
+puerta quede en `pending`. Es la división correcta según D2 —redactar no es una operación
+determinista— pero tiene una consecuencia que no se MUST ocultar:
+
+**el requisito "MUST NOT inventarse contenido no derivable de los insumos" no está garantizado
+por código.** Si el modelo redacta una sección plausible sin respaldo en los insumos y la pasa
+al tool, el tool la escribe. La defensa es el prompt del agente `machine-business`, que es
+mitigación, no garantía.
+
+Cerrarlo del todo exigiría que el tool verificase la trazabilidad de cada afirmación hasta un
+insumo concreto —atribución a nivel de frase—, que es un problema abierto. Alternativa parcial
+a evaluar: exigir que cada sección declare qué `inputs[].path` la respaldan, y que el tool
+rechace una sección sin atribución. No implementado.
+
+La puerta humana es lo que hoy cubre este hueco: alguien lee la propuesta antes de aprobarla.
+Ese es el motivo real por el que la puerta no es opcional.
+
+### 2. El rodeo por shell
+
+
 
 D4 y D6 garantizan que **el pipeline** no produce un entregable sin aprobación: los tools
 `machine_*` son la única ruta que el flujo de commands ofrece, y el agente `machine` deniega

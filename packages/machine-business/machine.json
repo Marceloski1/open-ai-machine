@@ -1,0 +1,17 @@
+{
+  "id": "machine-business",
+  "version": "0.1.0",
+  "target": "plugin",
+  "commands": [
+    "machine-business-init",
+    "machine-business-proposal"
+  ],
+  "agents": [
+    "machine-business"
+  ],
+  "skills": [],
+  "templates": [],
+  "dependencies": ["machine-core"],
+  "externalRequirements": [],
+  "permissions": {}
+}
