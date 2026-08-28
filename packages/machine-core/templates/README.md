@@ -25,7 +25,8 @@ El `.docx` **no se edita a mano**: es la salida reproducible de un script. La fu
 es el script; el binario commiteado es su resultado.
 
 ```
-python tools/build-template/build-template.py
+cd tools/build-template
+uv run python build-template.py
 ```
 
 Esto reconstruye `packages/machine-core/templates/reference.docx` desde cero usando unicamente
@@ -36,7 +37,8 @@ Para cambiar el diseno (colores, tipografia, espaciados), edita
 ### Como se verifica
 
 ```
-python tools/build-template/verify-template.py
+cd tools/build-template
+uv run python verify-template.py
 ```
 
 El verificador comprueba automaticamente:

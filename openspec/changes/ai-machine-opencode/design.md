@@ -157,7 +157,8 @@ No aplica: greenfield. El rollout es por fases 1→2→3; `machine-business` no 
 
 - [x] ~~Plantilla corporativa DOCX no disponible~~ → existe `templates/reference.docx`, plantilla **base neutra** generada por `tools/build-template/`. El render ya no está bloqueado.
 - [ ] **Identidad corporativa real** (`NEEDS INPUT`): la plantilla actual no lleva marca. Sustituirla sigue pendiente de insumo externo.
-- [ ] **Validación con Pandoc**: no está instalado en el entorno de desarrollo, así que nadie ha comprobado que Pandoc acepte la plantilla ni que aplique cada estilo. Un `w:styleId` mal nombrado se ignora **en silencio**: el `.docx` sale sin error y con formato equivocado. Es el riesgo abierto de mayor impacto.
+- [x] ~~Validación con Pandoc~~ **CERRADO (Pandoc 3.10.2)**: renderizado real con `--reference-doc` en exit 0, y verificada la herencia efectiva de estilos — los 5 colores y las 2 tipografías de la plantilla aparecen en el `.docx` de salida, los `pStyle` emitidos corresponden a estilos de la plantilla y los 20 `styleId` están presentes. No basta con que Pandoc no falle: un `styleId` mal nombrado se ignora en silencio, así que la comprobación válida es la herencia, no el exit code.
+- [ ] **Generación no determinista de `reference.docx`**: regenerar produce un binario distinto a nivel de bytes (timestamps del ZIP) con contenido equivalente. Fijar timestamps en `build-template.py` haría el build reproducible y los diffs binarios significativos.
 - [ ] Formato exacto de `business/proposal.md` (secciones, profundidad) no derivable del insumo.
 - [ ] ¿El instalador debe escribir `opencode.json` del proyecto o del usuario cuando ambos existen? Propuesta: el que corresponda al `target` elegido.
 - [ ] Verificar en implementación que un agente con `bash: deny` no puede eludirse vía otro agente primario del usuario.

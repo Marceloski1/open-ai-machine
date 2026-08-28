@@ -37,9 +37,9 @@ Comandos: `pnpm test` para tests, `pnpm build` para build. Nunca npm, yarn ni bu
 - **Plantilla corporativa DOCX**: resuelto parcialmente. Existe `templates/reference.docx`,
   una plantilla **base neutra** generada por `tools/build-template/build-template.py`, sin marca.
   Sustituirla por la identidad corporativa real sigue siendo `NEEDS INPUT`.
-  **Pandoc no está instalado**, así que la plantilla no se ha validado contra él: un `styleId`
-  mal nombrado se ignoraría en silencio. Instalar Pandoc y renderizar una propuesta real es
-  la única prueba que cierra este punto.
+  **Validada con Pandoc 3.10.2**: render real en exit 0 y herencia de estilos comprobada
+  (colores, tipografías y `pStyle` de la plantilla presentes en el `.docx` de salida).
+  Los scripts Python se gestionan con `uv` (`tools/build-template/pyproject.toml` + `uv.lock`).
 - **Estructura fina de `business/proposal.md`** (`NEEDS INPUT`): las tareas `3.2.6` y `3.2.11`
   se quedan en el nivel de detalle que la spec sostiene.
 - **Heurística de clasificación** business/discovery: es responsabilidad de `machine-core`

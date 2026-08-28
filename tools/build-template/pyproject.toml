@@ -1,0 +1,6 @@
+[project]
+name = "build-template"
+version = "0.1.0"
+description = "Genera y verifica packages/machine-core/templates/reference.docx (solo biblioteca estandar)."
+requires-python = ">=3.13"
+dependencies = []

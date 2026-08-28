@@ -2,3 +2,4 @@ posted*
 node_modules/
 dist/
 *.tsbuildinfo
+.venv/
