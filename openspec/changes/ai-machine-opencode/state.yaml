@@ -1,0 +1,27 @@
+change: ai-machine-opencode
+backend: openspec
+updated: 2026-08-28
+
+decisions:
+  source_code_origin: rewrite-from-scratch
+  js_package_manager: pnpm
+  python_package_manager: uv
+  opencode_target: v1
+  first_deliverable: fases 1-3 (marketplace minimo, machine-core, machine-business)
+
+artifacts:
+  exploration: done
+  proposal: done
+  specs: done
+  design: pending
+  tasks: pending
+  apply: pending
+  verify: pending
+  archive: pending
+
+specs_domains:
+  - marketplace
+  - machine-core
+  - machine-business
+
+next_recommended: sdd-design

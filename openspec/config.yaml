@@ -1,0 +1,43 @@
+schema: spec-driven
+
+context: |
+  Proyecto: opencode-market-place — marketplace de plugins/agentes para Opencode.
+  Origen: "The AI Machine" (plugins de Claude Code) que se porta a Opencode.
+  Estado: greenfield. NO hay stack detectado — solo docs/inputs/.
+  Stack: Bun + TypeScript ESM (SUPUESTO). Gestores DECIDIDOS: pnpm para JS/TS, uv para Python.
+  Origen de los plugins: se reescriben desde cero; no existe codigo fuente original.
+  Arquitectura: pipeline por fases (Business, Discovery) con puertas humanas.
+  Testing: sin definir.
+  Style: sin linters ni CI. Sin comentarios en codigo salvo TODO().
+  Idioma de artefactos: espanol; identificadores y terminos tecnicos en original.
+
+rules:
+  proposal:
+    - Incluir plan de rollback para cambios riesgosos
+    - Identificar modulos/paquetes afectados
+    - Marcar como SUPUESTO toda decision de stack aun no confirmada
+  specs:
+    - Usar formato Given/When/Then para escenarios
+    - Usar palabras clave RFC 2119 (MUST, SHALL, SHOULD, MAY)
+    - Los identificadores de comandos y plugins se escriben en su forma original
+  design:
+    - Incluir diagramas (Mermaid) para flujos complejos
+    - Documentar decisiones de arquitectura con su justificacion
+    - Contrastar cada decision contra la API real de Opencode (plugins, commands, agents)
+  tasks:
+    - Agrupar tareas por fase (infraestructura, implementacion, testing)
+    - Usar numeracion jerarquica (1.1, 1.2, ...)
+    - Tareas completables en una sola sesion
+  apply:
+    - Seguir los patrones y convenciones existentes del repositorio
+    - Sin comentarios en codigo salvo marcadores TODO()
+    - Gestor de paquetes JS/TS: pnpm. Prohibido npm/yarn/bun para instalar o generar lockfiles
+    - Gestor de paquetes Python: uv. Prohibido pip/poetry/conda y requirements.txt sueltos
+    tdd: false
+    test_command: ""
+  verify:
+    test_command: ""
+    build_command: ""
+    coverage_threshold: 0
+  archive:
+    - Advertir antes de fusionar deltas destructivos (eliminaciones grandes)
