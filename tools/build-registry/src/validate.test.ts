@@ -56,4 +56,30 @@ describe("validateManifest", () => {
     expect(result.valid).toBe(false);
     expect(result.errors.some((error) => error.includes("description"))).toBe(true);
   });
+
+  test("manifiesto con runtime no soportado falla e indica el campo infractor", async () => {
+    const manifest = await readManifest("invalid-bad-runtime");
+
+    const result = validateManifest(manifest);
+
+    expect(result.valid).toBe(false);
+    expect(result.errors.some((error) => error.includes("runtime"))).toBe(true);
+  });
+
+  test("manifiesto sin runtime sigue siendo valido (compatibilidad hacia atras)", async () => {
+    const manifest = await readManifest("valid-a");
+
+    const result = validateManifest(manifest);
+
+    expect(result.valid).toBe(true);
+  });
+
+  test("manifiesto con runtime python es valido", async () => {
+    const manifest = await readManifest("valid-a");
+    const withRuntime = { ...(manifest as Record<string, unknown>), runtime: "python" };
+
+    const result = validateManifest(withRuntime);
+
+    expect(result.valid).toBe(true);
+  });
 });

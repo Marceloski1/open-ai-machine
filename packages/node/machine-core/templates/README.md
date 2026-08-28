@@ -14,7 +14,7 @@
    `cli/src/paths.ts`), así que quien instala paquetes en modo `global` ya conoce esa carpeta.
    Coloca ahí tu `.docx` de marca una sola vez y se aplica a todos tus proyectos, sin repetir el
    archivo en cada uno.
-4. **Plantilla base del paquete** — `packages/machine-core/templates/reference.docx`, la neutra
+4. **Plantilla base del paquete** — `packages/node/machine-core/templates/reference.docx`, la neutra
    descrita abajo. Es el último recurso: si no configuraste ninguna plantilla propia, tus
    documentos salen con este formato genérico.
 
@@ -31,8 +31,8 @@ de usuario de arriba y listo.
 
 ## `reference.docx` — plantilla base neutra, NO identidad corporativa
 
-`packages/machine-core/templates/reference.docx` existe en este repositorio y es usada por
-`machine_render_docx` (`packages/machine-core/src/index.ts`, `defaultTemplatePath()` /
+`packages/node/machine-core/templates/reference.docx` existe en este repositorio y es usada por
+`machine_render_docx` (`packages/node/machine-core/src/index.ts`, `defaultTemplatePath()` /
 `defaultPandocRender()`) como `pandoc --reference-doc=<plantilla>` para dar formato a los
 `.docx` generados a partir de Markdown, **únicamente cuando ninguna plantilla de proyecto ni de
 usuario está presente** (ver cascada arriba).
@@ -52,7 +52,7 @@ provea la plantilla corporativa real debe reemplazar este archivo y retirar esta
 ### Pandoc: entorno gestionado por el repositorio, no un install de sistema
 
 Pandoc **no se resuelve desde el PATH del sistema**. `machine_render_docx`
-(`packages/machine-core/src/index.ts`, `resolveRepoPandocPath()` / `defaultPandocRender()`)
+(`packages/node/machine-core/src/index.ts`, `resolveRepoPandocPath()` / `defaultPandocRender()`)
 localiza el binario de Pandoc empaquetado por `pypandoc-binary` dentro del `.venv/` gestionado
 por `uv` en la raiz del repositorio. Para tenerlo disponible:
 
@@ -74,7 +74,7 @@ es el script; el binario commiteado es su resultado.
 uv run python tools/build-template/build-template.py
 ```
 
-Esto reconstruye `packages/machine-core/templates/reference.docx` desde cero usando unicamente
+Esto reconstruye `packages/node/machine-core/templates/reference.docx` desde cero usando unicamente
 la biblioteca estandar de Python (`zipfile`, `xml`) — sin Pandoc, sin Word, sin LibreOffice.
 Para cambiar el diseno (colores, tipografia, espaciados), edita
 `tools/build-template/build-template.py` y vuelve a ejecutar el comando.
@@ -113,10 +113,10 @@ LibreOffice; la validacion visual manual en esas aplicaciones sigue pendiente.
 
 `pypandoc-binary` no expone `pandoc` como script del `.venv` (no funciona `uv run pandoc`); el
 binario vive dentro de `site-packages` y se invoca por su ruta completa, tal como hace
-`resolveRepoPandocPath()` en `packages/machine-core/src/index.ts`:
+`resolveRepoPandocPath()` en `packages/node/machine-core/src/index.ts`:
 
 ```
-.venv/Lib/site-packages/pypandoc/files/pandoc.exe <artefacto>.md --reference-doc=packages/machine-core/templates/reference.docx -o <artefacto>.docx
+.venv/Lib/site-packages/pypandoc/files/pandoc.exe <artefacto>.md --reference-doc=packages/node/machine-core/templates/reference.docx -o <artefacto>.docx
 ```
 
 (en POSIX, la ruta equivalente es `.venv/lib/python<version>/site-packages/pypandoc/files/pandoc`).
@@ -127,7 +127,7 @@ binario vive dentro de `site-packages` y se invoca por su ruta completa, tal com
   o de usuario (ver cascada arriba), produce documentos con el formato neutro de este
   repositorio, no con la identidad de marca de quien usa el marketplace.
 - La validacion contra Pandoc real ya se realizo (ver seccion anterior); el contrato de fallo
-  explicito ante plantilla ausente (`packages/machine-core/src/index.ts`) ya no aplica porque el
+  explicito ante plantilla ausente (`packages/node/machine-core/src/index.ts`) ya no aplica porque el
   archivo existe.
 - Ningun tool debe presentar el resultado de este template neutro como si fuera la identidad
   corporativa real. El campo `templateSource` del resultado de `machine_render_docx` es la forma

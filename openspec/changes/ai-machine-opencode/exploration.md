@@ -216,7 +216,7 @@ Un marketplace añade cinco responsabilidades sobre "dos carpetas de comandos":
 ### Recomendación de arquitectura
 **Híbrido A + C, con puerta abierta a B cuando v2 estabilice.**
 
-1. **Monorepo `opencode-market-place`** con `packages/machine-business/`, `packages/machine-discovery/`, `packages/machine-core/` (skills y plantillas compartidas). Cada paquete con `machine.json` + `commands/`, `agents/`, `skills/`, `templates/`.
+1. **Monorepo `opencode-market-place`** con `packages/node/machine-business/`, `packages/node/machine-discovery/`, `packages/node/machine-core/` (skills y plantillas compartidas). Cada paquete con `machine.json` + `commands/`, `agents/`, `skills/`, `templates/`.
 2. **Catálogo generado** `registry/index.json` desde los `machine.json` (script `build-registry`), publicado en la rama principal y opcionalmente en Pages (opción C).
 3. **Instalador** distribuido como plugin+tool de Opencode (`machine-marketplace`) con comandos `/machine-install`, `/machine-list`, `/machine-update`, `/machine-uninstall`, respaldados por un tool custom en TS que hace fetch del índice, descarga, valida checksum y escribe en `~/.config/opencode/` o `.opencode/`, registrando en `installed.json`. Adicionalmente un CLI `npx machine` para bootstrap (problema del huevo y la gallina: el instalador no puede instalarse a sí mismo desde dentro).
 4. **Compatibilidad dual Claude/Opencode**: publicar las skills bajo `skills/<name>/SKILL.md` y permitir el destino `.claude/skills/` — el mismo paquete sirve a ambos runtimes.

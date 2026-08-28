@@ -161,7 +161,7 @@ export function resolveTemplate(args: {
 }
 
 function repoRoot(): string {
-  return join(import.meta.dir, "..", "..", "..");
+  return join(import.meta.dir, "..", "..", "..", "..");
 }
 
 function findVenvSitePackages(root: string): string | undefined {
@@ -239,7 +239,7 @@ export async function machine_render_docx(args: RenderDocxArgs): Promise<RenderD
 
   if (!templateExists(resolution.templatePath)) {
     throw new Error(
-      `Plantilla corporativa faltante: "${resolution.templatePath}". Coloca el .docx corporativo en esa ruta antes de renderizar (ver packages/machine-core/templates/README.md). No se entrega un .docx sin estilos corporativos.`,
+      `Plantilla corporativa faltante: "${resolution.templatePath}". Coloca el .docx corporativo en esa ruta antes de renderizar (ver packages/node/machine-core/templates/README.md). No se entrega un .docx sin estilos corporativos.`,
     );
   }
 

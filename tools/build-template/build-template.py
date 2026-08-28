@@ -1,4 +1,4 @@
-"""Genera packages/machine-core/templates/reference.docx.
+"""Genera packages/node/machine-core/templates/reference.docx.
 
 Construye un archivo OOXML (.docx) minimo pero valido, pensado para usarse como
 `pandoc --reference-doc`. No depende de Word, LibreOffice ni Pandoc: arma el
@@ -18,7 +18,7 @@ import zipfile
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-OUTPUT_PATH = REPO_ROOT / "packages" / "machine-core" / "templates" / "reference.docx"
+OUTPUT_PATH = REPO_ROOT / "packages" / "node" / "machine-core" / "templates" / "reference.docx"
 
 # Paleta neutra: grises y azul oscuro. Sin logos ni marca.
 COLOR_INK = "1F2937"          # texto principal (gris muy oscuro)
@@ -396,7 +396,10 @@ def build(output_path: Path = OUTPUT_PATH) -> Path:
 
     with zipfile.ZipFile(output_path, "w", zipfile.ZIP_DEFLATED) as docx:
         for name, content in parts.items():
-            docx.writestr(name, content.encode("utf-8"))
+            info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.external_attr = 0o600 << 16
+            docx.writestr(info, content.encode("utf-8"))
 
     return output_path
 

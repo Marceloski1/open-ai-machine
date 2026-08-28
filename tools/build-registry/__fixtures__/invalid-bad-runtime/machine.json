@@ -1,0 +1,14 @@
+{
+  "id": "machine-zeta",
+  "version": "0.1.0",
+  "target": "plugin",
+  "description": "Paquete zeta de prueba",
+  "runtime": "ruby",
+  "commands": ["machine-zeta-run"],
+  "agents": [],
+  "skills": [],
+  "templates": [],
+  "dependencies": [],
+  "externalRequirements": [],
+  "permissions": {}
+}

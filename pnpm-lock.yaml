@@ -10,12 +10,12 @@ importers:
 
   cli: {}
 
-  packages/machine-business:
+  packages/node/machine-business:
     dependencies:
       machine-core:
         specifier: workspace:*
         version: link:../machine-core
 
-  packages/machine-core: {}
+  packages/node/machine-core: {}
 
   tools/build-registry: {}

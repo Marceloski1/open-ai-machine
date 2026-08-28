@@ -71,15 +71,15 @@ flowchart LR
 | `tools/build-registry/` | Crear | Genera y valida el catálogo; falla ante colisión de comandos |
 | `cli/src/{install,list,search,info,update,uninstall}.ts` | Crear | Instalador; escribe `installed.json` |
 | `cli/src/opencode-config.ts` | Crear | Merge no destructivo de `opencode.json` |
-| `packages/machine-core/src/{state,hash,approvals,deps}.ts` | Crear | Núcleo determinista |
-| `packages/machine-core/src/index.ts` | Crear | Plugin v1: expone los tools |
-| `packages/machine-core/commands/machine-{process-input,render-docx,approve}.md` | Crear | Comandos compartidos |
-| `packages/machine-core/agents/machine.md` | Crear | `mode: subagent`, `bash: deny`; los commands compartidos MUST apuntar aquí, no a `build` |
-| `packages/machine-core/templates/` | Crear | Plantilla DOCX (**NEEDS INPUT**) |
-| `packages/machine-business/src/{init,proposal,index}.ts` | Crear | Lógica de fase 0; consume los tools de `machine-core`, no los reimplementa |
-| `packages/machine-business/commands/machine-business-{init,proposal}.md` | Crear | Fase 0 |
-| `packages/machine-business/agents/machine-business.md` | Crear | `mode: subagent`, `bash: deny` |
-| `packages/*/machine.json` | Crear | Manifiestos |
+| `packages/node/machine-core/src/{state,hash,approvals,deps}.ts` | Crear | Núcleo determinista |
+| `packages/node/machine-core/src/index.ts` | Crear | Plugin v1: expone los tools |
+| `packages/node/machine-core/commands/machine-{process-input,render-docx,approve}.md` | Crear | Comandos compartidos |
+| `packages/node/machine-core/agents/machine.md` | Crear | `mode: subagent`, `bash: deny`; los commands compartidos MUST apuntar aquí, no a `build` |
+| `packages/node/machine-core/templates/` | Crear | Plantilla DOCX (**NEEDS INPUT**) |
+| `packages/node/machine-business/src/{init,proposal,index}.ts` | Crear | Lógica de fase 0; consume los tools de `machine-core`, no los reimplementa |
+| `packages/node/machine-business/commands/machine-business-{init,proposal}.md` | Crear | Fase 0 |
+| `packages/node/machine-business/agents/machine-business.md` | Crear | `mode: subagent`, `bash: deny` |
+| `packages/node/*/machine.json` | Crear | Manifiestos (Node); `packages/py/*/machine.json` para futuros paquetes Python |
 
 ## Contratos
 
@@ -153,7 +153,7 @@ suficiente. No lo es para un modelo de amenaza con usuario hostil, y no se MUST 
 
 | Decisión | Motivo |
 |---|---|
-| `computeSha256` duplicado en `cli/src/hash.ts` y `packages/machine-core/src/hash.ts` | El CLI se publica y ejecuta **standalone** vía `pnpm dlx`; importar `machine-core` lo obligaría a arrastrar el paquete como dependencia de runtime. Son además hashes de cosas distintas: insumos frente a archivos instalados. Duplicación deliberada, no descuido |
+| `computeSha256` duplicado en `cli/src/hash.ts` y `packages/node/machine-core/src/hash.ts` | El CLI se publica y ejecuta **standalone** vía `pnpm dlx`; importar `machine-core` lo obligaría a arrastrar el paquete como dependencia de runtime. Son además hashes de cosas distintas: insumos frente a archivos instalados. Duplicación deliberada, no descuido |
 | `validateManifest` implementado a mano en vez de un motor JSON Schema | No hay `ajv` en el repo y añadir una dependencia requería aprobación. `registry/schema.json` queda como contrato documentado y el validador implementa su semántica. **Revisable** si el schema crece |
 | Pandoc empaquetado en el `.venv` del repo (`pypandoc-binary`) en vez de instalado en el sistema | El repo no MUST depender de binarios de la máquina. `uv sync` deja el entorno reproducible y `defaultPandocRender` resuelve el binario del `.venv`, no del PATH |
 | Plantilla DOCX resuelta en cascada: `override` > `project` > `user` > `package` | Quien usa el marketplace MUST poder poner su marca sin editar el paquete instalado, que se perdería al actualizar. El resultado informa qué plantilla se usó y de qué nivel vino: sin eso, colocar el archivo en la ruta equivocada degrada al documento neutro **en silencio**, y el fallo se descubre cuando ya está en manos del cliente |

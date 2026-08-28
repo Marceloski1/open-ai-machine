@@ -1,4 +1,4 @@
-"""Verifica packages/machine-core/templates/reference.docx.
+"""Verifica packages/node/machine-core/templates/reference.docx.
 
 Comprueba unicamente lo que es verificable sin Pandoc instalado:
 
@@ -9,6 +9,7 @@ Comprueba unicamente lo que es verificable sin Pandoc instalado:
    (para las partes con Override; los Default por extension no se listan una
    a una).
 5. word/_rels/document.xml.rels referencia styles.xml.
+6. build() es reproducible: dos generaciones producen bytes identicos (sha256).
 
 NO valida que Pandoc acepte o renderice correctamente la plantilla: eso
 requiere Pandoc instalado y queda fuera del alcance de este script.
@@ -19,13 +20,17 @@ Uso:
 
 from __future__ import annotations
 
+import hashlib
+import importlib.util
 import sys
+import tempfile
 import zipfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DOCX_PATH = REPO_ROOT / "packages" / "machine-core" / "templates" / "reference.docx"
+DOCX_PATH = REPO_ROOT / "packages" / "node" / "machine-core" / "templates" / "reference.docx"
+BUILD_SCRIPT_PATH = Path(__file__).resolve().parent / "build-template.py"
 
 REQUIRED_STYLE_IDS = [
     "Title",
@@ -161,11 +166,27 @@ def main() -> None:
                 ok = False
                 print(f"  [5] styles.xml NO esta referenciado en document.xml.rels (targets: {targets})")
 
+    # 6. build() es reproducible: dos generaciones producen bytes identicos
+    spec = importlib.util.spec_from_file_location("build_template", BUILD_SCRIPT_PATH)
+    build_template = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(build_template)
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        tmp_path = Path(tmp_dir)
+        out1 = build_template.build(tmp_path / "repro1.docx")
+        out2 = build_template.build(tmp_path / "repro2.docx")
+        hash1 = hashlib.sha256(out1.read_bytes()).hexdigest()
+        hash2 = hashlib.sha256(out2.read_bytes()).hexdigest()
+        if hash1 == hash2:
+            print(f"  [6] build() es reproducible (sha256 {hash1}). OK")
+        else:
+            ok = False
+            print(f"  [6] build() NO es reproducible: {hash1} != {hash2}")
+
     print()
     if ok:
         print("RESULTADO: todas las verificaciones pasaron.")
         print("NOTA: esto NO confirma que Pandoc acepte o renderice correctamente la plantilla;")
-        print("Pandoc no esta instalado en este entorno y esa validacion queda pendiente.")
+        print("Pandoc vive en el .venv del repositorio (uv sync); el render se valida aparte.")
         sys.exit(0)
     else:
         print("RESULTADO: una o mas verificaciones fallaron. Ver detalle arriba.")

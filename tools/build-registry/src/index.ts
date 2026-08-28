@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { readFile, readdir, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { computePackageChecksum } from "./checksum";
@@ -115,10 +116,22 @@ export async function writeRegistry(registryIndexPath: string, catalog: Catalog)
   await writeFile(registryIndexPath, `${JSON.stringify(catalog, null, 2)}\n`);
 }
 
+const LANGUAGE_DIRS = ["node", "py"] as const;
+
+async function discoverAllPackageDirs(packagesRoot: string): Promise<string[]> {
+  const dirs: string[] = [];
+  for (const language of LANGUAGE_DIRS) {
+    const languageRoot = join(packagesRoot, language);
+    if (!existsSync(languageRoot)) continue;
+    dirs.push(...(await discoverPackageDirs(languageRoot)));
+  }
+  return dirs;
+}
+
 async function main(): Promise<void> {
   const repoRoot = resolve(import.meta.dir, "..", "..", "..");
   const packagesRoot = join(repoRoot, "packages");
-  const packageDirs = await discoverPackageDirs(packagesRoot);
+  const packageDirs = await discoverAllPackageDirs(packagesRoot);
   const catalog = await buildRegistry({ packageDirs });
   const registryIndexPath = join(repoRoot, "registry", "index.json");
   await writeRegistry(registryIndexPath, catalog);

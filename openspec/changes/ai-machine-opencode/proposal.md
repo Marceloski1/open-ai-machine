@@ -103,9 +103,9 @@ Evaluar un adaptador de Opencode v2 una vez que su API de plugins sea estable. E
 
 | Módulo | Responsabilidad |
 |---|---|
-| `packages/machine-core` | Estado, hashes, aprobaciones, validación de dependencias, comandos compartidos, skills y plantillas |
-| `packages/machine-business` | Pipeline de propuesta de negocio |
-| `packages/machine-discovery` | Pipeline de descubrimiento y proyecto |
+| `packages/node/machine-core` | Estado, hashes, aprobaciones, validación de dependencias, comandos compartidos, skills y plantillas |
+| `packages/node/machine-business` | Pipeline de propuesta de negocio |
+| `packages/node/machine-discovery` | Pipeline de descubrimiento y proyecto |
 | `registry` | Schema y catálogo público generado |
 | `tools/build-registry` | Generación y validación del catálogo |
 | `cli` | Instalación, gestión de paquetes y bootstrap vía `pnpm dlx` |
@@ -122,7 +122,7 @@ Evaluar un adaptador de Opencode v2 una vez que su API de plugins sea estable. E
 - Las puertas humanas se implementarán como estado persistente, no como una confirmación conversacional. Así sobreviven a `opencode run --auto`, que auto-aprueba todo permiso no denegado explícitamente.
 - **Transcripción de audio:** API de proveedor configurable por portabilidad, con override a motor local. Un motor local exige toolchain que no es portable en Windows. Si el override local se implementa en Python (`faster-whisper` u otro), MUST empaquetarse con `uv` y declararse como requisito externo en `machine.json`.
 - **Idioma:** español por defecto, configurable en el `machine.json` del proyecto.
-- **Plantilla corporativa DOCX:** vive versionada en `packages/machine-core/templates/`, se distribuye con el paquete y se declara en su `machine.json`. **NEEDS INPUT:** el archivo `.docx` corporativo aún no está disponible en el repositorio; sin él `machine-render-docx` queda bloqueado.
+- **Plantilla corporativa DOCX:** vive versionada en `packages/node/machine-core/templates/`, se distribuye con el paquete y se declara en su `machine.json`. **NEEDS INPUT:** el archivo `.docx` corporativo aún no está disponible en el repositorio; sin él `machine-render-docx` queda bloqueado.
 
 ## Riesgos y mitigaciones
 

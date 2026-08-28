@@ -1,6 +1,7 @@
 const ID_PATTERN = /^machine-[a-z0-9-]+$/;
 const SEMVER_PATTERN = /^\d+\.\d+\.\d+(-[0-9A-Za-z-.]+)?(\+[0-9A-Za-z-.]+)?$/;
 const COMMAND_PATTERN = /^machine-[a-z0-9-]+$/;
+const RUNTIME_VALUES = ["node", "python"] as const;
 
 const REQUIRED_FIELDS = [
   "id",
@@ -75,6 +76,10 @@ export function validateManifest(manifest: unknown): ValidationResult {
 
   if (manifest.permissions !== undefined && !isRecord(manifest.permissions)) {
     errors.push("permissions: debe ser un objeto");
+  }
+
+  if (manifest.runtime !== undefined && !RUNTIME_VALUES.includes(manifest.runtime as never)) {
+    errors.push(`runtime: "${String(manifest.runtime)}" debe ser uno de ${RUNTIME_VALUES.join(", ")}`);
   }
 
   return { valid: errors.length === 0, errors };
