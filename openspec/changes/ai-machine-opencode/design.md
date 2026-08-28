@@ -75,6 +75,7 @@ flowchart LR
 | `packages/machine-core/src/index.ts` | Crear | Plugin v1: expone los tools |
 | `packages/machine-core/commands/machine-{process-input,render-docx,approve}.md` | Crear | Comandos compartidos |
 | `packages/machine-core/templates/` | Crear | Plantilla DOCX (**NEEDS INPUT**) |
+| `packages/machine-business/src/{init,proposal,index}.ts` | Crear | Lógica de fase 0; consume los tools de `machine-core`, no los reimplementa |
 | `packages/machine-business/commands/machine-business-{init,proposal}.md` | Crear | Fase 0 |
 | `packages/machine-business/agents/machine-business.md` | Crear | `mode: subagent`, `bash: deny` |
 | `packages/*/machine.json` | Crear | Manifiestos |
@@ -102,7 +103,7 @@ Los tools se nombran `machine_*` (snake_case) para no colisionar con los built-i
 
 | Capa | Qué | Cómo |
 |---|---|---|
-| Unit | hash, transiciones de gate, invalidación aguas abajo, merge de `opencode.json` | `bun test`, sin FS real salvo tmp |
+| Unit | hash, transiciones de gate, invalidación aguas abajo, merge de `opencode.json` | `pnpm test`, sin FS real salvo tmp |
 | Integration | install → update → uninstall; restauración ante fallo | Directorio temporal como HOME simulado |
 | E2E | pipeline business completo hasta rechazo por gate | `opencode run --auto`; el rechazo es el aserto clave |
 | Contrato | validación de todos los `machine.json` y del catálogo | En CI, con pnpm y con Bun |

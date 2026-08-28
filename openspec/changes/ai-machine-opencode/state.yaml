@@ -14,7 +14,7 @@ artifacts:
   proposal: done
   specs: done
   design: done
-  tasks: pending
+  tasks: done
   apply: pending
   verify: pending
   archive: pending
@@ -24,4 +24,4 @@ specs_domains:
   - machine-core
   - machine-business
 
-next_recommended: sdd-tasks
+next_recommended: sdd-apply
