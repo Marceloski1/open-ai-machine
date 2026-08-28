@@ -104,7 +104,7 @@ describe("flujo write -> pending -> approve -> render", () => {
 });
 
 describe("plantilla corporativa", () => {
-  test("puerta aprobada y Pandoc presente pero sin templates/reference.docx falla indicando la plantilla y no genera .docx", async () => {
+  test("puerta aprobada y Pandoc presente pero con templatePath inexistente falla indicando la plantilla y no genera .docx", async () => {
     const projectDir = await makeProjectDir();
     await machine_write_artifact({ projectDir, gate: "proposal" });
     await machine_approve({ projectDir, gate: "proposal" });
@@ -117,6 +117,7 @@ describe("plantilla corporativa", () => {
         gate: "proposal",
         sourcePath: join(projectDir, "business", "proposal.md"),
         outputPath,
+        templatePath: join(projectDir, "templates", "no-existe.docx"),
         isAvailable: () => true,
         render: async () => {
           throw new Error("render no deberia haberse invocado en este escenario");

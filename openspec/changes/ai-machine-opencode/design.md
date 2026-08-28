@@ -155,7 +155,9 @@ No aplica: greenfield. El rollout es por fases 1→2→3; `machine-business` no 
 
 ## Preguntas abiertas
 
-- [ ] **Plantilla corporativa DOCX** no disponible: bloquea `machine-render-docx` end-to-end (`NEEDS INPUT`).
+- [x] ~~Plantilla corporativa DOCX no disponible~~ → existe `templates/reference.docx`, plantilla **base neutra** generada por `tools/build-template/`. El render ya no está bloqueado.
+- [ ] **Identidad corporativa real** (`NEEDS INPUT`): la plantilla actual no lleva marca. Sustituirla sigue pendiente de insumo externo.
+- [ ] **Validación con Pandoc**: no está instalado en el entorno de desarrollo, así que nadie ha comprobado que Pandoc acepte la plantilla ni que aplique cada estilo. Un `w:styleId` mal nombrado se ignora **en silencio**: el `.docx` sale sin error y con formato equivocado. Es el riesgo abierto de mayor impacto.
 - [ ] Formato exacto de `business/proposal.md` (secciones, profundidad) no derivable del insumo.
 - [ ] ¿El instalador debe escribir `opencode.json` del proyecto o del usuario cuando ambos existen? Propuesta: el que corresponda al `target` elegido.
 - [ ] Verificar en implementación que un agente con `bash: deny` no puede eludirse vía otro agente primario del usuario.

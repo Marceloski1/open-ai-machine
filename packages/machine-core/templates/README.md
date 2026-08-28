@@ -1,45 +1,83 @@
 # Plantillas de `machine-core`
 
-## Plantilla corporativa DOCX — `NEEDS INPUT`
+## `reference.docx` — plantilla base neutra, NO identidad corporativa
 
-Este directorio debe alojar la plantilla corporativa `.docx` que `machine_render_docx`
-consume vía `pandoc --reference-doc=<plantilla>` para dar formato (estilos, encabezados,
-márgenes, tipografía) a los `.docx` generados a partir de Markdown.
+`packages/machine-core/templates/reference.docx` existe en este repositorio y es usada por
+`machine_render_docx` (`packages/machine-core/src/index.ts`, `defaultTemplatePath()` /
+`defaultPandocRender()`) como `pandoc --reference-doc=<plantilla>` para dar formato a los
+`.docx` generados a partir de Markdown.
 
-**Estado actual: la plantilla no está disponible.** Ningún archivo `.docx` corporativo fue
-provisto como insumo del proyecto. Este README documenta el hueco; **no se crea ni se inventa**
-un archivo `.docx` de relleno.
+**Este archivo es una plantilla base neutra generada por este repositorio.** Define una
+jerarquia tipografica sobria (grises y azul oscuro), pensada para una propuesta de negocio
+generica. **NO es, y no debe confundirse con, la identidad corporativa real de ningun cliente
+ni de The AI Machine.** No contiene logos, nombres de empresa ni ninguna marca.
 
-### Dónde debe colocarse
+### Estado: sustitucion por la plantilla corporativa real — `NEEDS INPUT`
+
+Sustituir `reference.docx` por la plantilla corporativa real (con la identidad de marca
+verdadera) sigue pendiente como insumo externo. Mientras no se provea, `machine_render_docx`
+producira documentos con el formato neutro descrito aqui, no con la marca del cliente. Quien
+provea la plantilla corporativa real debe reemplazar este archivo y retirar esta advertencia.
+
+### Como se regenera
+
+El `.docx` **no se edita a mano**: es la salida reproducible de un script. La fuente de verdad
+es el script; el binario commiteado es su resultado.
 
 ```
-packages/machine-core/templates/reference.docx
+python tools/build-template/build-template.py
 ```
 
-El tool `machine_render_docx` (`packages/machine-core/src/index.ts`) debe resolver esta ruta
-y pasarla a Pandoc como `--reference-doc`. Mientras el archivo no exista, el tool MUST fallar
-de forma explícita indicando la ausencia — nunca degradar el entregable renombrando un
-Markdown como `.docx`.
+Esto reconstruye `packages/machine-core/templates/reference.docx` desde cero usando unicamente
+la biblioteca estandar de Python (`zipfile`, `xml`) — sin Pandoc, sin Word, sin LibreOffice.
+Para cambiar el diseno (colores, tipografia, espaciados), edita
+`tools/build-template/build-template.py` y vuelve a ejecutar el comando.
 
-### Cómo se consume
+### Como se verifica
+
+```
+python tools/build-template/verify-template.py
+```
+
+El verificador comprueba automaticamente:
+
+1. El archivo abre como ZIP valido.
+2. Todas las partes XML (`word/document.xml`, `word/styles.xml`, etc.) parsean sin error.
+3. Los `w:styleId` que Pandoc busca al copiar formato de una reference doc estan presentes en
+   `word/styles.xml`: `Title`, `Subtitle`, `Author`, `Date`, `Heading1`–`Heading6`, `BodyText`,
+   `FirstParagraph`, `Compact`, `BlockText`, `SourceCode`, `VerbatimChar`, `TableCaption`,
+   `ImageCaption`, `Hyperlink`, `ListParagraph`.
+4. Cada parte declarada en `[Content_Types].xml` existe en el ZIP, y viceversa.
+5. `word/_rels/document.xml.rels` referencia `styles.xml`.
+
+Esto **no** confirma que Pandoc acepte o renderice correctamente la plantilla.
+
+### Que NO esta validado
+
+**Pandoc no esta instalado en este entorno de desarrollo.** No fue posible:
+
+- Generar la plantilla con `pandoc --print-default-data-file reference.docx` como punto de
+  partida (por eso se construye el OOXML directamente).
+- Ejecutar `pandoc <archivo>.md --reference-doc=reference.docx -o salida.docx` y confirmar que
+  Pandoc reconoce y aplica los estilos.
+- Abrir el `.docx` resultante en Word o LibreOffice y confirmar visualmente el render.
+
+Esta validacion contra Pandoc real queda **pendiente**. Lo que este README certifica es
+unicamente lo verificable sin Pandoc: estructura ZIP/XML valida y presencia de los `w:styleId`
+requeridos (ver seccion anterior).
+
+### Como se consume
 
 ```
 pandoc <artefacto>.md --reference-doc=packages/machine-core/templates/reference.docx -o <artefacto>.docx
 ```
 
-Pandoc toma los estilos definidos en el `.docx` de referencia (Word: "Estilos" del documento)
-y los aplica al documento generado. La plantilla debe crearse en Word/LibreOffice a partir de
-la identidad corporativa real, guardando los estilos con los nombres que Pandoc reconoce
-(`Heading 1`, `Heading 2`, `Body Text`, etc.).
+### Impacto mientras la plantilla corporativa real no se provea
 
-### Impacto del bloqueo
-
-Mientras esta plantilla no se provea:
-
-- `machine-render-docx` **no puede completarse end-to-end** para el escenario de exportación
-  aprobada.
-- Solo la ruta de rechazo (puerta pendiente, Pandoc ausente) es verificable hoy.
-- Ningún comando ni tool debe sustituir esta ausencia por una plantilla genérica o inventada.
-
-Quien provea la plantilla corporativa debe colocar el archivo en la ruta indicada arriba y
-retirar esta advertencia de `NEEDS INPUT`.
+- `machine_render_docx` **funciona end-to-end**, pero produce documentos con el formato neutro
+  de este repositorio, no con la identidad de marca del cliente.
+- La validacion contra Pandoc real sigue pendiente (ver arriba); el contrato de fallo explicito
+  ante plantilla ausente (`packages/machine-core/src/index.ts`) ya no aplica porque el archivo
+  existe.
+- Ningun tool debe presentar el resultado de este template neutro como si fuera la identidad
+  corporativa real.
