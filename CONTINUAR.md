@@ -29,6 +29,9 @@ a55d404 fix(machine-core): enforce corporate template and deny bash on commands
 - **Python**: uv. `pyproject.toml` y `uv.lock` en la raíz. Ejecutar siempre con `uv run`.
 - **Pandoc**: vive en el `.venv` del repo (`pypandoc-binary`, versión 3.9). NO está instalado en el
   sistema y no debe estarlo. Si falta: `uv sync`.
+- **MarkItDown**: también en el `.venv` (`markitdown[all]`). Es el camino inverso de Pandoc —
+  convierte insumos (PDF, Word, PPT, Excel, HTML, CSV, imágenes, audio) a Markdown vía
+  `tools/convert-inputs/convert_inputs.py`. Tests Python con `uv run pytest`.
 - Prohibido `package-lock.json`, `yarn.lock`, `bun.lockb`, `pip`, `poetry`, `conda`.
 
 ## Convenciones que no se negocian
