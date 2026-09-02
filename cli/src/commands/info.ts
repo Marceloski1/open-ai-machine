@@ -1,5 +1,5 @@
-import { findPackage } from "./catalog";
-import type { CatalogEntry } from "./types";
+import { findPackage } from "../core/catalog";
+import type { CatalogEntry } from "../core/types";
 
 export function getPackageInfo(catalog: CatalogEntry[], id: string): CatalogEntry | undefined {
   return findPackage(catalog, id);

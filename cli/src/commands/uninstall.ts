@@ -1,7 +1,7 @@
 import { rm } from "node:fs/promises";
 import { join } from "node:path";
-import { readInstalledEntries, writeInstalledEntries } from "./installed-registry";
-import type { InstalledTarget } from "./types";
+import { readInstalledEntries, writeInstalledEntries } from "../core/installed-registry";
+import type { InstalledTarget } from "../core/types";
 
 export type RemoveFileFn = (path: string) => Promise<void>;
 

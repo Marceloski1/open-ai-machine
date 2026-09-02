@@ -2,12 +2,12 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { mkdtemp, readFile, rm, stat } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { install } from "./install";
-import { computeSha256 } from "./hash";
-import { readInstalledEntries } from "./installed-registry";
-import type { CatalogEntry } from "./types";
+import { install } from "../src/commands/install";
+import { computeSha256 } from "../src/core/hash";
+import { readInstalledEntries } from "../src/core/installed-registry";
+import type { CatalogEntry } from "../src/core/types";
 
-const FIXTURE_SOURCE_ROOT = join(import.meta.dir, "__fixtures__");
+const FIXTURE_SOURCE_ROOT = join(import.meta.dir, "fixtures");
 
 async function buildEntry(): Promise<CatalogEntry> {
   const commandPath = join(FIXTURE_SOURCE_ROOT, "package-a", "commands", "hello.md");

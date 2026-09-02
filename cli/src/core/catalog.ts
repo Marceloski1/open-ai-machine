@@ -1,7 +1,7 @@
 import type { CatalogEntry } from "./types";
 
 export async function loadCatalog(catalogPath: string): Promise<CatalogEntry[]> {
-  const file = Bun.file(catalogPath);
+  const file = Bun.file(catalogPath); //Explain Bun here. What's Bun ? 
   if (!(await file.exists())) {
     return [];
   }

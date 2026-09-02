@@ -2,9 +2,9 @@ import { copyFile as fsCopyFile, mkdir, mkdtemp, readFile, rm } from "node:fs/pr
 import { existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, dirname, join } from "node:path";
-import { computeSha256 } from "./hash";
-import { readInstalledEntries, writeInstalledEntry } from "./installed-registry";
-import type { CatalogEntry, InstalledEntry, InstalledTarget } from "./types";
+import { computeSha256 } from "../core/hash";
+import { readInstalledEntries, writeInstalledEntry } from "../core/installed-registry";
+import type { CatalogEntry, InstalledEntry, InstalledTarget } from "../core/types";
 
 export type CopyFileFn = (src: string, dest: string) => Promise<void>;
 

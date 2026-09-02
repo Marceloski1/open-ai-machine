@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { parseArgs, resolveTarget } from "./cli";
+import { parseArgs, resolveTarget } from "../src/cli";
 
 describe("parseArgs", () => {
   test("routes install|list|search|info|update|uninstall", () => {

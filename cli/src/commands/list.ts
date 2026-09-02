@@ -1,4 +1,4 @@
-import type { CatalogEntry } from "./types";
+import type { CatalogEntry } from "../core/types";
 
 export function listPackages(catalog: CatalogEntry[]): CatalogEntry[] {
   return catalog;

@@ -2,7 +2,7 @@
   "name": "machine",
   "version": "0.1.0",
   "type": "module",
-  "description": "Instalador de paquetes de The AI Machine para Opencode",
+  "description": "Instalador de paquetes de The AI Machine",
   "main": "src/cli.ts",
   "bin": {
     "machine": "src/cli.ts"

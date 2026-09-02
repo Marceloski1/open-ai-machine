@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { mergeOpencodeConfig } from "./opencode-config";
+import { mergeOpencodeConfig } from "../src/core/opencode-config";
 
 describe("mergeOpencodeConfig", () => {
   test("preserves foreign keys and adds the plugin entry", () => {

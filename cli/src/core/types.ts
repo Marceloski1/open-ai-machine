@@ -1,4 +1,4 @@
-export type InstalledTarget = "global" | "project" | "claude";
+export type InstalledTarget = "global" | "project" | "claude";  //Add Opencode and others CLI targets 
 
 export type CatalogFile = {
   path: string;

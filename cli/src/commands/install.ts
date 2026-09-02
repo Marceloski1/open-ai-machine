@@ -1,9 +1,9 @@
 import { copyFile, mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { readInstalledEntries, writeInstalledEntry } from "./installed-registry";
-import { mergeOpencodeConfig, readOpencodeConfig, writeOpencodeConfig } from "./opencode-config";
-import { resolveConfigPath } from "./paths";
-import type { CatalogEntry, InstalledEntry, InstalledFile, InstalledTarget } from "./types";
+import { readInstalledEntries, writeInstalledEntry } from "../core/installed-registry";
+import { mergeOpencodeConfig, readOpencodeConfig, writeOpencodeConfig } from "../core/opencode-config";
+import { resolveConfigPath } from "../core/paths";
+import type { CatalogEntry, InstalledEntry, InstalledFile, InstalledTarget } from "../core/types";
 
 export type InstallDisclosure = {
   id: string;

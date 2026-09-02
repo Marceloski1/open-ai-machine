@@ -7,8 +7,8 @@ import {
   readInstalledEntries,
   removeInstalledEntry,
   writeInstalledEntry,
-} from "./installed-registry";
-import type { InstalledEntry } from "./types";
+} from "../src/core/installed-registry";
+import type { InstalledEntry } from "../src/core/types";
 
 let destRoot: string;
 

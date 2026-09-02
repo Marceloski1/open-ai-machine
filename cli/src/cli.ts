@@ -2,15 +2,15 @@
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { createInterface } from "node:readline/promises";
-import { findPackage, loadCatalog } from "./catalog";
-import { formatInfo, getPackageInfo } from "./info";
-import { install, type InstallDisclosure } from "./install";
-import { formatList } from "./list";
-import { resolveDestRoot } from "./paths";
-import { searchPackages } from "./search";
-import { uninstall } from "./uninstall";
-import { update } from "./update";
-import type { InstalledTarget } from "./types";
+import { findPackage, loadCatalog } from "./core/catalog";
+import { formatInfo, getPackageInfo } from "./commands/info";
+import { install, type InstallDisclosure } from "./commands/install";
+import { formatList } from "./commands/list";
+import { resolveDestRoot } from "./core/paths";
+import { searchPackages } from "./commands/search";
+import { uninstall } from "./commands/uninstall";
+import { update } from "./commands/update";
+import type { InstalledTarget } from "./core/types";
 
 export type Command = "install" | "list" | "search" | "info" | "update" | "uninstall";
 

@@ -2,11 +2,11 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { install } from "./install";
-import { update } from "./update";
-import { computeSha256 } from "./hash";
-import { readInstalledEntries } from "./installed-registry";
-import type { CatalogEntry } from "./types";
+import { install } from "../src/commands/install";
+import { update } from "../src/commands/update";
+import { computeSha256 } from "../src/core/hash";
+import { readInstalledEntries } from "../src/core/installed-registry";
+import type { CatalogEntry } from "../src/core/types";
 
 let destRoot: string;
 let sourceRoot: string;

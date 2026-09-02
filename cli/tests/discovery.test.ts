@@ -1,11 +1,11 @@
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
-import { loadCatalog, findPackage } from "./catalog";
-import { listPackages, formatList } from "./list";
-import { searchPackages } from "./search";
-import { getPackageInfo, formatInfo } from "./info";
+import { loadCatalog, findPackage } from "../src/core/catalog";
+import { listPackages, formatList } from "../src/commands/list";
+import { searchPackages } from "../src/commands/search";
+import { getPackageInfo, formatInfo } from "../src/commands/info";
 
-const FIXTURE_CATALOG_PATH = join(import.meta.dir, "__fixtures__", "catalog.json");
+const FIXTURE_CATALOG_PATH = join(import.meta.dir, "fixtures", "catalog.json");
 
 describe("discovery: list/search/info", () => {
   test("loadCatalog reads the fixture catalog", async () => {
@@ -14,7 +14,7 @@ describe("discovery: list/search/info", () => {
   });
 
   test("loadCatalog returns [] for a missing file", async () => {
-    const catalog = await loadCatalog(join(import.meta.dir, "__fixtures__", "does-not-exist.json"));
+    const catalog = await loadCatalog(join(import.meta.dir, "fixtures", "does-not-exist.json"));
     expect(catalog).toEqual([]);
   });
 
