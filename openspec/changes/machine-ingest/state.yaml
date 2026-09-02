@@ -1,0 +1,33 @@
+change: machine-ingest
+backend: openspec
+updated: 2026-09-02
+
+decisions:
+  ingesta_ubicacion: machine-core (no un paquete nuevo; ya es dueno del estado y del hash)
+  hash_objetivo: insumo original, nunca su conversion a Markdown
+  clasificacion_ambigua: NEEDS INPUT, nunca una route arbitraria
+  paquetes_python: fuera de alcance mientras el codigo ejecutable no se distribuya
+
+open_questions:
+  - proveedor de transcripcion y como se configura su credencial
+  - ffmpeg se vendoriza como pandoc, o se delega el audio en una API
+  - como se distribuye el codigo ejecutable de un paquete (bloquea packages/py)
+  - OCR de imagenes y PDF escaneado: recomendado diferir
+
+blocked_by:
+  - distribucion del codigo ejecutable (INSTALLABLE_DIRS no incluye src/, install no lee runtime)
+
+artifacts:
+  exploration: done
+  proposal: done
+  specs: pending
+  design: pending
+  tasks: pending
+  apply: pending
+  verify: pending
+  archive: pending
+
+specs_domains:
+  - machine-core
+
+next_recommended: sdd-spec

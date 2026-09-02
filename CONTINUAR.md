@@ -126,7 +126,18 @@ constancia de qué aprobación falta, sin incorporar el contenido pendiente.
 
 Ordenado por lo que bloquea a lo demás.
 
-### 1. La ingesta de insumos no existe — el hueco más grave
+### 1. La ingesta de insumos no existe — el hueco más grave (change abierto)
+
+**Change `machine-ingest` abierto** en `openspec/changes/machine-ingest/`, con exploración,
+propuesta y estado. Próximo artefacto: `sdd-spec`.
+
+Hallazgo de la exploración que no estaba en este inventario: **el código ejecutable de un paquete
+no se distribuye**. `INSTALLABLE_DIRS` es `["commands", "agents", "skills", "templates"]`, así que
+el `src/` no entra en el catálogo, y el instalador **no lee `runtime`**. No se nota porque los
+paquetes Node funcionan dentro de este clon, pero significa que un paquete Python no tiene forma
+de llegar al usuario. Por eso la propuesta deja la ingesta en `machine-core` y no crea nada en
+`packages/py`.
+
 
 `machine_process_input` recibe `{ content, route, outputPath }` **ya resueltos**
 (`packages/node/machine-core/src/index.ts:29`). No lee `docs/<proyecto>/inputs/`, no enumera
