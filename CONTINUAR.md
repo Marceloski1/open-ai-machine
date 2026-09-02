@@ -102,6 +102,24 @@ Creado el README raíz con instalación, targets y límites. Escrita
 `openspec/changes/ai-machine-opencode/specs/machine-discovery/spec.md`, el artefacto SDD que
 faltaba para poder implementar la fase.
 
+### 8. Fase Discovery completa
+
+`packages/node/machine-discovery` implementa los **siete** comandos con TDD:
+`machine-discovery-init`, `machine-requirements`, `machine-hla`, `machine-draft-prds`,
+`machine-time-estimation`, `machine-planning` y `machine-project-doc`. Se instala end-to-end.
+
+**La cadena de puertas está cerrada**: `proposal → requirements → prds → estimation → planning`,
+y `project` depende de las cinco. Re-aprobar cualquier eslabón invalida lo que cuelga debajo vía
+`invalidateDownstream` de `machine-core`; Discovery no duplica ni una regla de cascada.
+
+**Cada artefacto se deriva del artefacto de aguas arriba leído en disco**, no de una lista que el
+agente pase en paralelo: los PRD se leen de `discovery/prds/`, y la estimación y el plan parsean
+la tabla del anterior. Referenciar algo que no existe aguas arriba rechaza la operación completa
+nombrándolo, en vez de descartar la fila en silencio.
+
+`machine-project-doc` es el único que lee **varias** puertas: consolida solo lo aprobado y deja
+constancia de qué aprobación falta, sin incorporar el contenido pendiente.
+
 ---
 
 ## Lo que falta de verdad (inventario verificado)
@@ -126,54 +144,19 @@ hueco está señalizado pero vacío. Decisión ya tomada en la propuesta: API de
 configurable con override local. **Falta decidir el proveedor y si FFmpeg se vendoriza** como se
 hizo con Pandoc.
 
-### 3. La fase Discovery: seis de siete comandos
+### 3. El pre-render de Mermaid sigue sin resolver
 
-Ya existe la delta spec, y `packages/node/machine-discovery` tiene implementados con TDD
-`machine-discovery-init`, `machine-requirements`, `machine-hla`, `machine-draft-prds`,
-`machine-time-estimation` y `machine-planning`, más su agente y su entrada en el catálogo.
-Se instala end-to-end.
+`machine-hla` escribe los diagramas como bloques Mermaid en el Markdown, que es su fuente de
+verdad, pero **el pre-render a imagen no existe**. Pandoc no interpreta Mermaid, así que el
+`.docx` de un artefacto con diagramas todavía no sale correcto. Hay un `TODO(mermaid)` en
+`src/hla.ts` y el comando lo advierte al usuario.
 
-La cadena de puertas ya está encadenada de punta a punta:
-`proposal → requirements → prds → estimation → planning`. Cada artefacto se deriva leyendo el
-artefacto de aguas arriba **en disco**, no una lista que pase el agente en paralelo: los PRD se
-leen de `discovery/prds/`, y la estimación y el plan parsean la tabla del artefacto anterior.
+Cuando se elija el motor hay que declararlo en `externalRequirements` del manifiesto. Hoy ese
+campo sigue vacío a propósito: el manifiesto no declara requisitos que el paquete todavía no usa.
 
-**Límite conocido del formato**: la estimación y el plan son tablas Markdown, así que un título
-de unidad que contenga `|` rompería la fila. Hoy ningún título lo hace y `unitSlug` no lo
-permite en el nombre de archivo, pero el título se escribe tal cual.
-
-**El Architecture Gate ya está puesto**: `machine-requirements` exige `approvals.proposal` en
-`approved`, y deja `approvals.requirements` en `pending` con `dependsOn: ["proposal"]`, de modo
-que re-aprobar la propuesta invalida los requisitos automáticamente vía
-`invalidateDownstream` de `machine-core`.
-
-Falta **uno**: `project-doc`. Debe rechazar su ejecución mientras el Architecture Gate no esté
-en `approved`; `assertGateApproved(state, "requirements")` de `machine-core` es la pieza a usar,
-sin reimplementarla. `machine-hla` ya sirve de plantilla para ese patrón.
-
-`machine-project-doc` es el distinto: en vez de exigir una puerta, consolida y **debe excluir**
-los artefactos cuya puerta siga pendiente, así que lee varias en vez de una.
-
-`machine-draft-prds` deriva el nombre de archivo de cada PRD del título de la unidad
-(`unitSlug`) y **rechaza dos unidades que colisionen en el mismo archivo** en vez de que una
-pise a la otra en silencio. Regenerar borra los borradores de la corrida anterior para no dejar
-huérfanos de unidades que ya no existen.
-
-**Deuda abierta en `machine-hla`**: los diagramas se escriben como bloques Mermaid en el
-Markdown, que es su fuente de verdad, pero **el pre-render a imagen no existe**. Pandoc no
-interpreta Mermaid, así que el `.docx` de un artefacto con diagramas todavía no es correcto. Hay
-un `TODO(mermaid)` en `src/hla.ts` y el comando lo advierte al usuario. Cuando se resuelva el
-motor, hay que declararlo en `externalRequirements` del manifiesto. Por eso hoy ese campo sigue
-vacío: el manifiesto no declara requisitos que el paquete todavía no usa.
-
-`machine.json` declara solo los comandos que existen de verdad. Al añadir cada uno hay que
-declararlo ahí y regenerar el catálogo — así el registry nunca promete comandos que no están.
-
-Ojo con el tamaño real: cada comando es un `.md` declarativo **más** un tool determinista en
-`src/` con TDD, como en `machine-business`. No son siete archivos, son siete tools con sus tests.
-
-Además arrastra el pre-render de Mermaid a imagen: Pandoc no interpreta Mermaid, así que hace
-falta un motor declarado como requisito externo del paquete. Sin resolver.
+**Límite del formato de tablas**: la estimación y el plan son tablas Markdown, así que un título
+de unidad que contuviera `|` rompería la fila. Hoy ninguno lo hace, pero el título se escribe tal
+cual.
 
 ### 4. Distribución real
 
@@ -198,9 +181,8 @@ documentado en `packages/node/machine-core/templates/README.md`. Depende de que 
 1. **`machine-ingest`**: abrir el change SDD para ingesta + extracción + transcripción (puntos 1,
    2 y 5, que son el mismo problema desde tres ángulos). Requiere decidir proveedor de
    transcripción y qué hacer con FFmpeg.
-2. **Discovery**: implementar contra la spec ya escrita, incremento a incremento, empezando por
-   `discovery-init` y el Architecture Gate, que es el requisito distintivo de la fase.
-3. **Distribución**: cuando esté decidido dónde se publica.
+2. **Distribución**: cuando esté decidido dónde se publica.
+3. **Mermaid**: elegir el motor de pre-render para que el `.docx` de `hla.md` sea correcto.
 
 ---
 

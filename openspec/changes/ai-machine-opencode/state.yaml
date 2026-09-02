@@ -15,7 +15,7 @@ artifacts:
   specs: done
   design: done
   tasks: done
-  apply: secciones 1 (marketplace), 2 (machine-core) y 3 (machine-business) completas; machine-discovery con spec pero sin implementar
+  apply: secciones 1 (marketplace), 2 (machine-core) y 3 (machine-business) completas; machine-discovery completo (7 comandos con TDD)
   verify: pending
   archive: pending
 

@@ -86,7 +86,7 @@
     {
       "id": "machine-discovery",
       "version": "0.1.0",
-      "description": "Fase de descubrimiento del pipeline: convierte los insumos clasificados como route discovery y la propuesta de negocio aprobada en los artefactos de descubrimiento. machine-discovery-init prepara la estructura de la fase y machine-requirements sintetiza alcance, requisitos funcionales y no funcionales y restricciones en discovery/requirements.md, cerrando con el Architecture Gate que bloquea todo lo que viene despues. Depende de machine-core para el estado, las puertas de aprobacion y el renderizado.",
+      "description": "Fase de descubrimiento del pipeline: convierte los insumos clasificados como route discovery y la propuesta de negocio aprobada en los artefactos de descubrimiento. machine-discovery-init prepara la estructura, machine-requirements sintetiza los requisitos y cierra con el Architecture Gate que bloquea todo lo que sigue, y machine-hla, machine-draft-prds, machine-time-estimation, machine-planning y machine-project-doc derivan arquitectura, PRD por unidad funcional, estimacion, plan de trabajo y el documento consolidado, cada uno con su propia puerta humana. Depende de machine-core para el estado, las puertas de aprobacion y el renderizado.",
       "packageDir": "packages/node/machine-discovery",
       "runtime": "node",
       "commands": [
@@ -95,7 +95,8 @@
         "machine-hla",
         "machine-draft-prds",
         "machine-time-estimation",
-        "machine-planning"
+        "machine-planning",
+        "machine-project-doc"
       ],
       "agents": [
         "machine-discovery"
@@ -103,7 +104,7 @@
       "skills": [],
       "templates": [],
       "compatibility": "opencode-v1",
-      "checksum": "106ae3863a03ea954f64345d1e87225dee3ddeedfea770f0b6ddfc2d474f4331",
+      "checksum": "bfbad694d0020fa8bbff16c7bae4b70854875bbd521f38b8cdf241ae46fbe7f1",
       "permissions": {},
       "externalRequirements": [],
       "files": [
@@ -126,6 +127,10 @@
         {
           "path": "commands/machine-planning.md",
           "sha256": "8e17a10a82e6cda4bdf40741fecfaa78390c00d80ea5612d383ec3edc45a7c24"
+        },
+        {
+          "path": "commands/machine-project-doc.md",
+          "sha256": "1a1aadc98c64d9baec7efb63b9096e2d8a098bf65e497c49a8737e67224fa371"
         },
         {
           "path": "commands/machine-requirements.md",

@@ -3,14 +3,15 @@
   "version": "0.1.0",
   "target": "plugin",
   "runtime": "node",
-  "description": "Fase de descubrimiento del pipeline: convierte los insumos clasificados como route discovery y la propuesta de negocio aprobada en los artefactos de descubrimiento. machine-discovery-init prepara la estructura de la fase y machine-requirements sintetiza alcance, requisitos funcionales y no funcionales y restricciones en discovery/requirements.md, cerrando con el Architecture Gate que bloquea todo lo que viene despues. Depende de machine-core para el estado, las puertas de aprobacion y el renderizado.",
+  "description": "Fase de descubrimiento del pipeline: convierte los insumos clasificados como route discovery y la propuesta de negocio aprobada en los artefactos de descubrimiento. machine-discovery-init prepara la estructura, machine-requirements sintetiza los requisitos y cierra con el Architecture Gate que bloquea todo lo que sigue, y machine-hla, machine-draft-prds, machine-time-estimation, machine-planning y machine-project-doc derivan arquitectura, PRD por unidad funcional, estimacion, plan de trabajo y el documento consolidado, cada uno con su propia puerta humana. Depende de machine-core para el estado, las puertas de aprobacion y el renderizado.",
   "commands": [
     "machine-discovery-init",
     "machine-requirements",
     "machine-hla",
     "machine-draft-prds",
     "machine-time-estimation",
-    "machine-planning"
+    "machine-planning",
+    "machine-project-doc"
   ],
   "agents": [
     "machine-discovery"

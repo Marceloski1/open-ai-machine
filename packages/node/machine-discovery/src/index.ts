@@ -3,6 +3,7 @@ import { machine_discovery_hla } from "./hla";
 import { machine_discovery_time_estimation } from "./estimation";
 import { machine_discovery_planning } from "./planning";
 import { machine_discovery_draft_prds } from "./prds";
+import { machine_discovery_project_doc } from "./project-doc";
 import { machine_discovery_requirements } from "./requirements";
 
 export { machine_discovery_init, discoveryDir } from "./init";
@@ -14,6 +15,8 @@ export type { EstimationArgs, EstimationResult, UnitEstimate } from "./estimatio
 export { machine_discovery_planning, planningPath, parseEstimatedUnits } from "./planning";
 export type { PlanningArgs, PlanningItem, PlanningResult } from "./planning";
 export { machine_discovery_draft_prds, prdsDir, unitSlug } from "./prds";
+export { machine_discovery_project_doc, projectDocPath } from "./project-doc";
+export type { ProjectDocArgs, ProjectDocResult } from "./project-doc";
 export type { DraftPrdsArgs, DraftPrdsResult, PrdUnit } from "./prds";
 export { machine_discovery_requirements, requirementsPath } from "./requirements";
 export type { RequirementsArgs, RequirementsResult, RequirementsSections } from "./requirements";
@@ -27,6 +30,7 @@ export default async function machineDiscoveryPlugin() {
       machine_discovery_draft_prds,
       machine_discovery_time_estimation,
       machine_discovery_planning,
+      machine_discovery_project_doc,
     },
   };
 }
