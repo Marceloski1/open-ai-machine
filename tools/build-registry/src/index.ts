@@ -142,7 +142,7 @@ export async function discoverPackageDirs(packagesRoot: string): Promise<string[
       dirs.push(packageDir);
     }
   }
-  return dirs;
+  return dirs.sort();
 }
 
 export async function writeRegistry(registryIndexPath: string, catalog: Catalog): Promise<void> {

@@ -23,4 +23,24 @@ jobs:
         run: pnpm test
       - name: Build registry
         run: bun run tools/build-registry/src/index.ts
-      # TODO(cli): agregar validacion de instalacion con pnpm y con Bun una vez que cli/ este listo
+      - name: Check registry is up to date
+        run: git diff --exit-code registry/index.json
+      # El CLI se ejecuta con Bun (usa Bun.file), no con Node. pnpm queda para las
+      # dependencias del workspace; la instalacion se valida con el binario real.
+      - name: Validate installation end to end (Bun)
+        run: |
+          set -euo pipefail
+          workdir="$(mktemp -d)"
+          cli="$GITHUB_WORKSPACE/cli/src/cli.ts"
+          cd "$workdir"
+
+          test "$(bun "$cli" install machine-core --yes)" = "installed"
+          test -f .opencode/commands/machine-process-input.md
+          test -f .opencode/agents/machine.md
+          test -f .opencode/templates/reference.docx
+          test -f .opencode/installed.json
+          test -f opencode.json
+
+          test "$(bun "$cli" install machine-core --yes)" = "unchanged"
+          test "$(bun "$cli" uninstall machine-core)" = "removed"
+          test ! -f .opencode/commands/machine-process-input.md

@@ -2,7 +2,8 @@ import { describe, expect, test } from "bun:test";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { buildRegistry } from "./index";
+import { basename } from "node:path";
+import { buildRegistry, discoverPackageDirs } from "./index";
 
 const fixturesDir = join(import.meta.dir, "..", "__fixtures__");
 
@@ -88,5 +89,14 @@ describe("buildRegistry: contrato con el instalador", () => {
     });
 
     expect(result.packages[0]!.runtime).toBe("node");
+  });
+});
+
+describe("discoverPackageDirs", () => {
+  test("devuelve los directorios en orden estable, no en el que da el sistema de archivos", async () => {
+    const names = (await discoverPackageDirs(fixturesDir)).map((dir) => basename(dir));
+
+    expect(names).toEqual([...names].sort());
+    expect(names).toContain("with-files");
   });
 });
