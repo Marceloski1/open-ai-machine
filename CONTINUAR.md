@@ -128,8 +128,14 @@ Ordenado por lo que bloquea a lo demás.
 
 ### 1. La ingesta de insumos no existe — el hueco más grave (change abierto)
 
-**Change `machine-ingest` abierto** en `openspec/changes/machine-ingest/`, con exploración,
-propuesta y estado. Próximo artefacto: `sdd-spec`.
+**Change `machine-ingest` en `openspec/changes/machine-ingest/`**, con exploración, propuesta y
+la delta spec de `machine-core` ya escritas. **Próximo artefacto: `sdd-design`.**
+
+La delta spec (`specs/machine-core/spec.md`) fija ocho requisitos: enumeración recursiva con orden
+estable, idempotencia **sobre el insumo original**, conversión reutilizando la extracción
+existente, `NEEDS INPUT` para lo no extraíble y para el audio, rechazo de una `route` no
+reconocida, índice reproducible desde el estado, y compatibilidad de la firma actual de
+`machine_process_input`. No redefine lo que la spec de `machine-core` ya cubre: se apoya en ello.
 
 Hallazgo de la exploración que no estaba en este inventario: **el código ejecutable de un paquete
 no se distribuye**. `INSTALLABLE_DIRS` es `["commands", "agents", "skills", "templates"]`, así que
@@ -189,9 +195,10 @@ documentado en `packages/node/machine-core/templates/README.md`. Depende de que 
 
 ## Recomendación para retomar
 
-1. **`machine-ingest`**: abrir el change SDD para ingesta + extracción + transcripción (puntos 1,
-   2 y 5, que son el mismo problema desde tres ángulos). Requiere decidir proveedor de
-   transcripción y qué hacer con FFmpeg.
+1. **`machine-ingest`**: continuar el change por `sdd-design` y luego `sdd-tasks`. Las cuatro
+   primeras fases de la propuesta (enumeración, conversión, clasificación, comando) **no dependen
+   de ninguna decisión abierta** y ya se pueden implementar. La transcripción y `packages/py`
+   esperan a que se decidan proveedor, FFmpeg y distribución del código ejecutable.
 2. **Distribución**: cuando esté decidido dónde se publica.
 3. **Mermaid**: elegir el motor de pre-render para que el `.docx` de `hla.md` sea correcto.
 

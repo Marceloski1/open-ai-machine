@@ -20,7 +20,7 @@ blocked_by:
 artifacts:
   exploration: done
   proposal: done
-  specs: pending
+  specs: done (delta de machine-core: enumeracion, conversion, indice, clasificacion)
   design: pending
   tasks: pending
   apply: pending
@@ -30,4 +30,4 @@ artifacts:
 specs_domains:
   - machine-core
 
-next_recommended: sdd-spec
+next_recommended: sdd-design
