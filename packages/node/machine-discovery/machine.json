@@ -1,0 +1,20 @@
+{
+  "id": "machine-discovery",
+  "version": "0.1.0",
+  "target": "plugin",
+  "runtime": "node",
+  "description": "Fase de descubrimiento del pipeline: convierte los insumos clasificados como route discovery y la propuesta de negocio aprobada en los artefactos de descubrimiento. machine-discovery-init prepara la estructura del proyecto para la fase. Depende de machine-core para el estado, las puertas de aprobacion y el renderizado.",
+  "commands": [
+    "machine-discovery-init"
+  ],
+  "agents": [
+    "machine-discovery"
+  ],
+  "skills": [],
+  "templates": [],
+  "dependencies": [
+    "machine-core"
+  ],
+  "externalRequirements": [],
+  "permissions": {}
+}

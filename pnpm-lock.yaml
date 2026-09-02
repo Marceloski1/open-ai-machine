@@ -18,4 +18,10 @@ importers:
 
   packages/node/machine-core: {}
 
+  packages/node/machine-discovery:
+    dependencies:
+      machine-core:
+        specifier: workspace:*
+        version: link:../machine-core
+
   tools/build-registry: {}

@@ -126,11 +126,17 @@ hueco está señalizado pero vacío. Decisión ya tomada en la propuesta: API de
 configurable con override local. **Falta decidir el proveedor y si FFmpeg se vendoriza** como se
 hizo con Pandoc.
 
-### 3. La fase Discovery: spec lista, implementación pendiente
+### 3. La fase Discovery: empezada, seis comandos por delante
 
-Ya existe la delta spec. Falta el paquete `packages/node/machine-discovery` con sus **siete**
-comandos: `discovery-init`, `requirements` (que cierra con el Architecture Gate), `hla`,
+Ya existe la delta spec, y el paquete `packages/node/machine-discovery` está creado con su
+primer comando (`machine-discovery-init`) implementado con TDD, su agente y su entrada en el
+catálogo. Se instala end-to-end.
+
+Faltan los **seis** restantes: `requirements` (que cierra con el Architecture Gate), `hla`,
 `draft-prds`, `time-estimation`, `planning` y `project-doc`.
+
+`machine.json` declara solo los comandos que existen de verdad. Al añadir cada uno hay que
+declararlo ahí y regenerar el catálogo — así el registry nunca promete comandos que no están.
 
 Ojo con el tamaño real: cada comando es un `.md` declarativo **más** un tool determinista en
 `src/` con TDD, como en `machine-business`. No son siete archivos, son siete tools con sus tests.
