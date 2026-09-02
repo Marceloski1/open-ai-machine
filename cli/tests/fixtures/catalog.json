@@ -4,19 +4,43 @@
     "version": "0.1.0",
     "description": "Nucleo determinista de The AI Machine: estado, hash, puertas de aprobacion.",
     "packageDir": "packages/machine-core",
-    "commands": ["machine-process-input", "machine-render-docx", "machine-approve"],
-    "agents": ["machine"],
+    "runtime": "node",
+    "commands": [
+      "machine-process-input",
+      "machine-render-docx",
+      "machine-approve"
+    ],
+    "agents": [
+      "machine"
+    ],
     "skills": [],
     "templates": [],
     "compatibility": "opencode>=1.0.0",
     "checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    "permissions": { "bash": "deny", "edit": "ask" },
-    "externalRequirements": ["pandoc"],
+    "permissions": {
+      "bash": "deny",
+      "edit": "ask"
+    },
+    "externalRequirements": [
+      "pandoc"
+    ],
     "files": [
-      { "path": "commands/machine-process-input.md", "sha256": "1111111111111111111111111111111111111111111111111111111111111111" },
-      { "path": "commands/machine-render-docx.md", "sha256": "2222222222222222222222222222222222222222222222222222222222222222" },
-      { "path": "commands/machine-approve.md", "sha256": "3333333333333333333333333333333333333333333333333333333333333333" },
-      { "path": "agents/machine.md", "sha256": "4444444444444444444444444444444444444444444444444444444444444444" }
+      {
+        "path": "commands/machine-process-input.md",
+        "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      {
+        "path": "commands/machine-render-docx.md",
+        "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+      },
+      {
+        "path": "commands/machine-approve.md",
+        "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      {
+        "path": "agents/machine.md",
+        "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+      }
     ]
   },
   {
@@ -24,18 +48,36 @@
     "version": "0.1.0",
     "description": "Pipeline de propuesta de negocio de The AI Machine.",
     "packageDir": "packages/machine-business",
-    "commands": ["machine-business-init", "machine-business-proposal"],
-    "agents": ["machine-business"],
+    "runtime": "node",
+    "commands": [
+      "machine-business-init",
+      "machine-business-proposal"
+    ],
+    "agents": [
+      "machine-business"
+    ],
     "skills": [],
     "templates": [],
     "compatibility": "opencode>=1.0.0",
     "checksum": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-    "permissions": { "bash": "deny", "edit": "ask" },
+    "permissions": {
+      "bash": "deny",
+      "edit": "ask"
+    },
     "externalRequirements": [],
     "files": [
-      { "path": "commands/machine-business-init.md", "sha256": "5555555555555555555555555555555555555555555555555555555555555555" },
-      { "path": "commands/machine-business-proposal.md", "sha256": "6666666666666666666666666666666666666666666666666666666666666666" },
-      { "path": "agents/machine-business.md", "sha256": "7777777777777777777777777777777777777777777777777777777777777777" }
+      {
+        "path": "commands/machine-business-init.md",
+        "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+      },
+      {
+        "path": "commands/machine-business-proposal.md",
+        "sha256": "6666666666666666666666666666666666666666666666666666666666666666"
+      },
+      {
+        "path": "agents/machine-business.md",
+        "sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+      }
     ]
   }
 ]

@@ -5,11 +5,14 @@ export type CatalogFile = {
   sha256: string;
 };
 
+export type Runtime = "node" | "python";
+
 export type CatalogEntry = {
   id: string;
   version: string;
   description: string;
   packageDir: string;
+  runtime: Runtime;
   commands: string[];
   agents: string[];
   skills: string[];

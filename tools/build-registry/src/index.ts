@@ -1,13 +1,22 @@
 import { existsSync } from "node:fs";
 import { readFile, readdir, writeFile } from "node:fs/promises";
-import { join, resolve } from "node:path";
-import { computePackageChecksum } from "./checksum";
+import { join, relative, resolve, sep } from "node:path";
+import { computePackageChecksum, hashFile, listPackageFiles } from "./checksum";
 import { validateManifest } from "./validate";
+
+export type Runtime = "node" | "python";
+
+export type CatalogFile = {
+  path: string;
+  sha256: string;
+};
 
 export type CatalogEntry = {
   id: string;
   version: string;
   description: string;
+  packageDir: string;
+  runtime: Runtime;
   commands: string[];
   agents: string[];
   skills: string[];
@@ -16,6 +25,7 @@ export type CatalogEntry = {
   checksum: string;
   permissions: Record<string, unknown>;
   externalRequirements: string[];
+  files: CatalogFile[];
 };
 
 export type Catalog = {
@@ -25,12 +35,31 @@ export type Catalog = {
 export type BuildRegistryOptions = {
   packageDirs: string[];
   compatibility?: string;
+  repoRoot?: string;
 };
+
+const INSTALLABLE_DIRS = ["commands", "agents", "skills", "templates"] as const;
+
+function toPosix(path: string): string {
+  return path.split(sep).join("/");
+}
+
+function isInstallable(relativePath: string): boolean {
+  return INSTALLABLE_DIRS.some((dir) => relativePath.startsWith(`${dir}/`));
+}
+
+async function collectInstallableFiles(packageDir: string): Promise<CatalogFile[]> {
+  const files = (await listPackageFiles(packageDir)).filter(isInstallable);
+  return Promise.all(
+    files.map(async (path) => ({ path, sha256: await hashFile(join(packageDir, path)) })),
+  );
+}
 
 type Manifest = {
   id: string;
   version: string;
   description?: string;
+  runtime?: Runtime;
   commands: string[];
   agents: string[];
   skills: string[];
@@ -68,6 +97,7 @@ function detectCommandCollisions(manifests: { packageDir: string; manifest: Mani
 
 export async function buildRegistry(options: BuildRegistryOptions): Promise<Catalog> {
   const compatibility = options.compatibility ?? "opencode-v1";
+  const repoRoot = options.repoRoot ?? process.cwd();
 
   const manifests = await Promise.all(
     options.packageDirs.map(async (packageDir) => ({
@@ -83,6 +113,8 @@ export async function buildRegistry(options: BuildRegistryOptions): Promise<Cata
       id: manifest.id,
       version: manifest.version,
       description: manifest.description ?? "",
+      packageDir: toPosix(relative(repoRoot, packageDir)),
+      runtime: manifest.runtime ?? "node",
       commands: manifest.commands,
       agents: manifest.agents,
       skills: manifest.skills,
@@ -91,6 +123,7 @@ export async function buildRegistry(options: BuildRegistryOptions): Promise<Cata
       checksum: await computePackageChecksum(packageDir),
       permissions: manifest.permissions,
       externalRequirements: manifest.externalRequirements,
+      files: await collectInstallableFiles(packageDir),
     })),
   );
 
@@ -132,7 +165,7 @@ async function main(): Promise<void> {
   const repoRoot = resolve(import.meta.dir, "..", "..", "..");
   const packagesRoot = join(repoRoot, "packages");
   const packageDirs = await discoverAllPackageDirs(packagesRoot);
-  const catalog = await buildRegistry({ packageDirs });
+  const catalog = await buildRegistry({ packageDirs, repoRoot });
   const registryIndexPath = join(repoRoot, "registry", "index.json");
   await writeRegistry(registryIndexPath, catalog);
   console.log(`registry/index.json generado con ${catalog.packages.length} paquete(s).`);

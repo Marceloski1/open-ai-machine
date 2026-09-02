@@ -2,6 +2,7 @@
   "id": "machine-business",
   "version": "0.1.0",
   "target": "plugin",
+  "runtime": "node",
   "description": "Fase 0 del pipeline: convierte insumos de una reunion en una propuesta de negocio aprobada. machine-business-init crea la estructura estandar del proyecto y machine-business-proposal sintetiza mercado, problema, solucion y estimacion en business/proposal.md a partir de los insumos clasificados como route business, marcando como NEEDS INPUT lo que no tenga respaldo. Depende de machine-core para el estado, el hash de insumos y las puertas de aprobacion.",
   "commands": [
     "machine-business-init",
@@ -12,7 +13,9 @@
   ],
   "skills": [],
   "templates": [],
-  "dependencies": ["machine-core"],
+  "dependencies": [
+    "machine-core"
+  ],
   "externalRequirements": [],
   "permissions": {}
 }

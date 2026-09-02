@@ -1,0 +1,14 @@
+{
+  "id": "machine-delta",
+  "version": "0.2.0",
+  "target": "plugin",
+  "runtime": "python",
+  "description": "Paquete de prueba con contenido instalable y ruido no instalable.",
+  "commands": ["machine-delta-run"],
+  "agents": ["delta"],
+  "skills": [],
+  "templates": [],
+  "dependencies": [],
+  "externalRequirements": [],
+  "permissions": {}
+}

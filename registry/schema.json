@@ -42,26 +42,43 @@
         },
         "agents": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "skills": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "templates": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "dependencies": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "externalRequirements": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "permissions": {
           "type": "object"
+        },
+        "runtime": {
+          "type": "string",
+          "enum": [
+            "node",
+            "python"
+          ]
         }
       }
     },
@@ -79,51 +96,116 @@
         "compatibility",
         "checksum",
         "permissions",
-        "externalRequirements"
+        "externalRequirements",
+        "packageDir",
+        "runtime",
+        "files"
       ],
       "properties": {
-        "id": { "type": "string" },
-        "version": { "type": "string" },
-        "description": { "type": "string" },
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
         "commands": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "agents": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "skills": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "templates": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
-        "compatibility": { "type": "string" },
-        "checksum": { "type": "string" },
-        "permissions": { "type": "object" },
+        "compatibility": {
+          "type": "string"
+        },
+        "checksum": {
+          "type": "string"
+        },
+        "permissions": {
+          "type": "object"
+        },
         "externalRequirements": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
+        },
+        "runtime": {
+          "type": "string",
+          "enum": [
+            "node",
+            "python"
+          ]
+        },
+        "packageDir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "sha256"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
         }
       }
     },
     "catalog": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["packages"],
+      "required": [
+        "packages"
+      ],
       "properties": {
         "packages": {
           "type": "array",
-          "items": { "$ref": "#/definitions/catalogEntry" }
+          "items": {
+            "$ref": "#/definitions/catalogEntry"
+          }
         }
       }
     }
   },
   "oneOf": [
-    { "$ref": "#/definitions/manifest" },
-    { "$ref": "#/definitions/catalog" }
+    {
+      "$ref": "#/definitions/manifest"
+    },
+    {
+      "$ref": "#/definitions/catalog"
+    }
   ]
 }
