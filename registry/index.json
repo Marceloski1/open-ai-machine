@@ -94,7 +94,8 @@
         "machine-requirements",
         "machine-hla",
         "machine-draft-prds",
-        "machine-time-estimation"
+        "machine-time-estimation",
+        "machine-planning"
       ],
       "agents": [
         "machine-discovery"
@@ -102,7 +103,7 @@
       "skills": [],
       "templates": [],
       "compatibility": "opencode-v1",
-      "checksum": "4c6498fdec7130fff03faac3360ff428070d7ed374b3d6d389a0770286a852ff",
+      "checksum": "106ae3863a03ea954f64345d1e87225dee3ddeedfea770f0b6ddfc2d474f4331",
       "permissions": {},
       "externalRequirements": [],
       "files": [
@@ -121,6 +122,10 @@
         {
           "path": "commands/machine-hla.md",
           "sha256": "ee7b332fc0cf3ba8a26443858204ff37555739e77a3f9bc0821f9c31f769149b"
+        },
+        {
+          "path": "commands/machine-planning.md",
+          "sha256": "8e17a10a82e6cda4bdf40741fecfaa78390c00d80ea5612d383ec3edc45a7c24"
         },
         {
           "path": "commands/machine-requirements.md",

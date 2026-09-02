@@ -126,21 +126,30 @@ hueco está señalizado pero vacío. Decisión ya tomada en la propuesta: API de
 configurable con override local. **Falta decidir el proveedor y si FFmpeg se vendoriza** como se
 hizo con Pandoc.
 
-### 3. La fase Discovery: empezada, dos comandos por delante
+### 3. La fase Discovery: seis de siete comandos
 
 Ya existe la delta spec, y `packages/node/machine-discovery` tiene implementados con TDD
-`machine-discovery-init`, `machine-requirements`, `machine-hla`, `machine-draft-prds` y
-`machine-time-estimation`, más su agente y su entrada en el catálogo. Se instala end-to-end.
+`machine-discovery-init`, `machine-requirements`, `machine-hla`, `machine-draft-prds`,
+`machine-time-estimation` y `machine-planning`, más su agente y su entrada en el catálogo.
+Se instala end-to-end.
+
+La cadena de puertas ya está encadenada de punta a punta:
+`proposal → requirements → prds → estimation → planning`. Cada artefacto se deriva leyendo el
+artefacto de aguas arriba **en disco**, no una lista que pase el agente en paralelo: los PRD se
+leen de `discovery/prds/`, y la estimación y el plan parsean la tabla del artefacto anterior.
+
+**Límite conocido del formato**: la estimación y el plan son tablas Markdown, así que un título
+de unidad que contenga `|` rompería la fila. Hoy ningún título lo hace y `unitSlug` no lo
+permite en el nombre de archivo, pero el título se escribe tal cual.
 
 **El Architecture Gate ya está puesto**: `machine-requirements` exige `approvals.proposal` en
 `approved`, y deja `approvals.requirements` en `pending` con `dependsOn: ["proposal"]`, de modo
 que re-aprobar la propuesta invalida los requisitos automáticamente vía
 `invalidateDownstream` de `machine-core`.
 
-Faltan los **dos** restantes: `planning` y `project-doc`. Ambos deben
-rechazar su ejecución mientras el Architecture Gate no esté en `approved`;
-`assertGateApproved(state, "requirements")` de `machine-core` es la pieza a usar, sin
-reimplementarla. `machine-hla` ya sirve de plantilla para ese patrón.
+Falta **uno**: `project-doc`. Debe rechazar su ejecución mientras el Architecture Gate no esté
+en `approved`; `assertGateApproved(state, "requirements")` de `machine-core` es la pieza a usar,
+sin reimplementarla. `machine-hla` ya sirve de plantilla para ese patrón.
 
 `machine-project-doc` es el distinto: en vez de exigir una puerta, consolida y **debe excluir**
 los artefactos cuya puerta siga pendiente, así que lee varias en vez de una.

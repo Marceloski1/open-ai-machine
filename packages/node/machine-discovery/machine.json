@@ -9,7 +9,8 @@
     "machine-requirements",
     "machine-hla",
     "machine-draft-prds",
-    "machine-time-estimation"
+    "machine-time-estimation",
+    "machine-planning"
   ],
   "agents": [
     "machine-discovery"
