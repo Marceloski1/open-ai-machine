@@ -126,14 +126,21 @@ hueco está señalizado pero vacío. Decisión ya tomada en la propuesta: API de
 configurable con override local. **Falta decidir el proveedor y si FFmpeg se vendoriza** como se
 hizo con Pandoc.
 
-### 3. La fase Discovery: empezada, seis comandos por delante
+### 3. La fase Discovery: empezada, cinco comandos por delante
 
-Ya existe la delta spec, y el paquete `packages/node/machine-discovery` está creado con su
-primer comando (`machine-discovery-init`) implementado con TDD, su agente y su entrada en el
-catálogo. Se instala end-to-end.
+Ya existe la delta spec, y `packages/node/machine-discovery` tiene implementados con TDD
+`machine-discovery-init` y `machine-requirements`, más su agente y su entrada en el catálogo.
+Se instala end-to-end.
 
-Faltan los **seis** restantes: `requirements` (que cierra con el Architecture Gate), `hla`,
-`draft-prds`, `time-estimation`, `planning` y `project-doc`.
+**El Architecture Gate ya está puesto**: `machine-requirements` exige `approvals.proposal` en
+`approved`, y deja `approvals.requirements` en `pending` con `dependsOn: ["proposal"]`, de modo
+que re-aprobar la propuesta invalida los requisitos automáticamente vía
+`invalidateDownstream` de `machine-core`.
+
+Faltan los **cinco** restantes: `hla`, `draft-prds`, `time-estimation`, `planning` y
+`project-doc`. Todos deben rechazar su ejecución mientras el Architecture Gate no esté en
+`approved`; `assertGateApproved(state, "requirements")` de `machine-core` es la pieza a usar,
+sin reimplementarla.
 
 `machine.json` declara solo los comandos que existen de verdad. Al añadir cada uno hay que
 declararlo ahí y regenerar el catálogo — así el registry nunca promete comandos que no están.

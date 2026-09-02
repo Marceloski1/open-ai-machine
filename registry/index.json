@@ -86,11 +86,12 @@
     {
       "id": "machine-discovery",
       "version": "0.1.0",
-      "description": "Fase de descubrimiento del pipeline: convierte los insumos clasificados como route discovery y la propuesta de negocio aprobada en los artefactos de descubrimiento. machine-discovery-init prepara la estructura del proyecto para la fase. Depende de machine-core para el estado, las puertas de aprobacion y el renderizado.",
+      "description": "Fase de descubrimiento del pipeline: convierte los insumos clasificados como route discovery y la propuesta de negocio aprobada en los artefactos de descubrimiento. machine-discovery-init prepara la estructura de la fase y machine-requirements sintetiza alcance, requisitos funcionales y no funcionales y restricciones en discovery/requirements.md, cerrando con el Architecture Gate que bloquea todo lo que viene despues. Depende de machine-core para el estado, las puertas de aprobacion y el renderizado.",
       "packageDir": "packages/node/machine-discovery",
       "runtime": "node",
       "commands": [
-        "machine-discovery-init"
+        "machine-discovery-init",
+        "machine-requirements"
       ],
       "agents": [
         "machine-discovery"
@@ -98,7 +99,7 @@
       "skills": [],
       "templates": [],
       "compatibility": "opencode-v1",
-      "checksum": "00368f64655a99bc7b68e59c25274aabaa2ce7832ac48af2bf644f73b6f38a23",
+      "checksum": "78df61ce5ef9156d526669117ec61977b51130097593e05f189abc884eceb304",
       "permissions": {},
       "externalRequirements": [],
       "files": [
@@ -109,6 +110,10 @@
         {
           "path": "commands/machine-discovery-init.md",
           "sha256": "a7b1924512566ae87d3689e9964196e0e521f15ddf4052066d4de30751676a42"
+        },
+        {
+          "path": "commands/machine-requirements.md",
+          "sha256": "d3c324409a19c7eed047fb8488a073a22313f5c5eac608f5a7950a96d31eade1"
         }
       ]
     }
