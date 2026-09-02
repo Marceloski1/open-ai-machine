@@ -1,6 +1,6 @@
 change: ai-machine-opencode
 backend: openspec
-updated: 2026-08-28
+updated: 2026-09-02
 
 decisions:
   source_code_origin: rewrite-from-scratch
@@ -15,7 +15,7 @@ artifacts:
   specs: done
   design: done
   tasks: done
-  apply: secciones 2 (machine-core) y 3 (machine-business) completas; seccion 1 (marketplace) pendiente
+  apply: secciones 1 (marketplace), 2 (machine-core) y 3 (machine-business) completas; machine-discovery con spec pero sin implementar
   verify: pending
   archive: pending
 
@@ -23,5 +23,6 @@ specs_domains:
   - marketplace
   - machine-core
   - machine-business
+  - machine-discovery
 
 next_recommended: sdd-apply

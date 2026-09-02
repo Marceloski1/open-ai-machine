@@ -1,6 +1,6 @@
 # Continuar aquí
 
-Estado al cerrar la sesión del **2026-08-28**. Para retomar basta con decir «continúa».
+Estado al cerrar la sesión del **2026-09-02**. Para retomar basta con decir «continúa».
 
 ---
 
@@ -11,16 +11,14 @@ Marketplace público de The AI Machine para Opencode v1. Flujo SDD con backend `
 **Fases 1–3 implementadas y verdes**: plataforma del marketplace, `machine-core` y `machine-business`.
 Las 92 tareas de `openspec/changes/ai-machine-opencode/tasks.md` están marcadas.
 
-Último commit estable: `ea15dfb`.
+Todo lo de esta sesión está en `main`, con el árbol limpio.
 
 ```
-ea15dfb feat: fill catalog descriptions and let users supply their own branding
-2272753 refactor: vendor pandoc into the repo venv instead of the system
-b3fcaac feat(marketplace): add registry, build-registry and cli installer
-92bf065 feat(machine-business): implement phase 0 pipeline with tdd
-e1129ea feat(machine-core): add neutral base docx template with generator
-a55d404 fix(machine-core): enforce corporate template and deny bash on commands
-73aaf30 feat(machine-core): implement deterministic core with tdd
+ci: validate a real installation and keep the registry honest
+fix(registry): emit the fields the installer needs and propagate runtime
+feat(tools): convert inputs to markdown with markitdown
+refactor(cli): split flat src into commands, core and tests
+fc77e0e refactor: split packages by language into node and py
 ```
 
 ## Entorno
@@ -30,7 +28,7 @@ a55d404 fix(machine-core): enforce corporate template and deny bash on commands
 - **Pandoc**: vive en el `.venv` del repo (`pypandoc-binary`, versión 3.9). NO está instalado en el
   sistema y no debe estarlo. Si falta: `uv sync`.
 - **MarkItDown**: también en el `.venv` (`markitdown[all]`). Es el camino inverso de Pandoc —
-  convierte insumos (PDF, Word, PPT, Excel, HTML, CSV, imágenes, audio) a Markdown vía
+  convierte insumos (PDF, Word, PPT, Excel, HTML, CSV) a Markdown vía
   `tools/convert-inputs/convert_inputs.py`. Tests Python con `uv run pytest`.
 - Prohibido `package-lock.json`, `yarn.lock`, `bun.lockb`, `pip`, `poetry`, `conda`.
 
@@ -42,45 +40,67 @@ a55d404 fix(machine-core): enforce corporate template and deny bash on commands
   declarativo (commands, agents, plantillas) está exento.
 - Todo archivo que empiece por `posted` es **material privado**: no se versiona ni se publica.
   El insumo del dominio es `docs/inputs/posted.md`, fuera de git.
+- **`registry/index.json` se genera, nunca se edita a mano.**
 
 ---
 
-## Trabajo en vuelo al cerrar
+## Hecho en esta sesión
 
-**Todo lo de abajo está commiteado. El árbol queda limpio y `pnpm test` da 90 pasando, 0 fallos.**
+### 1. El instalador estaba roto en producción — CORREGIDO
 
-### 1. Reestructuración `packages/node` + `packages/py` — CASI COMPLETA
+El hallazgo más importante. `build-registry` no emitía `packageDir` ni `files`, y `install` lee
+ambos: instalar desde el registry real reventaba con `ERR_INVALID_ARG_TYPE`. **Los 90 tests
+pasaban** porque cada lado corría contra sus propios fixtures, que nunca se cruzaban.
 
-Hecho: `machine-core` y `machine-business` movidos a `packages/node/` con `git mv` (historial
-preservado). Rutas actualizadas en `pnpm-workspace.yaml`, `discoverAllPackageDirs` del
-build-registry (ya escanea `node/` y `py/`), `repoRoot()` de machine-core, los README y los
-artefactos SDD. Creado `packages/py/README.md` con la convención.
+Corregido de punta a punta y protegido con `cli/tests/registry-contract.test.ts`, que instala
+`machine-core` desde el registry **real** y verifica que cada archivo declarado existe y su
+checksum coincide con el disco.
 
-Campo `runtime` decidido: **opcional**, `"node" | "python"`, con default implícito `"node"`.
-Validador implementado con RED→GREEN (3 tests nuevos, de ahí 87 → 90).
+**Lección que conviene no olvidar: las 92 tareas marcadas no garantizaban un contrato
+funcionando.** Los fixtures aislados dieron verde sobre un camino que en producción fallaba.
+Cuando dos módulos se pasan datos, hace falta un test que cruce la frontera real.
 
-**Falta solo propagarlo por la cadena. Esto es lo primero que hay que hacer al retomar:**
+### 2. `runtime` propagado
 
-1. Añadir `runtime` a `registry/schema.json` (manifest y catalogEntry, enum opcional).
-2. Propagarlo en `tools/build-registry/src/index.ts`: `runtime: manifest.runtime ?? "node"`.
-3. Poner `runtime: "node"` explícito en los dos `machine.json` reales.
-4. Añadir el campo a `cli/src/types.ts` — el instalador necesita saber el runtime antes de instalar.
-5. Regenerar `registry/index.json` con el build-registry real, **nunca a mano**. Ahora mismo está
-   desactualizado respecto al código: no rompe los tests, pero no refleja la estructura nueva.
+Cerrados los 5 pasos que quedaban pendientes: schema del manifiesto, entrada del catálogo, ambos
+`machine.json` reales y los tipos del CLI, con default `node`.
 
-### 2. Determinismo del generador DOCX — COMPLETO
+### 3. `files` del catálogo: criterio
 
-`build-template.py` usa `ZipInfo` con `date_time` fijo. Dos builds dan sha256 idénticos
-(`2c41a337...`), y la comprobación quedó como check `[6]` de `verify-template.py`, para que no
-pueda perderse en silencio.
+Solo `commands/`, `agents/`, `skills/` y `templates/`. Quedan fuera `machine.json`,
+`package.json` y `src/`: son parte del paquete, no del contenido que se copia a `.opencode/`.
+El `checksum` sigue cubriendo el paquete entero, que es lo correcto para integridad.
 
-Los dos cabos que dejó la paralelización quedaron resueltos: las rutas de ambos scripts apuntan ya
-a `packages/node/machine-core/templates/`, y la nota obsoleta sobre Pandoc está corregida.
+### 4. CI que ya no miente
 
-Ojo con lo que pasó aquí, por si se repite el patrón: el `.docx` regenerado quedó huérfano en la
-ruta vieja mientras la migración movía la carpeta, así que durante un rato **el archivo bueno era
-el que git veía como no rastreado** y el movido era el viejo. Se resolvió copiando el determinista
-a la ubicación nueva.
+Instala un paquete de verdad y verifica el ciclo `installed` → `unchanged` → `removed`. Además
+falla si `registry/index.json` quedó desfasado; antes el CI lo regeneraba y tiraba el resultado.
+
+Eso exigió ordenar `discoverPackageDirs`: `readdir` es alfabético en NTFS pero por hash en el
+ext4 donde corre el CI, así que sin ordenar el check habría fallado de forma intermitente.
+
+**El CLI se ejecuta con Bun, no con Node** (usa `Bun.file`). pnpm queda para las dependencias del
+workspace. Por eso la validación del CI es solo con Bun.
+
+### 5. Extracción de documentos — LISTA
+
+`tools/convert-inputs/` convierte insumos a Markdown. Verificado con binarios reales: PDF, DOCX,
+XLSX, PPTX, HTML y CSV. Es idempotente por contenido.
+
+**Las imágenes devuelven `empty`**: sin `llm_client`, MarkItDown solo lee metadatos, así que una
+foto sin EXIF no aporta nada. Un PDF escaneado cae en lo mismo. La herramienta lo reporta y no
+escribe un `.md` vacío.
+
+### 6. Estructura del CLI
+
+`src/commands/` (uno por comando), `src/core/` (infraestructura compartida) y `tests/`.
+Dependencias en una sola dirección: `cli.ts` → `commands/` → `core/`.
+
+### 7. README raíz y spec de Discovery
+
+Creado el README raíz con instalación, targets y límites. Escrita
+`openspec/changes/ai-machine-opencode/specs/machine-discovery/spec.md`, el artefacto SDD que
+faltaba para poder implementar la fase.
 
 ---
 
@@ -90,60 +110,60 @@ Ordenado por lo que bloquea a lo demás.
 
 ### 1. La ingesta de insumos no existe — el hueco más grave
 
-`machine_process_input` recibe `{ content, route, outputPath }` **ya resueltos**. No lee
-`docs/<proyecto>/inputs/`, no enumera archivos, no clasifica `business`/`discovery`, no escribe el
-registro Markdown ni el `inputs/index.md` que la spec menciona.
+`machine_process_input` recibe `{ content, route, outputPath }` **ya resueltos**
+(`packages/node/machine-core/src/index.ts:29`). No lee `docs/<proyecto>/inputs/`, no enumera
+archivos, no clasifica `business`/`discovery`, no escribe el `inputs/index.md`.
 
-Lo implementado es el guardián: hashea, decide si ya se procesó y actualiza el estado. Funciona y
-está probado. Falta quien enumere y clasifique — y no puede vivir en el prompt si queremos
-idempotencia real.
+`tools/convert-inputs` **no cierra esto**: vive en `tools/`, no es un paquete instalable ni lo
+invoca el pipeline. Es la pieza de extracción esperando a que exista quien enumere y clasifique.
 
-**Consecuencia**: el pipeline es demostrable con argumentos inyectados, pero un usuario no puede
-soltar archivos en `inputs/` y ejecutar el comando.
+**Consecuencia**: un usuario todavía no puede soltar archivos en `inputs/` y ejecutar el comando.
 
-### 2. Extracción de texto de documentos
+### 2. Transcripción de audio
 
-Un `.docx` o `.pdf` en `inputs/` hoy no se puede leer. Pandoc cubre la salida Markdown→DOCX, no la
-entrada. Un PDF escaneado necesitaría además OCR, que es un problema aparte y más caro.
+Sin proveedor y sin FFmpeg. El código detecta la extensión y marca `NEEDS INPUT`, así que el
+hueco está señalizado pero vacío. Decisión ya tomada en la propuesta: API de proveedor
+configurable con override local. **Falta decidir el proveedor y si FFmpeg se vendoriza** como se
+hizo con Pandoc.
 
-### 3. Transcripción de audio
+### 3. La fase Discovery: spec lista, implementación pendiente
 
-Hoy solo se detecta la extensión y se marca `NEEDS INPUT`. No hay proveedor, ni motor local, ni
-FFmpeg. El audio es el insumo principal de una reunión.
+Ya existe la delta spec. Falta el paquete `packages/node/machine-discovery` con sus **siete**
+comandos: `discovery-init`, `requirements` (que cierra con el Architecture Gate), `hla`,
+`draft-prds`, `time-estimation`, `planning` y `project-doc`.
 
-Decisión ya tomada en la propuesta: API de proveedor configurable con override local.
+Ojo con el tamaño real: cada comando es un `.md` declarativo **más** un tool determinista en
+`src/` con TDD, como en `machine-business`. No son siete archivos, son siete tools con sus tests.
 
-### 4. La fase Discovery entera
+Además arrastra el pre-render de Mermaid a imagen: Pandoc no interpreta Mermaid, así que hace
+falta un motor declarado como requisito externo del paquete. Sin resolver.
 
-Es la otra mitad del producto y no se ha empezado. Nueve comandos: `discovery-init`, `requirements`
-con su Architecture Gate, `hla`, `draft-prds`, `time-estimation`, `planning`, `project-doc`. Más el
-pre-render de diagramas Mermaid a imagen, otra dependencia externa sin resolver.
+### 4. Distribución real
 
-### 5. Distribución real
+`defaultSourceRoot` solo instala desde el clon local: no hay resolución remota con verificación
+de checksum ni publicación versionada. El README ya documenta este límite. **Falta decidir dónde
+se publica** (GitHub Releases, npm, otro) antes de implementarlo.
 
-`defaultSourceRoot` solo instala desde el monorepo local. Falta resolución remota con verificación
-de checksum, publicación versionada y documentación de instalación. El repo no tiene README raíz.
+### 5. `packages/py` sigue vacío
 
-### 6. Menores
+Solo tiene el README de convención. Es coherente: sus primeros habitantes naturales son la
+extracción y la transcripción, o sea los puntos 1 y 2.
 
-- El workflow de CI tiene un `TODO(cli)` en el paso de validación de instalación. Ya se puede cerrar.
-- La identidad corporativa real del `.docx` sigue siendo `NEEDS INPUT`; hoy la plantilla es neutra.
+### 6. Identidad corporativa del `.docx`
+
+Sigue en `NEEDS INPUT`. La plantilla es neutra y el mecanismo de marca en cascada ya está
+documentado en `packages/node/machine-core/templates/README.md`. Depende de que se aporte la marca.
 
 ---
 
 ## Recomendación para retomar
 
-Los puntos 2 y 3 son **exactamente los paquetes Python** que justifican la reestructuración en
-curso: extracción de documentos y transcripción encajan mucho mejor en Python que en Node.
-
-Esas capacidades **no estaban en las specs de las fases 1–3**. No son tareas pendientes, son
-funcionalidad nueva. Lo correcto es abrir un change SDD propio —algo como `machine-ingest`— con su
-exploración y sus specs, en vez de colgarlo del change actual.
-
-**Orden sugerido:**
-1. Cerrar la reestructuración y sus dos cabos sueltos, y commitear.
-2. Abrir el change `machine-ingest` para ingesta + extracción + transcripción.
-3. Después, Discovery.
+1. **`machine-ingest`**: abrir el change SDD para ingesta + extracción + transcripción (puntos 1,
+   2 y 5, que son el mismo problema desde tres ángulos). Requiere decidir proveedor de
+   transcripción y qué hacer con FFmpeg.
+2. **Discovery**: implementar contra la spec ya escrita, incremento a incremento, empezando por
+   `discovery-init` y el Architecture Gate, que es el requisito distintivo de la fase.
+3. **Distribución**: cuando esté decidido dónde se publica.
 
 ---
 
