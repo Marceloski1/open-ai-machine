@@ -126,18 +126,18 @@ hueco está señalizado pero vacío. Decisión ya tomada en la propuesta: API de
 configurable con override local. **Falta decidir el proveedor y si FFmpeg se vendoriza** como se
 hizo con Pandoc.
 
-### 3. La fase Discovery: empezada, tres comandos por delante
+### 3. La fase Discovery: empezada, dos comandos por delante
 
 Ya existe la delta spec, y `packages/node/machine-discovery` tiene implementados con TDD
-`machine-discovery-init`, `machine-requirements`, `machine-hla` y `machine-draft-prds`, más su
-agente y su entrada en el catálogo. Se instala end-to-end.
+`machine-discovery-init`, `machine-requirements`, `machine-hla`, `machine-draft-prds` y
+`machine-time-estimation`, más su agente y su entrada en el catálogo. Se instala end-to-end.
 
 **El Architecture Gate ya está puesto**: `machine-requirements` exige `approvals.proposal` en
 `approved`, y deja `approvals.requirements` en `pending` con `dependsOn: ["proposal"]`, de modo
 que re-aprobar la propuesta invalida los requisitos automáticamente vía
 `invalidateDownstream` de `machine-core`.
 
-Faltan los **tres** restantes: `time-estimation`, `planning` y `project-doc`. Todos deben
+Faltan los **dos** restantes: `planning` y `project-doc`. Ambos deben
 rechazar su ejecución mientras el Architecture Gate no esté en `approved`;
 `assertGateApproved(state, "requirements")` de `machine-core` es la pieza a usar, sin
 reimplementarla. `machine-hla` ya sirve de plantilla para ese patrón.

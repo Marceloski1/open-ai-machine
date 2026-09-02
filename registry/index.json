@@ -93,7 +93,8 @@
         "machine-discovery-init",
         "machine-requirements",
         "machine-hla",
-        "machine-draft-prds"
+        "machine-draft-prds",
+        "machine-time-estimation"
       ],
       "agents": [
         "machine-discovery"
@@ -101,7 +102,7 @@
       "skills": [],
       "templates": [],
       "compatibility": "opencode-v1",
-      "checksum": "fe7429ed5ce18b0a171d12466dead890be156d3a85f9e3e8fde4167c040de1fb",
+      "checksum": "4c6498fdec7130fff03faac3360ff428070d7ed374b3d6d389a0770286a852ff",
       "permissions": {},
       "externalRequirements": [],
       "files": [
@@ -124,6 +125,10 @@
         {
           "path": "commands/machine-requirements.md",
           "sha256": "d3c324409a19c7eed047fb8488a073a22313f5c5eac608f5a7950a96d31eade1"
+        },
+        {
+          "path": "commands/machine-time-estimation.md",
+          "sha256": "648beba94c3108678c9207f3f434ae999e7663d7a30fb338fa9f8e75493f4e26"
         }
       ]
     }

@@ -8,7 +8,8 @@
     "machine-discovery-init",
     "machine-requirements",
     "machine-hla",
-    "machine-draft-prds"
+    "machine-draft-prds",
+    "machine-time-estimation"
   ],
   "agents": [
     "machine-discovery"
