@@ -91,7 +91,8 @@
       "runtime": "node",
       "commands": [
         "machine-discovery-init",
-        "machine-requirements"
+        "machine-requirements",
+        "machine-hla"
       ],
       "agents": [
         "machine-discovery"
@@ -99,7 +100,7 @@
       "skills": [],
       "templates": [],
       "compatibility": "opencode-v1",
-      "checksum": "78df61ce5ef9156d526669117ec61977b51130097593e05f189abc884eceb304",
+      "checksum": "db355e65eb8782a1d06935042512cee7622f1388e33dfe73f80cfca62234c344",
       "permissions": {},
       "externalRequirements": [],
       "files": [
@@ -110,6 +111,10 @@
         {
           "path": "commands/machine-discovery-init.md",
           "sha256": "a7b1924512566ae87d3689e9964196e0e521f15ddf4052066d4de30751676a42"
+        },
+        {
+          "path": "commands/machine-hla.md",
+          "sha256": "ee7b332fc0cf3ba8a26443858204ff37555739e77a3f9bc0821f9c31f769149b"
         },
         {
           "path": "commands/machine-requirements.md",

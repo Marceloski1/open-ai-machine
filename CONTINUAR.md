@@ -126,21 +126,28 @@ hueco está señalizado pero vacío. Decisión ya tomada en la propuesta: API de
 configurable con override local. **Falta decidir el proveedor y si FFmpeg se vendoriza** como se
 hizo con Pandoc.
 
-### 3. La fase Discovery: empezada, cinco comandos por delante
+### 3. La fase Discovery: empezada, cuatro comandos por delante
 
 Ya existe la delta spec, y `packages/node/machine-discovery` tiene implementados con TDD
-`machine-discovery-init` y `machine-requirements`, más su agente y su entrada en el catálogo.
-Se instala end-to-end.
+`machine-discovery-init`, `machine-requirements` y `machine-hla`, más su agente y su entrada en
+el catálogo. Se instala end-to-end.
 
 **El Architecture Gate ya está puesto**: `machine-requirements` exige `approvals.proposal` en
 `approved`, y deja `approvals.requirements` en `pending` con `dependsOn: ["proposal"]`, de modo
 que re-aprobar la propuesta invalida los requisitos automáticamente vía
 `invalidateDownstream` de `machine-core`.
 
-Faltan los **cinco** restantes: `hla`, `draft-prds`, `time-estimation`, `planning` y
-`project-doc`. Todos deben rechazar su ejecución mientras el Architecture Gate no esté en
-`approved`; `assertGateApproved(state, "requirements")` de `machine-core` es la pieza a usar,
-sin reimplementarla.
+Faltan los **cuatro** restantes: `draft-prds`, `time-estimation`, `planning` y `project-doc`.
+Todos deben rechazar su ejecución mientras el Architecture Gate no esté en `approved`;
+`assertGateApproved(state, "requirements")` de `machine-core` es la pieza a usar, sin
+reimplementarla. `machine-hla` ya sirve de plantilla para ese patrón.
+
+**Deuda abierta en `machine-hla`**: los diagramas se escriben como bloques Mermaid en el
+Markdown, que es su fuente de verdad, pero **el pre-render a imagen no existe**. Pandoc no
+interpreta Mermaid, así que el `.docx` de un artefacto con diagramas todavía no es correcto. Hay
+un `TODO(mermaid)` en `src/hla.ts` y el comando lo advierte al usuario. Cuando se resuelva el
+motor, hay que declararlo en `externalRequirements` del manifiesto. Por eso hoy ese campo sigue
+vacío: el manifiesto no declara requisitos que el paquete todavía no usa.
 
 `machine.json` declara solo los comandos que existen de verdad. Al añadir cada uno hay que
 declararlo ahí y regenerar el catálogo — así el registry nunca promete comandos que no están.

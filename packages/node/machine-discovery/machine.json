@@ -6,7 +6,8 @@
   "description": "Fase de descubrimiento del pipeline: convierte los insumos clasificados como route discovery y la propuesta de negocio aprobada en los artefactos de descubrimiento. machine-discovery-init prepara la estructura de la fase y machine-requirements sintetiza alcance, requisitos funcionales y no funcionales y restricciones en discovery/requirements.md, cerrando con el Architecture Gate que bloquea todo lo que viene despues. Depende de machine-core para el estado, las puertas de aprobacion y el renderizado.",
   "commands": [
     "machine-discovery-init",
-    "machine-requirements"
+    "machine-requirements",
+    "machine-hla"
   ],
   "agents": [
     "machine-discovery"
