@@ -92,7 +92,8 @@
       "commands": [
         "machine-discovery-init",
         "machine-requirements",
-        "machine-hla"
+        "machine-hla",
+        "machine-draft-prds"
       ],
       "agents": [
         "machine-discovery"
@@ -100,7 +101,7 @@
       "skills": [],
       "templates": [],
       "compatibility": "opencode-v1",
-      "checksum": "db355e65eb8782a1d06935042512cee7622f1388e33dfe73f80cfca62234c344",
+      "checksum": "fe7429ed5ce18b0a171d12466dead890be156d3a85f9e3e8fde4167c040de1fb",
       "permissions": {},
       "externalRequirements": [],
       "files": [
@@ -111,6 +112,10 @@
         {
           "path": "commands/machine-discovery-init.md",
           "sha256": "a7b1924512566ae87d3689e9964196e0e521f15ddf4052066d4de30751676a42"
+        },
+        {
+          "path": "commands/machine-draft-prds.md",
+          "sha256": "ec57d93f81fedfb0aac2d1dfd3dd2db82f71fc31dcd851f4ae3a02f5474d8836"
         },
         {
           "path": "commands/machine-hla.md",

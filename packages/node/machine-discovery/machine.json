@@ -7,7 +7,8 @@
   "commands": [
     "machine-discovery-init",
     "machine-requirements",
-    "machine-hla"
+    "machine-hla",
+    "machine-draft-prds"
   ],
   "agents": [
     "machine-discovery"
