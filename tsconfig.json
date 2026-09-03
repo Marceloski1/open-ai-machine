@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.base.json",
+  "include": [
+    "cli/src",
+    "cli/tests",
+    "packages/node/*/src",
+    "packages/node/*/test",
+    "tools/build-registry/src"
+  ]
+}

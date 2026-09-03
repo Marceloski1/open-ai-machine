@@ -69,10 +69,14 @@ openspec/          artefactos del flujo SDD
 
 ```bash
 pnpm test                                       # tests de TypeScript (Bun)
+pnpm typecheck                                  # comprobación de tipos (tsc)
 uv run pytest                                   # tests de las herramientas Python
 bun tools/build-registry/src/index.ts           # regenerar registry/index.json
 uv run python tools/convert-inputs/convert_inputs.py docs/inputs
 ```
+
+**Bun ejecuta TypeScript sin comprobar tipos**, así que `pnpm test` puede pasar con errores de
+tipo. `pnpm typecheck` es lo que los detecta, y el CI lo ejecuta antes de los tests.
 
 **`registry/index.json` se genera, nunca se edita a mano.** El CI regenera el catálogo y falla si
 el archivo commiteado quedó desfasado, e instala un paquete de verdad para comprobar que el

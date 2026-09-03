@@ -19,6 +19,7 @@ async function buildEntry(): Promise<CatalogEntry> {
     version: "1.0.0",
     description: "Paquete de fixture",
     packageDir: "package-a",
+    runtime: "node",
     commands: ["hello"],
     agents: ["hello-agent"],
     skills: [],

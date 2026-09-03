@@ -19,6 +19,8 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Check forbidden lockfiles
         run: bun run tools/build-registry/src/check-lockfiles.ts
+      - name: Typecheck
+        run: pnpm typecheck
       - name: Run tests
         run: pnpm test
       - name: Build registry

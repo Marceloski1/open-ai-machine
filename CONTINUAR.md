@@ -24,6 +24,9 @@ fc77e0e refactor: split packages by language into node and py
 ## Entorno
 
 - **Node/TS**: pnpm + Bun. Tests con `pnpm test` desde la raíz.
+- **Tipos**: `pnpm typecheck` (tsc). **Bun no comprueba tipos al ejecutar**, así que los tests
+  pueden estar verdes con errores de tipo; el editor sí los muestra. La config vive en
+  `tsconfig.base.json` y cada paquete la extiende. El CI ejecuta el typecheck antes de los tests.
 - **Python**: uv. `pyproject.toml` y `uv.lock` en la raíz. Ejecutar siempre con `uv run`.
 - **Pandoc**: vive en el `.venv` del repo (`pypandoc-binary`, versión 3.9). NO está instalado en el
   sistema y no debe estarlo. Si falta: `uv sync`.
