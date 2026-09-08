@@ -13,9 +13,9 @@ describe("discovery: list/search/info", () => {
     expect(catalog).toHaveLength(2);
   });
 
-  test("loadCatalog returns [] for a missing file", async () => {
-    const catalog = await loadCatalog(join(import.meta.dir, "fixtures", "does-not-exist.json"));
-    expect(catalog).toEqual([]);
+  test("loadCatalog throws a clear error for a missing file", async () => {
+    const missingPath = join(import.meta.dir, "fixtures", "does-not-exist.json");
+    await expect(loadCatalog(missingPath)).rejects.toThrow(missingPath);
   });
 
   test("listPackages returns every catalog entry", async () => {

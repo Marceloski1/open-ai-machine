@@ -1,4 +1,5 @@
 #!/usr/bin/env bun
+import { existsSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { createInterface } from "node:readline/promises";
@@ -59,11 +60,23 @@ export function resolveTarget(flags: Record<string, string | boolean>): Installe
   return "project";
 }
 
-function defaultCatalogPath(): string {
+function vendorRoot(): string {
+  return join(import.meta.dir, "..", "vendor");
+}
+
+export function defaultCatalogPath(): string {
+  const vendoredCatalogPath = join(vendorRoot(), "registry", "index.json");
+  if (existsSync(vendoredCatalogPath)) {
+    return vendoredCatalogPath;
+  }
   return join(import.meta.dir, "..", "..", "registry", "index.json");
 }
 
-function defaultSourceRoot(): string {
+export function defaultSourceRoot(): string {
+  const vendoredPackagesDir = join(vendorRoot(), "packages");
+  if (existsSync(vendoredPackagesDir)) {
+    return vendorRoot();
+  }
   return join(import.meta.dir, "..", "..");
 }
 
@@ -92,7 +105,13 @@ export async function main(argv: string[]): Promise<number> {
     return 1;
   }
 
-  const catalog = await loadCatalog(defaultCatalogPath());
+  let catalog: Awaited<ReturnType<typeof loadCatalog>>;
+  try {
+    catalog = await loadCatalog(defaultCatalogPath());
+  } catch (error) {
+    console.error((error as Error).message);
+    return 1;
+  }
 
   if (parsed.command === "list") {
     console.log(formatList(catalog));
