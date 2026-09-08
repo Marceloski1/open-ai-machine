@@ -7,7 +7,15 @@
   "bin": {
     "machine": "src/cli.ts"
   },
+  "files": [
+    "package.json",
+    "tsconfig.json",
+    "src",
+    "vendor"
+  ],
   "scripts": {
-    "test": "bun test"
+    "test": "bun test",
+    "vendor-assets": "bun scripts/vendor-assets.ts",
+    "prepack": "bun scripts/vendor-assets.ts"
   }
 }
