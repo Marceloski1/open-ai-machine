@@ -216,3 +216,85 @@ Están en `openspec/changes/ai-machine-opencode/design.md` y conviene no redescu
 - **La síntesis no es determinista.** El tool recibe las secciones ya redactadas; no puede verificar
   que deriven de los insumos. «No inventar» es mitigación por prompt, no garantía de código. La
   puerta humana es lo que cubre ese hueco, y por eso no es opcional.
+
+---
+
+## Sesión 2026-09-08
+
+### Cómo probar el proyecto (recordatorio operativo)
+
+- `pnpm install --frozen-lockfile` + `uv sync` para el setup inicial.
+- `pnpm test` corre los tests TS vía **Bun** (`bun test`) en todos los workspaces
+  (`cli/`, `packages/node/machine-core`, `machine-business`, `machine-discovery`,
+  `tools/build-registry`). **`pnpm test` puede pasar con errores de tipos** — solo
+  `pnpm typecheck` (`tsc --noEmit`) los detecta.
+- `uv run pytest` para los tests Python (solo hay en `tools/convert-inputs/`).
+- No hay script `lint` ni `build`.
+- **Por qué conviven pnpm y Bun**: no son redundantes. pnpm gestiona el monorepo/workspaces
+  y las dependencias (`pnpm-lock.yaml`); Bun es el *runtime* que ejecuta los tests
+  (`bun:test`, no Jest/Vitest) y el propio CLI (`bun cli/src/cli.ts ...`, usa `Bun.file`, no
+  corre con Node). `pnpm test` termina invocando `bun test` dentro de cada workspace.
+- Prueba manual del CLI (sin `npm link`, directo con Bun):
+  `bun cli/src/cli.ts {list|search <q>|info <pkg>|install <pkg> --target project|update <pkg>|uninstall <pkg>}`.
+  `install` resuelve paquetes desde el propio clon local — no hay descarga remota todavía.
+- Gap de cobertura que había: `cli/src/core/paths.ts` no tenía test dedicado. **Cerrado**:
+  se agregó `cli/tests/paths.test.ts` (13 tests) cubriendo `resolveDestRoot`/`resolveConfigPath`
+  en los tres modos, rutas relativas/con espacios, y comportamiento win32 vs posix explícito
+  (usa `path.win32`/`path.posix` para no depender del SO real donde corre el test). Sin
+  regresiones (suite completa del CLI: 54/54) y sin bugs de compatibilidad encontrados —
+  `paths.ts` ya era correcto porque delega todo a `node:path`. Commit `b2fa532` en `main`.
+
+### Compatibilidad con Codex — hoy NO existe
+
+Investigado a pedido del usuario, que quiere probar el marketplace también en Codex (CLI de
+OpenAI) además de en opencode. Conclusión: **los paquetes no son compatibles tal cual con
+Codex** hoy. Motivos concretos:
+
+1. `resolveDestRoot` (`cli/src/core/paths.ts`) solo resuelve tres targets: `global`
+   (`~/.config/opencode/`), `project` (`.opencode/`), `claude` (`.claude/`). No existe `codex`.
+   Hay un TODO textual en `types.ts`: "Add Opencode and others CLI targets".
+2. El frontmatter de agentes (`packages/node/machine-core/agents/machine.md`) usa claves
+   propias de opencode: `mode: subagent`, `permission: {bash: deny, edit: deny}`.
+3. Los comandos invocan tools custom `machine_*` registrados vía plugin de opencode
+   (`packages/node/machine-core/src/index.ts`), inexistentes en Codex.
+4. El soporte `.claude/` **no es una traducción real de formato** — es copia literal de los
+   mismos `.md`; funciona solo porque Claude Code entiende la misma convención de opencode.
+5. Cero menciones a "codex" en todo el repo (código, README, docs).
+
+### Riesgos de migrar a soporte multi-CLI "general" (opencode + Claude Code + Codex + otros)
+
+El usuario quiere que el soporte sea general, no solo agregar Codex puntualmente. Riesgos
+identificados, de mayor a menor bloqueo:
+
+1. **Falta el eje "formato" en el modelo de datos.** `InstalledTarget` solo mapea *rutas* de
+   destino, no *transformación* de contenido. Habría que decidir si cada herramienta es un
+   branch más del switch o si se introduce un eje ortogonal destino × formato — hoy no existe
+   ese segundo eje en ningún tipo.
+2. **`install.ts` hace `copyFile` literal, sin ningún punto de extensión** para reescribir
+   frontmatter, sintaxis de comandos o rutas según el target. Que `.claude/` funcione hoy es
+   casualidad de compatibilidad, no evidencia de que la arquitectura soporte traducción real.
+3. **El modelo de permisos (`mode: subagent`, `permission: {bash: deny, edit: deny}`) es
+   específico del runtime de opencode.** Sin equivalente directo conocido en Codex: o se
+   degrada la garantía de seguridad al portar, o se bloquea la instalación en targets sin ese
+   modelo.
+4. **Los tools custom (`machine_process_input`, etc.) están registrados como plugin de
+   opencode**, no como MCP server ni schema genérico. Portarlos a otra herramienta no es
+   copiar un archivo — es reimplementar la superficie de integración (wiring, contrato de
+   invocación) por herramienta.
+5. **Deuda ya existente sin resolver en el manifest**: `machine.json` declara
+   `"target": "plugin"` pero `CatalogEntry` no tipa ese campo; también hay un
+   `compatibility?: string` suelto sin definición de valores válidos. Hay que sanear esto
+   antes de generalizar.
+6. **El merge de config (`opencode-config.ts`) es específico de `opencode.json`.** Cada
+   herramienta necesitaría su propio módulo de merge, no solo su propia ruta de destino
+   (`resolveConfigPath` ya devuelve `undefined` para `claude` por falta de equivalente).
+7. **Testing se multiplica por N herramientas.** No existe hoy una abstracción común de
+   "ejecutar un agente y verificar su comportamiento"; los tests de integración actuales
+   asumen runtime de opencode.
+8. **Mantenimiento a futuro**: cada herramienta versiona su propio formato de forma
+   independiente y sin control del marketplace sobre su cadencia de breaking changes.
+
+**Conclusión operativa**: no es "agregar una carpeta `.codex/`" — es introducir una capa de
+traducción de formato por herramienta y reimplementar la integración de tools, más sanear la
+deuda de tipos que ya existe en el manifest. Pendiente decidir si esto se aborda como un
+change SDD (`sdd-explore` primero, dado el alcance) antes de tocar código.
