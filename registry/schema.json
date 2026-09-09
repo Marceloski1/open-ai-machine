@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://opencode-market-place/registry/schema.json",
+  "$id": "https://open-machine-ai/registry/schema.json",
   "definitions": {
     "manifest": {
       "type": "object",

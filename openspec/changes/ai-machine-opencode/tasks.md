@@ -109,7 +109,7 @@ Comandos: `pnpm test` para tests, `pnpm build` para build. Nunca npm, yarn ni bu
 
 ### 1.10 CLI: bootstrap y empaquetado
 
-- [x] 1.10.1 `cli/package.json` (`bin: machine`, publicable a npm, vía `pnpm dlx machine install <paquete>`); `cli/src/cli.ts` enruta `install|list|search|info|update|uninstall`
+- [x] 1.10.1 `cli/package.json` (paquete npm `open-ai-machine`, `bin: machine`, vía `pnpm dlx open-ai-machine install <paquete>`); `cli/src/cli.ts` enruta `install|list|search|info|update|uninstall`
 
 ### 1.11 CI y validación de repositorio
 

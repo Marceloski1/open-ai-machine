@@ -1,5 +1,5 @@
 [project]
-name = "opencode-market-place"
+name = "open-machine-ai"
 version = "0.1.0"
 description = "Entorno Python unico del repo (uv). Usado por tools/build-template, por tools/convert-inputs y por el pandoc empaquetado via pypandoc-binary."
 requires-python = ">=3.13,<3.14"

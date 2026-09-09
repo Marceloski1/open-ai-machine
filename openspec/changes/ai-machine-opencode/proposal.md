@@ -65,7 +65,7 @@ Los comandos compartidos por más de una fase —`process-input` y `render-docx`
 
 Crear el monorepo, los manifiestos `machine.json`, el schema del registry y el catálogo público `registry/index.json`. Implementar el instalador con los comandos `install`, `list`, `search`, `info`, `update` y `uninstall`.
 
-El instalador MUST permitir elegir destino global (`~/.config/opencode/`) o de proyecto (`.opencode/`), y MUST registrar el destino elegido en `installed.json` para que `update` y `uninstall` operen sobre la misma ubicación. El CLI de bootstrap resuelve el arranque en frío y se invoca con `pnpm dlx machine install <paquete>`.
+El instalador MUST permitir elegir destino global (`~/.config/opencode/`) o de proyecto (`.opencode/`), y MUST registrar el destino elegido en `installed.json` para que `update` y `uninstall` operen sobre la misma ubicación. El CLI de bootstrap resuelve el arranque en frío y se invoca con `pnpm dlx open-ai-machine install <paquete>`.
 
 El monorepo se gestiona con **pnpm workspaces**. El repositorio MUST contener `pnpm-workspace.yaml` y `pnpm-lock.yaml`, y MUST NOT contener `package-lock.json`, `yarn.lock` ni `bun.lockb`.
 

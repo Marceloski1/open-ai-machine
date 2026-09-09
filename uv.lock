@@ -512,7 +512,7 @@ wheels = [
 ]
 
 [[package]]
-name = "opencode-market-place"
+name = "open-machine-ai"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

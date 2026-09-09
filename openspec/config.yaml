@@ -1,7 +1,7 @@
 schema: spec-driven
 
 context: |
-  Proyecto: opencode-market-place — marketplace de plugins/agentes para Opencode.
+  Proyecto: open-machine-ai — marketplace de plugins/agentes para Opencode.
   Origen: "The AI Machine" (plugins de Claude Code) que se porta a Opencode.
   Estado: greenfield. NO hay stack detectado — solo docs/inputs/.
   Stack: Bun + TypeScript ESM (SUPUESTO). Gestores DECIDIDOS: pnpm para JS/TS, uv para Python.
