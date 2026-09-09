@@ -44,7 +44,7 @@ jobs:
           test -f .opencode/agents/machine.md
           test -f .opencode/templates/reference.docx
           test -f .opencode/installed.json
-          test -f opencode.json
+          test ! -f opencode.json
 
           test "$(bun "$cli" install machine-core --yes)" = "unchanged"
           test "$(bun "$cli" uninstall machine-core)" = "removed"

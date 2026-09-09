@@ -100,13 +100,11 @@ describe("install", () => {
     expect(entries[0]?.files).toEqual(entry.files);
   });
 
-  test("install merges the plugin key into opencode.json without touching foreign keys", async () => {
+  test("install does not write opencode.json (machine-core is not published to npm yet)", async () => {
     const entry = await buildEntry();
     await install({ entry, sourceRoot: FIXTURE_SOURCE_ROOT, target: "global", destRoot, yes: true });
 
-    const configRaw = await readFile(join(destRoot, "opencode.json"), "utf8");
-    const config = JSON.parse(configRaw);
-    expect(config.plugin).toEqual(["package-a"]);
+    await expect(stat(join(destRoot, "opencode.json"))).rejects.toThrow();
   });
 
   test("reinstalling the same version does not rewrite files and reports unchanged", async () => {

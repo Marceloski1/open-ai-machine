@@ -1,8 +1,6 @@
 import { copyFile, mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { readInstalledEntries, writeInstalledEntry } from "../core/installed-registry";
-import { mergeOpencodeConfig, readOpencodeConfig, writeOpencodeConfig } from "../core/opencode-config";
-import { resolveConfigPath } from "../core/paths";
 import type { CatalogEntry, InstalledEntry, InstalledFile, InstalledTarget } from "../core/types";
 
 export type InstallDisclosure = {
@@ -82,13 +80,10 @@ export async function install(args: InstallArgs): Promise<InstallResult> {
     await copyFile(src, dest);
   }
 
-  const configPath = resolveConfigPath(args.target, args.destRoot);
-  if (configPath) {
-    const existingConfig = await readOpencodeConfig(configPath);
-    const mergedConfig = mergeOpencodeConfig(existingConfig, [args.entry.id]);
-    await mkdir(dirname(configPath), { recursive: true });
-    await writeOpencodeConfig(configPath, mergedConfig);
-  }
+  // TODO(machine-core-npm-publish): once machine-core is published to npm, resolve the
+  // config path with resolveConfigPath (../core/paths) and merge args.entry.id into
+  // opencode.json's `plugin` key with mergeOpencodeConfig + readOpencodeConfig/writeOpencodeConfig
+  // (../core/opencode-config). Until then this would write an npm spec that always 404s.
 
   const newEntry: InstalledEntry = {
     id: args.entry.id,

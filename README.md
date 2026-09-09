@@ -35,11 +35,15 @@ requisitos externos— y espera confirmación. En un entorno no interactivo hay 
 
 `--target` decide el destino, y `project` es el valor por defecto:
 
-| `--target` | Destino | Configuración que actualiza |
-|---|---|---|
-| `project` | `.opencode/` del directorio actual | `opencode.json` del proyecto |
-| `global` | `~/.config/opencode/` | `~/.config/opencode/opencode.json` |
-| `claude` | `.claude/` del directorio actual | ninguna |
+| `--target` | Destino |
+|---|---|
+| `project` | `.opencode/` del directorio actual |
+| `global` | `~/.config/opencode/` |
+| `claude` | `.claude/` del directorio actual |
+
+El CLI no escribe `opencode.json`: los agentes y comandos de Opencode se detectan solo por
+convención de archivos en `.opencode/`, y la clave `plugin` de ese archivo hoy apuntaría a un
+paquete (`machine-core`) que todavía no está publicado en npm.
 
 ### Mantenimiento
 
