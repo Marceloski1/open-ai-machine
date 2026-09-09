@@ -16,7 +16,7 @@
       "skills": [],
       "templates": [],
       "compatibility": "opencode-v1",
-      "checksum": "d062d7fb78706125d3119b5953ab55a7b68cb6c613709a404981f784cc29f439",
+      "checksum": "60b3037c3981608cb77b0b94275eaa9cafefd17a6556056e3a242d07776cf6fb",
       "permissions": {},
       "externalRequirements": [],
       "files": [
@@ -51,7 +51,7 @@
       "skills": [],
       "templates": [],
       "compatibility": "opencode-v1",
-      "checksum": "1c3ef1cbdd35087d216ab24e6eba9ea85669b3f2262c6a86e99c02640348652d",
+      "checksum": "2e45adf6a0dcb34dac57620bd8beb8d442284469c778be3d2e70e3e7bb9455b7",
       "permissions": {},
       "externalRequirements": [
         "pandoc"
@@ -104,7 +104,7 @@
       "skills": [],
       "templates": [],
       "compatibility": "opencode-v1",
-      "checksum": "5c5ff851f3d3b8c2ff54a66fa653d142c429d0b2b166be22dc3b30f2cf94933a",
+      "checksum": "b5cbb6b6019b5bee0b5d7b54f0227b724d4a5f176ff394c395df984f00c232bf",
       "permissions": {},
       "externalRequirements": [],
       "files": [
