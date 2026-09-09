@@ -15,8 +15,11 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: 9
+      - uses: astral-sh/setup-uv@v3
       - name: Install dependencies (pnpm)
         run: pnpm install --frozen-lockfile
+      - name: Install Python dependencies (uv)
+        run: uv sync
       - name: Check forbidden lockfiles
         run: bun run tools/build-registry/src/check-lockfiles.ts
       - name: Typecheck
