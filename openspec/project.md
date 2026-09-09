@@ -1,4 +1,4 @@
-# Contexto de Proyecto — open-machine-ai
+# Contexto de Proyecto — open-ai-machine
 
 > Artefacto SDD generado por `sdd-init` (modo `openspec`). Idioma: español.
 > Los términos técnicos e identificadores (`plugin`, `hooks`, `machine-business`, `process-input`, ...)
@@ -6,7 +6,7 @@
 
 ## 1. Qué es este proyecto
 
-`open-machine-ai` es el marketplace de plugins/agentes de **The AI Machine** portado a
+`open-ai-machine` es el marketplace de plugins/agentes de **The AI Machine** portado a
 **Opencode** (https://opencode.ai).
 
 The AI Machine es un marketplace de plugins que convierte inputs crudos —audios, notas y documentos

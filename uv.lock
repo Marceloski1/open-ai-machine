@@ -512,7 +512,7 @@ wheels = [
 ]
 
 [[package]]
-name = "open-machine-ai"
+name = "open-ai-machine"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
