@@ -2,7 +2,7 @@
 name = "opencode-market-place"
 version = "0.1.0"
 description = "Entorno Python unico del repo (uv). Usado por tools/build-template, por tools/convert-inputs y por el pandoc empaquetado via pypandoc-binary."
-requires-python = ">=3.13"
+requires-python = ">=3.13,<3.14"
 dependencies = [
     "markitdown[all]>=0.1.2",
     "pypandoc-binary>=1.17",
