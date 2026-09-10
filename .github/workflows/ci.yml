@@ -26,6 +26,10 @@ jobs:
         run: pnpm typecheck
       - name: Run tests
         run: pnpm test
+      - name: Build machine-core tool bundle
+        run: bun run packages/node/machine-core/scripts/build-tool.ts
+      - name: Check machine-core tool bundle is up to date
+        run: git diff --exit-code packages/node/machine-core/tools/machine.js
       - name: Build registry
         run: bun run tools/build-registry/src/index.ts
       - name: Check registry is up to date
@@ -43,6 +47,7 @@ jobs:
           test -f .opencode/commands/machine-process-input.md
           test -f .opencode/agents/machine.md
           test -f .opencode/templates/reference.docx
+          test -f .opencode/tools/machine.js
           test -f .opencode/installed.json
           test ! -f opencode.json
 

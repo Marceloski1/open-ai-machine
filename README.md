@@ -41,9 +41,15 @@ requisitos externos— y espera confirmación. En un entorno no interactivo hay 
 | `global` | `~/.config/opencode/` |
 | `claude` | `.claude/` del directorio actual |
 
-El CLI no escribe `opencode.json`: los agentes y comandos de Opencode se detectan solo por
-convención de archivos en `.opencode/`, y la clave `plugin` de ese archivo hoy apuntaría a un
-paquete (`machine-core`) que todavía no está publicado en npm.
+El CLI no escribe `opencode.json`: los agentes, comandos y tools de Opencode se detectan solo por
+convención de archivos en `.opencode/` (`commands/`, `agents/`, `tools/`, ...), y la clave `plugin`
+de ese archivo hoy apuntaría a un paquete (`machine-core`) que todavía no está publicado en npm.
+
+Los tools que invocan esos comandos (`machine_approve`, `machine_process_input`,
+`machine_render_docx`) se instalan como código ejecutable autocontenido en
+`.opencode/tools/machine.js` — un bundle generado con `bun run packages/node/machine-core/scripts/build-tool.ts`
+a partir de `packages/node/machine-core/src/tool.ts`, sin más dependencia externa que
+`@opencode-ai/plugin` (que Opencode ya provee en `.opencode/node_modules/`).
 
 ### Mantenimiento
 
@@ -75,12 +81,18 @@ openspec/          artefactos del flujo SDD
 pnpm test                                       # tests de TypeScript (Bun)
 pnpm typecheck                                  # comprobación de tipos (tsc)
 uv run pytest                                   # tests de las herramientas Python
+bun packages/node/machine-core/scripts/build-tool.ts  # regenerar tools/machine.js
 bun tools/build-registry/src/index.ts           # regenerar registry/index.json
 uv run python tools/convert-inputs/convert_inputs.py docs/inputs
 ```
 
 **Bun ejecuta TypeScript sin comprobar tipos**, así que `pnpm test` puede pasar con errores de
 tipo. `pnpm typecheck` es lo que los detecta, y el CI lo ejecuta antes de los tests.
+
+**`packages/node/machine-core/tools/machine.js` se genera, nunca se edita a mano.** Es el bundle
+autocontenido de `src/tool.ts` (sin las importaciones relativas a `./approvals`, `./deps`, `./hash`,
+`./state` ni `./types`, que no viajan con el paquete instalado). El CI lo regenera y falla si el
+archivo commiteado quedó desfasado.
 
 **`registry/index.json` se genera, nunca se edita a mano.** El CI regenera el catálogo y falla si
 el archivo commiteado quedó desfasado, e instala un paquete de verdad para comprobar que el
