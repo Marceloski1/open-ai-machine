@@ -45,11 +45,21 @@ El CLI no escribe `opencode.json`: los agentes, comandos y tools de Opencode se 
 convención de archivos en `.opencode/` (`commands/`, `agents/`, `tools/`, ...), y la clave `plugin`
 de ese archivo hoy apuntaría a un paquete (`machine-core`) que todavía no está publicado en npm.
 
-Los tools que invocan esos comandos (`machine_approve`, `machine_process_input`,
-`machine_render_docx`) se instalan como código ejecutable autocontenido en
-`.opencode/tools/machine.js` — un bundle generado con `bun run packages/node/machine-core/scripts/build-tool.ts`
-a partir de `packages/node/machine-core/src/tool.ts`, sin más dependencia externa que
-`@opencode-ai/plugin` (que Opencode ya provee en `.opencode/node_modules/`).
+Los tools que invocan esos comandos se instalan como código ejecutable autocontenido: cada
+paquete (`machine-core`, `machine-business`, `machine-discovery`) genera su propio bundle con
+`bun run packages/node/<paquete>/scripts/build-tool.ts` a partir de `src/tool.ts`, y lo instala en
+`.opencode/tools/`, sin más dependencia externa que `@opencode-ai/plugin` (que Opencode ya provee
+en `.opencode/node_modules/`).
+
+| Paquete | Bundle | Tools que expone |
+|---|---|---|
+| `machine-core` | `.opencode/tools/machine.js` | `machine_approve`, `machine_process_input`, `machine_render_docx` |
+| `machine-business` | `.opencode/tools/machine_business.js` | `machine_business_init`, `machine_business_proposal` |
+| `machine-discovery` | `.opencode/tools/machine_discovery.js` | `machine_discovery_init`, `machine_discovery_requirements`, `machine_discovery_hla`, `machine_discovery_draft_prds`, `machine_discovery_time_estimation`, `machine_discovery_planning`, `machine_discovery_project_doc` |
+
+`machine-business` y `machine-discovery` importan de `machine-core/src/*` (estado, puertas de
+aprobacion); el bundler inlinea esas importaciones al compilar, asi que el artefacto instalado no
+depende de que `machine-core` tambien este instalado.
 
 ### Mantenimiento
 
@@ -81,7 +91,9 @@ openspec/          artefactos del flujo SDD
 pnpm test                                       # tests de TypeScript (Bun)
 pnpm typecheck                                  # comprobación de tipos (tsc)
 uv run pytest                                   # tests de las herramientas Python
-bun packages/node/machine-core/scripts/build-tool.ts  # regenerar tools/machine.js
+bun packages/node/machine-core/scripts/build-tool.ts       # regenerar tools/machine.js
+bun packages/node/machine-business/scripts/build-tool.ts   # regenerar tools/machine_business.js
+bun packages/node/machine-discovery/scripts/build-tool.ts  # regenerar tools/machine_discovery.js
 bun tools/build-registry/src/index.ts           # regenerar registry/index.json
 uv run python tools/convert-inputs/convert_inputs.py docs/inputs
 ```
@@ -89,10 +101,10 @@ uv run python tools/convert-inputs/convert_inputs.py docs/inputs
 **Bun ejecuta TypeScript sin comprobar tipos**, así que `pnpm test` puede pasar con errores de
 tipo. `pnpm typecheck` es lo que los detecta, y el CI lo ejecuta antes de los tests.
 
-**`packages/node/machine-core/tools/machine.js` se genera, nunca se edita a mano.** Es el bundle
-autocontenido de `src/tool.ts` (sin las importaciones relativas a `./approvals`, `./deps`, `./hash`,
-`./state` ni `./types`, que no viajan con el paquete instalado). El CI lo regenera y falla si el
-archivo commiteado quedó desfasado.
+**Los `tools/*.js` de cada paquete se generan, nunca se editan a mano.** Cada uno es el bundle
+autocontenido de su `src/tool.ts` (sin las importaciones relativas, incluidas las que cruzan a
+`machine-core/src/*`, que el bundler inlinea y que no viajan como archivos sueltos con el paquete
+instalado). El CI regenera los tres y falla si algún archivo commiteado quedó desfasado.
 
 **`registry/index.json` se genera, nunca se edita a mano.** El CI regenera el catálogo y falla si
 el archivo commiteado quedó desfasado, e instala un paquete de verdad para comprobar que el

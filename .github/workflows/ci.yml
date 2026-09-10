@@ -30,6 +30,14 @@ jobs:
         run: bun run packages/node/machine-core/scripts/build-tool.ts
       - name: Check machine-core tool bundle is up to date
         run: git diff --exit-code packages/node/machine-core/tools/machine.js
+      - name: Build machine-business tool bundle
+        run: bun run packages/node/machine-business/scripts/build-tool.ts
+      - name: Check machine-business tool bundle is up to date
+        run: git diff --exit-code packages/node/machine-business/tools/machine_business.js
+      - name: Build machine-discovery tool bundle
+        run: bun run packages/node/machine-discovery/scripts/build-tool.ts
+      - name: Check machine-discovery tool bundle is up to date
+        run: git diff --exit-code packages/node/machine-discovery/tools/machine_discovery.js
       - name: Build registry
         run: bun run tools/build-registry/src/index.ts
       - name: Check registry is up to date
@@ -54,3 +62,23 @@ jobs:
           test "$(bun "$cli" install machine-core --yes)" = "unchanged"
           test "$(bun "$cli" uninstall machine-core)" = "removed"
           test ! -f .opencode/commands/machine-process-input.md
+
+          test "$(bun "$cli" install machine-business --yes)" = "installed"
+          test -f .opencode/commands/machine-business-init.md
+          test -f .opencode/agents/machine-business.md
+          test -f .opencode/tools/machine_business.js
+
+          test "$(bun "$cli" install machine-business --yes)" = "unchanged"
+          test "$(bun "$cli" uninstall machine-business)" = "removed"
+          test ! -f .opencode/commands/machine-business-init.md
+          test ! -f .opencode/tools/machine_business.js
+
+          test "$(bun "$cli" install machine-discovery --yes)" = "installed"
+          test -f .opencode/commands/machine-discovery-init.md
+          test -f .opencode/agents/machine-discovery.md
+          test -f .opencode/tools/machine_discovery.js
+
+          test "$(bun "$cli" install machine-discovery --yes)" = "unchanged"
+          test "$(bun "$cli" uninstall machine-discovery)" = "removed"
+          test ! -f .opencode/commands/machine-discovery-init.md
+          test ! -f .opencode/tools/machine_discovery.js
