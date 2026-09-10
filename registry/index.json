@@ -16,7 +16,7 @@
       "skills": [],
       "templates": [],
       "compatibility": "opencode-v1",
-      "checksum": "60b3037c3981608cb77b0b94275eaa9cafefd17a6556056e3a242d07776cf6fb",
+      "checksum": "3d16634e1d3227ff6908833f614b1496b180b1d9e8c9f1ba05cb2efc0e53270c",
       "permissions": {},
       "externalRequirements": [],
       "files": [
@@ -31,6 +31,10 @@
         {
           "path": "commands/machine-business-proposal.md",
           "sha256": "683689f1bcd79630744b700a800e49c998dc192aab314fc1b0263191b916a8dc"
+        },
+        {
+          "path": "tools/machine_business.js",
+          "sha256": "0e3cf642f7122cb34b30d180c098742af745375fb5df2459aa2c491020f6acbc"
         }
       ]
     },
@@ -108,7 +112,7 @@
       "skills": [],
       "templates": [],
       "compatibility": "opencode-v1",
-      "checksum": "b5cbb6b6019b5bee0b5d7b54f0227b724d4a5f176ff394c395df984f00c232bf",
+      "checksum": "768b41c40d0dcdcec7a57eb6af8247f1e0b1a50b607761dd98db40f32c536031",
       "permissions": {},
       "externalRequirements": [],
       "files": [
@@ -143,6 +147,10 @@
         {
           "path": "commands/machine-time-estimation.md",
           "sha256": "648beba94c3108678c9207f3f434ae999e7663d7a30fb338fa9f8e75493f4e26"
+        },
+        {
+          "path": "tools/machine_discovery.js",
+          "sha256": "987087ec740f0e1eb3c9483991b187c329343cc310851033207150dbfd9cdd2a"
         }
       ]
     }
