@@ -5,9 +5,13 @@
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
-    "test": "bun test"
+    "test": "bun test",
+    "build": "bun scripts/build-tool.ts"
   },
   "dependencies": {
     "machine-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "^1.18.0"
   }
 }
