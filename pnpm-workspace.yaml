@@ -3,3 +3,5 @@ packages:
   - "packages/py/*"
   - "cli"
   - "tools/build-registry"
+allowBuilds:
+  msgpackr-extract: false
