@@ -25,6 +25,10 @@ importers:
       machine-core:
         specifier: workspace:*
         version: link:../machine-core
+    devDependencies:
+      '@opencode-ai/plugin':
+        specifier: ^1.18.0
+        version: 1.18.30
 
   packages/node/machine-core:
     devDependencies:
