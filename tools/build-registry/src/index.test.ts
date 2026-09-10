@@ -60,6 +60,7 @@ describe("buildRegistry: contrato con el instalador", () => {
       "agents/delta.md",
       "commands/machine-delta-run.md",
       "templates/base.md",
+      "tools/index.js",
     ]);
     for (const file of entry.files) {
       const content = await readFile(join(fixture("with-files"), file.path));

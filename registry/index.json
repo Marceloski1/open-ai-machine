@@ -51,7 +51,7 @@
       "skills": [],
       "templates": [],
       "compatibility": "opencode-v1",
-      "checksum": "2e45adf6a0dcb34dac57620bd8beb8d442284469c778be3d2e70e3e7bb9455b7",
+      "checksum": "ddb6fc6eb70fb2b60a1808da0494ee3047dd339c2fb126d9cf026321ecdcbe64",
       "permissions": {},
       "externalRequirements": [
         "pandoc"
@@ -80,6 +80,10 @@
         {
           "path": "templates/reference.docx",
           "sha256": "2c41a337ffc8735543b93881d9e42dc9969cb709f9b13d3fa6ed16e57bc645dd"
+        },
+        {
+          "path": "tools/machine.js",
+          "sha256": "97d5eb366d176c00359067a3ed11cd9e837a4540860dec9bc7bd4fa5fe55acff"
         }
       ]
     },

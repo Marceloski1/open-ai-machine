@@ -38,7 +38,7 @@ export type BuildRegistryOptions = {
   repoRoot?: string;
 };
 
-const INSTALLABLE_DIRS = ["commands", "agents", "skills", "templates"] as const;
+const INSTALLABLE_DIRS = ["commands", "agents", "skills", "templates", "tools"] as const;
 
 function toPosix(path: string): string {
   return path.split(sep).join("/");
