@@ -26,18 +26,6 @@ jobs:
         run: pnpm typecheck
       - name: Run tests
         run: pnpm test
-      - name: Build machine-core tool bundle
-        run: bun run packages/node/machine-core/scripts/build-tool.ts
-      - name: Check machine-core tool bundle is up to date
-        run: git diff --exit-code packages/node/machine-core/tools/machine.js
-      - name: Build machine-business tool bundle
-        run: bun run packages/node/machine-business/scripts/build-tool.ts
-      - name: Check machine-business tool bundle is up to date
-        run: git diff --exit-code packages/node/machine-business/tools/machine_business.js
-      - name: Build machine-discovery tool bundle
-        run: bun run packages/node/machine-discovery/scripts/build-tool.ts
-      - name: Check machine-discovery tool bundle is up to date
-        run: git diff --exit-code packages/node/machine-discovery/tools/machine_discovery.js
       - name: Build registry
         run: bun run tools/build-registry/src/index.ts
       - name: Check registry is up to date
@@ -55,30 +43,45 @@ jobs:
           test -f .opencode/commands/machine-process-input.md
           test -f .opencode/agents/machine.md
           test -f .opencode/templates/reference.docx
-          test -f .opencode/tools/machine.js
+          test -f .opencode/tools/machine.ts
+          test -f .opencode/tools/lib/machine-core/core.ts
           test -f .opencode/installed.json
           test ! -f opencode.json
 
           test "$(bun "$cli" install machine-core --yes)" = "unchanged"
           test "$(bun "$cli" uninstall machine-core)" = "removed"
           test ! -f .opencode/commands/machine-process-input.md
+          test ! -f .opencode/tools/machine.ts
 
           test "$(bun "$cli" install machine-business --yes)" = "installed"
           test -f .opencode/commands/machine-business-init.md
           test -f .opencode/agents/machine-business.md
-          test -f .opencode/tools/machine_business.js
+          test -f .opencode/tools/machine_business.ts
+          test -f .opencode/tools/lib/machine-business/init.ts
 
           test "$(bun "$cli" install machine-business --yes)" = "unchanged"
           test "$(bun "$cli" uninstall machine-business)" = "removed"
           test ! -f .opencode/commands/machine-business-init.md
-          test ! -f .opencode/tools/machine_business.js
+          test ! -f .opencode/tools/machine_business.ts
 
           test "$(bun "$cli" install machine-discovery --yes)" = "installed"
           test -f .opencode/commands/machine-discovery-init.md
           test -f .opencode/agents/machine-discovery.md
-          test -f .opencode/tools/machine_discovery.js
+          test -f .opencode/tools/machine_discovery.ts
+          test -f .opencode/tools/lib/machine-discovery/init.ts
 
           test "$(bun "$cli" install machine-discovery --yes)" = "unchanged"
           test "$(bun "$cli" uninstall machine-discovery)" = "removed"
           test ! -f .opencode/commands/machine-discovery-init.md
-          test ! -f .opencode/tools/machine_discovery.js
+          test ! -f .opencode/tools/machine_discovery.ts
+
+          # machine-core y machine-business conviven en el mismo .opencode/: cada
+          # paquete namespacea su copia de tools/lib bajo su propio id para que
+          # instalar o desinstalar uno no pise ni borre los archivos del otro.
+          test "$(bun "$cli" install machine-core --yes)" = "installed"
+          test "$(bun "$cli" install machine-business --yes)" = "installed"
+          test -f .opencode/tools/lib/machine-core/state.ts
+          test -f .opencode/tools/lib/machine-business/state.ts
+          test "$(bun "$cli" uninstall machine-business)" = "removed"
+          test -f .opencode/tools/lib/machine-core/state.ts
+          test "$(bun "$cli" uninstall machine-core)" = "removed"
