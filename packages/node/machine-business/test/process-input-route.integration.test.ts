@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { machine_process_input } from "machine-core/src/index";
+import { machine_process_input } from "../../machine-core/tools/lib/machine-core/core";
 
 async function makeSimulatedHome(): Promise<string> {
   return mkdtemp(join(tmpdir(), "machine-business-home-"));

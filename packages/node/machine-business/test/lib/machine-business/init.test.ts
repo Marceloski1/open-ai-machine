@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { mkdtemp, readFile, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { indexPath, machine_business_init } from "./init";
+import { indexPath, machine_business_init } from "../../../tools/lib/machine-business/init";
 
 async function makeProjectDir(): Promise<string> {
   return mkdtemp(join(tmpdir(), "machine-business-init-"));

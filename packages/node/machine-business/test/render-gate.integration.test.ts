@@ -2,10 +2,10 @@ import { describe, expect, test } from "bun:test";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { readState, writeState } from "machine-core/src/state";
-import { machine_render_docx } from "machine-core/src/index";
-import type { InputRecord } from "machine-core/src/types";
-import { machine_business_proposal } from "../src/proposal";
+import { readState, writeState } from "../../machine-core/tools/lib/machine-core/state";
+import { machine_render_docx } from "../../machine-core/tools/lib/machine-core/core";
+import type { InputRecord } from "../../machine-core/tools/lib/machine-core/types";
+import { machine_business_proposal } from "../tools/lib/machine-business/proposal";
 
 async function makeProjectDir(): Promise<string> {
   return mkdtemp(join(tmpdir(), "machine-business-render-gate-"));

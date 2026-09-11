@@ -3,7 +3,7 @@ import { describe, expect, test } from "bun:test";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { init, proposal } from "./tool";
+import { init, proposal } from "../tools/machine_business";
 
 async function makeProjectDir(): Promise<string> {
   return mkdtemp(join(tmpdir(), "machine-business-tool-"));

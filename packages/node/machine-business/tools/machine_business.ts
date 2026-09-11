@@ -1,5 +1,6 @@
 import { tool } from "@opencode-ai/plugin/tool";
-import { machine_business_init, machine_business_proposal } from "./index";
+import { machine_business_init } from "./lib/machine-business/init";
+import { machine_business_proposal } from "./lib/machine-business/proposal";
 
 const { schema } = tool;
 
