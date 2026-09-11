@@ -2,8 +2,8 @@ import { describe, expect, spyOn, test } from "bun:test";
 import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import * as approvalsModule from "./approvals";
-import { readState } from "./state";
+import * as approvalsModule from "../../../tools/lib/machine-core/approvals";
+import { readState } from "../../../tools/lib/machine-core/state";
 import {
   defaultProjectTemplatePath,
   defaultTemplatePath,
@@ -13,7 +13,7 @@ import {
   machine_render_docx,
   machine_write_artifact,
   resolveRepoPandocPath,
-} from "./index";
+} from "../../../tools/lib/machine-core/core";
 
 async function makeProjectDir(): Promise<string> {
   return mkdtemp(join(tmpdir(), "machine-core-index-"));

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { computeSha256, isProcessed, upsertInput } from "./hash";
-import type { MachineState } from "./types";
+import { computeSha256, isProcessed, upsertInput } from "../../../tools/lib/machine-core/hash";
+import type { MachineState } from "../../../tools/lib/machine-core/types";
 
 function emptyState(): MachineState {
   return { phase: "", inputs: [], approvals: {} };

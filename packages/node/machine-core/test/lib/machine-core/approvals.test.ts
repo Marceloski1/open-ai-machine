@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { approveGate, assertGateApproved, setGatePending } from "./approvals";
-import type { MachineState } from "./types";
+import { approveGate, assertGateApproved, setGatePending } from "../../../tools/lib/machine-core/approvals";
+import type { MachineState } from "../../../tools/lib/machine-core/types";
 
 function stateWith(approvals: MachineState["approvals"]): MachineState {
   return { phase: "", inputs: [], approvals };

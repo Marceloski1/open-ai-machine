@@ -117,7 +117,7 @@ const PANDOC_INSTALL_INSTRUCTIONS =
   'ejecuta "uv sync" en la raiz del repositorio (instala el pandoc empaquetado via pypandoc-binary en .venv/). Referencia: https://pandoc.org/installing.html';
 
 export function defaultTemplatePath(): string {
-  return join(import.meta.dir, "..", "templates", "reference.docx");
+  return join(import.meta.dir, "..", "..", "..", "templates", "reference.docx");
 }
 
 export function defaultTemplateExists(templatePath: string): boolean {
@@ -161,7 +161,7 @@ export function resolveTemplate(args: {
 }
 
 function repoRoot(): string {
-  return join(import.meta.dir, "..", "..", "..", "..");
+  return join(import.meta.dir, "..", "..", "..", "..", "..", "..");
 }
 
 function findVenvSitePackages(root: string): string | undefined {
@@ -248,16 +248,4 @@ export async function machine_render_docx(args: RenderDocxArgs): Promise<RenderD
   await render(args.sourcePath, args.outputPath, resolution.templatePath);
 
   return { outputPath: args.outputPath, templatePath: resolution.templatePath, templateSource: resolution.source };
-}
-
-export default async function machineCorePlugin() {
-  return {
-    tool: {
-      machine_process_input,
-      machine_write_artifact,
-      machine_approve,
-      machine_check_deps,
-      machine_render_docx,
-    },
-  };
 }

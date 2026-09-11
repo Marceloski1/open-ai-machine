@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { checkExternalBinary } from "./deps";
+import { checkExternalBinary } from "../../../tools/lib/machine-core/deps";
 
 describe("checkExternalBinary", () => {
   test("Pandoc ausente falla con instruccion de instalacion", () => {

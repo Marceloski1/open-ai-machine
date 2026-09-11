@@ -1,5 +1,5 @@
 import { tool } from "@opencode-ai/plugin/tool";
-import { machine_approve, machine_process_input, machine_render_docx } from "./index";
+import { machine_approve, machine_process_input, machine_render_docx } from "./lib/machine-core/core";
 
 const { schema } = tool;
 
