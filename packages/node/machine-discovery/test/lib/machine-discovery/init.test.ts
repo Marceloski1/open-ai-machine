@@ -3,8 +3,8 @@ import { existsSync } from "node:fs";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { readState } from "machine-core/src/state";
-import { machine_discovery_init } from "./init";
+import { readState } from "../../../tools/lib/machine-discovery/state";
+import { machine_discovery_init } from "../../../tools/lib/machine-discovery/init";
 
 describe("machine_discovery_init", () => {
   let projectDir: string;

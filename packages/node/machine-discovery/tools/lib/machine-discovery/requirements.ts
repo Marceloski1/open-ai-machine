@@ -1,8 +1,8 @@
 import { mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { assertGateApproved, setGatePending } from "machine-core/src/approvals";
-import { readState, writeState } from "machine-core/src/state";
-import type { MachineState } from "machine-core/src/types";
+import { assertGateApproved, setGatePending } from "./approvals";
+import { readState, writeState } from "./state";
+import type { MachineState } from "./types";
 
 const NEEDS_INPUT = "NEEDS INPUT";
 const GATE = "requirements";

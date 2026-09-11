@@ -3,16 +3,16 @@ import { existsSync } from "node:fs";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { approveGate } from "machine-core/src/approvals";
-import { readState, writeState } from "machine-core/src/state";
-import type { InputRecord, Route } from "machine-core/src/types";
-import { machine_discovery_time_estimation } from "./estimation";
-import { machine_discovery_hla } from "./hla";
-import { machine_discovery_init } from "./init";
-import { machine_discovery_planning } from "./planning";
-import { machine_discovery_draft_prds } from "./prds";
-import { machine_discovery_requirements } from "./requirements";
-import { machine_discovery_project_doc, projectDocPath } from "./project-doc";
+import { approveGate } from "../../../tools/lib/machine-discovery/approvals";
+import { readState, writeState } from "../../../tools/lib/machine-discovery/state";
+import type { InputRecord, Route } from "../../../tools/lib/machine-discovery/types";
+import { machine_discovery_time_estimation } from "../../../tools/lib/machine-discovery/estimation";
+import { machine_discovery_hla } from "../../../tools/lib/machine-discovery/hla";
+import { machine_discovery_init } from "../../../tools/lib/machine-discovery/init";
+import { machine_discovery_planning } from "../../../tools/lib/machine-discovery/planning";
+import { machine_discovery_draft_prds } from "../../../tools/lib/machine-discovery/prds";
+import { machine_discovery_requirements } from "../../../tools/lib/machine-discovery/requirements";
+import { machine_discovery_project_doc, projectDocPath } from "../../../tools/lib/machine-discovery/project-doc";
 
 function input(route: Route, path: string): InputRecord {
   return { path, sha256: "0".repeat(64), processedAt: "2026-09-02T00:00:00.000Z", route, outputPath: path };

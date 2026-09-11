@@ -3,10 +3,10 @@ import { existsSync } from "node:fs";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { readState, writeState } from "machine-core/src/state";
-import type { InputRecord, MachineState, Route } from "machine-core/src/types";
-import { machine_discovery_init } from "./init";
-import { hlaPath, machine_discovery_hla } from "./hla";
+import { readState, writeState } from "../../../tools/lib/machine-discovery/state";
+import type { InputRecord, MachineState, Route } from "../../../tools/lib/machine-discovery/types";
+import { machine_discovery_init } from "../../../tools/lib/machine-discovery/init";
+import { hlaPath, machine_discovery_hla } from "../../../tools/lib/machine-discovery/hla";
 
 function input(route: Route, path: string): InputRecord {
   return { path, sha256: "0".repeat(64), processedAt: "2026-09-02T00:00:00.000Z", route, outputPath: path };

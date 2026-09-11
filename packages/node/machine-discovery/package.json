@@ -3,13 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "main": "src/index.ts",
   "scripts": {
-    "test": "bun test",
-    "build": "bun scripts/build-tool.ts"
-  },
-  "dependencies": {
-    "machine-core": "workspace:*"
+    "test": "bun test"
   },
   "devDependencies": {
     "@opencode-ai/plugin": "^1.18.0"

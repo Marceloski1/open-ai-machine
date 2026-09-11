@@ -1,8 +1,8 @@
 import { existsSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
-import { ensureState } from "machine-core/src/state";
-import type { MachineState } from "machine-core/src/types";
+import { ensureState } from "./state";
+import type { MachineState } from "./types";
 
 export type InitArgs = {
   projectDir: string;

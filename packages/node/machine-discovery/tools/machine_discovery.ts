@@ -1,13 +1,11 @@
 import { tool } from "@opencode-ai/plugin/tool";
-import {
-  machine_discovery_draft_prds,
-  machine_discovery_hla,
-  machine_discovery_init,
-  machine_discovery_planning,
-  machine_discovery_project_doc,
-  machine_discovery_requirements,
-  machine_discovery_time_estimation,
-} from "./index";
+import { machine_discovery_init } from "./lib/machine-discovery/init";
+import { machine_discovery_requirements } from "./lib/machine-discovery/requirements";
+import { machine_discovery_hla } from "./lib/machine-discovery/hla";
+import { machine_discovery_draft_prds } from "./lib/machine-discovery/prds";
+import { machine_discovery_time_estimation } from "./lib/machine-discovery/estimation";
+import { machine_discovery_planning } from "./lib/machine-discovery/planning";
+import { machine_discovery_project_doc } from "./lib/machine-discovery/project-doc";
 
 const { schema } = tool;
 

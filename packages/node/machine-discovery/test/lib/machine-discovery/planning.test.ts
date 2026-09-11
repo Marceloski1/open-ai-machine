@@ -3,12 +3,12 @@ import { existsSync } from "node:fs";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { readState, writeState } from "machine-core/src/state";
-import type { InputRecord, MachineState, Route } from "machine-core/src/types";
-import { machine_discovery_time_estimation } from "./estimation";
-import { machine_discovery_init } from "./init";
-import { machine_discovery_planning, planningPath } from "./planning";
-import { machine_discovery_draft_prds } from "./prds";
+import { readState, writeState } from "../../../tools/lib/machine-discovery/state";
+import type { InputRecord, MachineState, Route } from "../../../tools/lib/machine-discovery/types";
+import { machine_discovery_time_estimation } from "../../../tools/lib/machine-discovery/estimation";
+import { machine_discovery_init } from "../../../tools/lib/machine-discovery/init";
+import { machine_discovery_planning, planningPath } from "../../../tools/lib/machine-discovery/planning";
+import { machine_discovery_draft_prds } from "../../../tools/lib/machine-discovery/prds";
 
 function input(route: Route, path: string): InputRecord {
   return { path, sha256: "0".repeat(64), processedAt: "2026-09-02T00:00:00.000Z", route, outputPath: path };

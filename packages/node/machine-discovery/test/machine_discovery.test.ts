@@ -3,8 +3,8 @@ import { describe, expect, test } from "bun:test";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { readState, writeState } from "machine-core/src/state";
-import type { InputRecord } from "machine-core/src/types";
+import { readState, writeState } from "../tools/lib/machine-discovery/state";
+import type { InputRecord } from "../tools/lib/machine-discovery/types";
 import {
   draft_prds,
   hla,
@@ -13,7 +13,7 @@ import {
   project_doc,
   requirements,
   time_estimation,
-} from "./tool";
+} from "../tools/machine_discovery";
 
 async function makeProjectDir(): Promise<string> {
   return mkdtemp(join(tmpdir(), "machine-discovery-tool-"));
