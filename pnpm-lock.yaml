@@ -21,10 +21,6 @@ importers:
   cli: {}
 
   packages/node/machine-business:
-    dependencies:
-      machine-core:
-        specifier: workspace:*
-        version: link:../machine-core
     devDependencies:
       '@opencode-ai/plugin':
         specifier: ^1.18.0
@@ -37,10 +33,6 @@ importers:
         version: 1.18.30
 
   packages/node/machine-discovery:
-    dependencies:
-      machine-core:
-        specifier: workspace:*
-        version: link:../machine-core
     devDependencies:
       '@opencode-ai/plugin':
         specifier: ^1.18.0
