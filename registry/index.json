@@ -16,7 +16,7 @@
       "skills": [],
       "templates": [],
       "compatibility": "opencode-v1",
-      "checksum": "3d16634e1d3227ff6908833f614b1496b180b1d9e8c9f1ba05cb2efc0e53270c",
+      "checksum": "30745362af42dfb644d6c721907986868e20c66580e9b7ae5e6cb20aee6ca478",
       "permissions": {},
       "externalRequirements": [],
       "files": [
@@ -33,8 +33,28 @@
           "sha256": "683689f1bcd79630744b700a800e49c998dc192aab314fc1b0263191b916a8dc"
         },
         {
-          "path": "tools/machine_business.js",
-          "sha256": "0e3cf642f7122cb34b30d180c098742af745375fb5df2459aa2c491020f6acbc"
+          "path": "tools/lib/machine-business/approvals.ts",
+          "sha256": "e8178235080a0a7f402aa5a7aed0202b6da601bfb51c32a5fd5a1a8b936a2115"
+        },
+        {
+          "path": "tools/lib/machine-business/init.ts",
+          "sha256": "ff57dc8af1410455600eea7c0af4429f5c36eb56ff9881321909f9fb6c94b662"
+        },
+        {
+          "path": "tools/lib/machine-business/proposal.ts",
+          "sha256": "e8cab603b0fe3f7fdaf9d42555042170ca2d60085f7fcf147ecc45c2802c2666"
+        },
+        {
+          "path": "tools/lib/machine-business/state.ts",
+          "sha256": "d45b916b95a47b458254a075a20e812cc47f194cbf777d9366e0959084ff5ca2"
+        },
+        {
+          "path": "tools/lib/machine-business/types.ts",
+          "sha256": "c04f915b2ac62fedc5a6e776bb9dd666891baa733216e735327e3b52598a36ac"
+        },
+        {
+          "path": "tools/machine_business.ts",
+          "sha256": "bd45e57b57e63ea5b9e33fc17756a9a12d2263182083eee47083fd65eec15438"
         }
       ]
     },
@@ -55,7 +75,7 @@
       "skills": [],
       "templates": [],
       "compatibility": "opencode-v1",
-      "checksum": "ddb6fc6eb70fb2b60a1808da0494ee3047dd339c2fb126d9cf026321ecdcbe64",
+      "checksum": "9e6221570156c6bbdeef754330b646bbfaf1cabd2dd1beccc0b6be377448343d",
       "permissions": {},
       "externalRequirements": [
         "pandoc"
@@ -86,8 +106,32 @@
           "sha256": "2c41a337ffc8735543b93881d9e42dc9969cb709f9b13d3fa6ed16e57bc645dd"
         },
         {
-          "path": "tools/machine.js",
-          "sha256": "97d5eb366d176c00359067a3ed11cd9e837a4540860dec9bc7bd4fa5fe55acff"
+          "path": "tools/lib/machine-core/approvals.ts",
+          "sha256": "e8178235080a0a7f402aa5a7aed0202b6da601bfb51c32a5fd5a1a8b936a2115"
+        },
+        {
+          "path": "tools/lib/machine-core/core.ts",
+          "sha256": "db0e5cc1e4d3fb69c7116ad17b5d7e959778bc90fcc6fcf3d7ebf5004629f365"
+        },
+        {
+          "path": "tools/lib/machine-core/deps.ts",
+          "sha256": "60a1f40855e424aadcfccb15d706d868cb29aa6ff0d0e4b2f499a786ab65fb28"
+        },
+        {
+          "path": "tools/lib/machine-core/hash.ts",
+          "sha256": "ddfa357fc4b7050de7f83e76b76d4709c9a8ed46fcb15687c24bb6a64a4aeb2f"
+        },
+        {
+          "path": "tools/lib/machine-core/state.ts",
+          "sha256": "d45b916b95a47b458254a075a20e812cc47f194cbf777d9366e0959084ff5ca2"
+        },
+        {
+          "path": "tools/lib/machine-core/types.ts",
+          "sha256": "c04f915b2ac62fedc5a6e776bb9dd666891baa733216e735327e3b52598a36ac"
+        },
+        {
+          "path": "tools/machine.ts",
+          "sha256": "5a2bf54e1cb54cd23b7eafd94f21e9787a69547853bb2a519978c6c80100f4ba"
         }
       ]
     },
@@ -112,7 +156,7 @@
       "skills": [],
       "templates": [],
       "compatibility": "opencode-v1",
-      "checksum": "768b41c40d0dcdcec7a57eb6af8247f1e0b1a50b607761dd98db40f32c536031",
+      "checksum": "3593be27c2edca2eb7c5ef88edfbdc91416be28d76b2ab4f3a20517b4751fc9d",
       "permissions": {},
       "externalRequirements": [],
       "files": [
@@ -149,8 +193,48 @@
           "sha256": "648beba94c3108678c9207f3f434ae999e7663d7a30fb338fa9f8e75493f4e26"
         },
         {
-          "path": "tools/machine_discovery.js",
-          "sha256": "987087ec740f0e1eb3c9483991b187c329343cc310851033207150dbfd9cdd2a"
+          "path": "tools/lib/machine-discovery/approvals.ts",
+          "sha256": "e8178235080a0a7f402aa5a7aed0202b6da601bfb51c32a5fd5a1a8b936a2115"
+        },
+        {
+          "path": "tools/lib/machine-discovery/estimation.ts",
+          "sha256": "b1e695a78904e3e75637d7dcffee05fc0fdb0a3b85fb05be0424ae44eec7d454"
+        },
+        {
+          "path": "tools/lib/machine-discovery/hla.ts",
+          "sha256": "ee31a879f4c78b49a2ff6f03507c9da8617c26251a68fea7bd208d27573a2bcd"
+        },
+        {
+          "path": "tools/lib/machine-discovery/init.ts",
+          "sha256": "5a03ffa9658a81d0dafc6fbd2480fe8070ad2d7086669b2d5cb5fdad28c1a565"
+        },
+        {
+          "path": "tools/lib/machine-discovery/planning.ts",
+          "sha256": "6221b15b254a973d3391b4ae347e921582b7240af185a751b0db0847e8e01d98"
+        },
+        {
+          "path": "tools/lib/machine-discovery/prds.ts",
+          "sha256": "37d0642bbd4b73ebf626d13d2f1b7b9991299ec0e8611ec9f1dd54cfdfbaf3a9"
+        },
+        {
+          "path": "tools/lib/machine-discovery/project-doc.ts",
+          "sha256": "74b0b15f047c72b3a206ffb0a9c7c70283240dc4acde294ea0b3b62d93c60264"
+        },
+        {
+          "path": "tools/lib/machine-discovery/requirements.ts",
+          "sha256": "6cf399e8b441bec61ca8d04780d12abde8ea1db53df05fb0b3ba0e880e26c22c"
+        },
+        {
+          "path": "tools/lib/machine-discovery/state.ts",
+          "sha256": "d45b916b95a47b458254a075a20e812cc47f194cbf777d9366e0959084ff5ca2"
+        },
+        {
+          "path": "tools/lib/machine-discovery/types.ts",
+          "sha256": "c04f915b2ac62fedc5a6e776bb9dd666891baa733216e735327e3b52598a36ac"
+        },
+        {
+          "path": "tools/machine_discovery.ts",
+          "sha256": "3d830cf43c76b8e73a0d0f8767400b4a29973dcce502b812ea728281f67b2def"
         }
       ]
     }
